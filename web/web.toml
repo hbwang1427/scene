@@ -1,0 +1,8 @@
+[http]
+bind = ":8081"
+assetsdir = "assets"
+
+[grpc]
+addr = "localhost:50051"
+cert = "../certs/cert.pem"
+host = "aitour.com"

@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.aitour.rpc";
+option java_outer_classname = "AuthProto";
+option objc_class_prefix = "aitour";
+
+package serverpb;
+
+service Auth {
+	rpc Authenticate(AuthRequest) returns (AuthResponse) {
+		
+	}
+}
+
+service Predict {
+	rpc PredictPhoto(PhotoPredictRequest) returns (PhotoPredictResponse) {
+
+	}
+}
+
+
+message AuthRequest {
+  string name = 1;
+  string password = 2;
+  string token = 3;
+}
+
+message AuthResponse {
+	bool require_login = 1;
+	string token = 2;
+	string msg = 3;
+}
+
+
+message GeoPosition {
+	double latitude = 1;
+	double longitude = 2;
+}
+
+message SignSpot {
+	enum SignSpotType {
+		Museum = 0;
+	}
+
+	uint64 id = 1;
+	string name = 2;
+	SignSpotType type = 3;
+	GeoPosition geo = 4;
+}
+
+message PhotoPredictRequest {
+	enum PhotoType {
+		PNG = 0;
+		JPG = 1;
+	}
+
+	PhotoType type = 1;
+	bytes data = 2;
+	bool base64_encoded = 3;
+	GeoPosition geo = 4;
+	bool acquire_text = 5;
+	bool acquire_audio = 6;
+	bool acquire_vedio = 7;
+}
+
+message PhotoPredictResponse {
+	string text = 1;
+	string audio_url = 2;
+	string vedio_url = 3;
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{.title}}</title>
+	<link href="/assets/css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Raleway:600,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+    <link href="/assets/css/index_demo.css" rel="stylesheet" type="text/css">
+	<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="/assets/js/load-image.all.min.js"></script>
+	<script src="//unpkg.com/vue"></script>
+	<script type="text/javascript">
+		function selectFile(input) {
+        	if (input.files && input.files[0]) {
+	            console.log('in select file!!')
+	            var reader = new FileReader();
+	            $('#centerDiv').show();
+	            $('#url').val('http://');
+	            reader.onload = function (e) {
+	                $("#imageDiv").show();
+	                $("#statusText").show();
+	                $("#imageArea").css('width', 'auto');
+	                $("#imageArea").css('height', 'auto');
+	                $("#imageArea").attr("src", e.target.result); //result =  data:image/bmp;base64,...
+	            }
+	            reader.readAsDataURL(input.files[0]);
+	            loadImage(input.files[0],
+	              function(img){
+	              	var jpeg = img.toDataURL("image/jpeg");
+	                $("#data").val(jpeg); 
+	                $.post("/predict", {
+	                	"image": jpeg,
+	                }).done(function(data) {
+	                	if (data.text) {
+	                		$("#ptext").html("<pre>" + data.text + "</pre>");
+	                	}
+	                	if (data.audio) {
+	                		$("#audioArea").show();
+	                		var audio = $("#paudio")[0];
+	                		audio.src = data.audio;
+	                		// Show loading animation.
+						  	var playPromise = audio.play();
+						  // if (playPromise !== undefined) {
+						  //   playPromise.then(_ => {
+						  //     // Automatic playback started!
+						  //     // Show playing UI.
+						  //     // We can now safely pause video...
+						  //     audio.pause();
+						  //   })
+						  //   .catch(error => {
+						  //     // Auto-play was prevented
+						  //     // Show paused UI.
+						  //   });
+						  // }
+	                	}
+	                }).fail(function() {
+	                	alert("server error");
+	                }).always(function(){
+	                	 $("#statusText").hide();
+	                });
+	              },
+	              {maxWidth: 400, maxHeight: 400, canvas: true, orientation: true}
+	            );
+	        }
+    }
+	</script>
+</head>
+<body>
+	<div class="contaner" id="main-content">
+		<div class="row">
+			<div class="col-md-4 col-sm-6">
+				<p><strong>What's the story about your picture? Upload to find out!</strong><p>
+				<form id="file_form" style="display: block;">
+					<input type="file" name="file_name" id="fileinput" onchange="selectFile(this);" style="max-width: 80%; display: inline;">
+			    </form>
+			</div>
+
+			<div class="col-md-8  col-sm-6" id="centerDiv" style="text-align: center; font-size: 1.5em;">
+				<div id="imageDiv" style="margin-top: 7px; float: center; display: none;">
+		            <div id="box" style="background-size: 100% 100%;">
+		            	<img id="imageArea" src="/assets/imgs/1.jpg" style="max-width: 100%; max-height: 450px;"></img><br/>
+	            		<p id="ptext"></p>
+	            		<p id="audioArea">
+	            			<audio id="paudio" controls="controls"></audio>
+	            		</p>
+		            </div>
+		            <div style="text-align: left; ">
+		                <center><h1 id="statusText" style="display:none;">Computing... <img src="/assets/imgs/spinner.gif" /></h1></center>
+		                <div id="resultArea">
+		                </div>
+		            </div>
+	          	</div>
+			</div>
+		</div>
+
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,4 @@
+[grpc]
+bind = ":50051"
+cert = "../certs/cert.pem"
+key = "../certs/key.pem"
