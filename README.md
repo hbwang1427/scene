@@ -16,9 +16,13 @@ http server demo.
 - config GOROOT and GOPATH environment variable, append $GOPATH/bin to PATH environment variable
 - install git
 - install dep `go get -u github.com/golang/dep/cmd/dep`
-- clone the project `cd $GOPATH/src/github.com/ && git clone https://github.com/aitour/scene.git`
-- `cd aitour\scene`
+- clone the project `mkdir $GOPATH/src/github.com/aitour && cd $GOPATH/src/github.com/aitour && git clone https://github.com/aitour/scene.git`
+- `cd scene`
 - run `dep ensure`
+
+## build and run
+- `cd $GOPATH/src/github.com/aitour/scene/service && go build -o aiserver.exe && aiserver`
+- in another shell, `cd $GOPATH/src/github.com/aitour/scene/web && go build -o aiweb.exe && aiweb`
 
 
 ## misc
