@@ -95,7 +95,7 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 		fmt.Fprintf(&b, "0x%04x-0x%04x: %6d %6d %6d %6d\n", i<<12, (i+1)<<12-1, x[0], x[1], x[2], x[3])
 	}
 	response.Text = b.String()
-	response.AudioUrl = "disney616.com:8081/assets/audio/sample_0.4mb.mp3"
+	response.AudioUrl = "http://disney616.com:8081/assets/audio/sample_0.4mb.mp3"
 
 	return response, nil
 }
