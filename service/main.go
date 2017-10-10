@@ -56,7 +56,7 @@ type authserver struct{}
 // Authenticate implements serverpb.AuthServer.Authenticate
 func (s *authserver) Authenticate(ctx context.Context, in *pb.AuthRequest) (*pb.AuthResponse, error) {
 	var response = &pb.AuthResponse{}
-	if (in.Name != "wangxr" || in.Password != "123") && in.Token != "this is an valid token" {
+	if (in.Name != "test" || in.Password != "123") && in.Token != "this is an valid token" {
 		response.Msg = "invalid name or password or invalid token"
 	} else {
 		response.Token = "this is another valid token"
@@ -95,7 +95,7 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 		fmt.Fprintf(&b, "0x%04x-0x%04x: %6d %6d %6d %6d\n", i<<12, (i+1)<<12-1, x[0], x[1], x[2], x[3])
 	}
 	response.Text = b.String()
-	response.AudioUrl = "/assets/audio/sample_0.4mb.mp3"
+	response.AudioUrl = "disney616.com:8081/assets/audio/sample_0.4mb.mp3"
 
 	return response, nil
 }
