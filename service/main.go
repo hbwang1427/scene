@@ -3,18 +3,23 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
+	"errors"
 	"flag"
 	"fmt"
 	"image"
 	"io/ioutil"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 
 	"syscall"
 
 	pb "github.com/aitour/scene/serverpb"
+	"golang.org/x/net/trace"
 
 	"github.com/BurntSushi/toml"
 	"google.golang.org/grpc"
@@ -26,15 +31,22 @@ import (
 )
 
 var (
-	conf   = flag.String("conf", "service.toml", "Specify the config file")
-	config *Config
+	conf                = flag.String("conf", "service.toml", "Specify the config file")
+	config              *Config
+	MissingWebHostError = errors.New("webhost config missing")
 )
 
 type Config struct {
 	Grpc struct {
-		Bind string
-		Cert string
-		Key  string
+		Bind        string
+		Cert        string
+		Key         string
+		TraceEnable bool
+		TraceBind   string
+	}
+
+	Web struct {
+		Host string
 	}
 }
 
@@ -47,6 +59,11 @@ func parseConfig(conf string) (*Config, error) {
 	if _, err = toml.Decode(string(content), &c); err != nil {
 		return nil, err
 	}
+	if len(c.Web.Host) == 0 {
+		return nil, MissingWebHostError
+	}
+	c.Web.Host = strings.TrimRight(c.Web.Host, "/")
+
 	return &c, nil
 }
 
@@ -95,20 +112,30 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 		fmt.Fprintf(&b, "0x%04x-0x%04x: %6d %6d %6d %6d\n", i<<12, (i+1)<<12-1, x[0], x[1], x[2], x[3])
 	}
 	response.Text = b.String()
-	response.AudioUrl = "http://disney616.com:8081/assets/audio/sample_0.4mb.mp3"
+	response.AudioUrl = fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host)
 
 	return response, nil
 }
 
 func createGrpcServer() (*grpc.Server, error) {
 	//make credentials for grpc
-	creds, err := credentials.NewServerTLSFromFile(config.Grpc.Cert, config.Grpc.Key)
+	cert, err := tls.LoadX509KeyPair(config.Grpc.Cert, config.Grpc.Key)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to generate credentials %v", err)
+		return nil, err
 	}
+	creds := credentials.NewTLS(&tls.Config{
+		Certificates: []tls.Certificate{cert},
+		MinVersion:   0,
+	})
+
+	// creds, err := credentials.NewServerTLSFromFile(config.Grpc.Cert, config.Grpc.Key)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("Failed to generate credentials %v", err)
+	// }
 	opts := []grpc.ServerOption{grpc.Creds(creds)}
 
 	//create grpc server
+	grpc.EnableTracing = config.Grpc.TraceEnable
 	s := grpc.NewServer(opts...)
 
 	//register serverpb.AuthServer
@@ -144,6 +171,16 @@ func main() {
 			log.Fatalf("failed to serve: %v", err)
 		}
 	}()
+
+	//startup trace server if wanted
+	//visit /debug/requests in browser to trace requests
+	if config.Grpc.TraceEnable {
+		trace.AuthRequest = func(req *http.Request) (any, sensitive bool) {
+			return true, true
+		}
+		log.Printf("visit tracing at: %s", config.Grpc.TraceBind)
+		go http.ListenAndServe(config.Grpc.TraceBind, nil)
+	}
 
 	//setup signal handlers to handle signals sent to stop this process
 	quit := make(chan os.Signal, 1)
