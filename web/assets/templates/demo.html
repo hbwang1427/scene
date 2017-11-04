@@ -19,6 +19,13 @@
 	<script src="/assets/js/load-image.all.min.js"></script>
 	<script src="//unpkg.com/vue"></script>
 	<script type="text/javascript">
+		function clearResult() {
+			$("#images").empty();
+			var audio = $("#paudio")[0];
+	        audio.src = "";
+	        $("#text").empty();
+		}
+
 		function selectFile(input) {
         	if (input.files && input.files[0]) {
 	            console.log('in select file!!')
@@ -37,16 +44,17 @@
 	              function(img){
 	              	var jpeg = img.toDataURL("image/jpeg");
 	                $("#data").val(jpeg); 
+	                clearResult();
 	                $.post("/predict", {
 	                	"image": jpeg,
 	                }).done(function(data) {
-	                	$("#result").show();
+	                	$("#images").show();
 	                	if (data.text) {
 	                		var images = data.text.split(";");
 	                		for (var i = 0; i < images.length; i++) {
-	                			$("#result").append('<div class="col"><img src="/assets/' + images[i] + '"></div>')
+	                			$("#images").append('<div class="col"><img src="http://100.0.245.19:8081/assets/' + images[i] + '"></div>')
 	                		}
-	                		$("#ptext").html("<pre>" + data.text + "</pre>");
+	                		$("#text").show().html("<pre>" + data.text + "</pre>");
 	                	}
 	                	if (data.audio) {
 	                		$("#audioArea").show();
@@ -102,11 +110,14 @@
 	          	</div>
 			</div>
 		</div>
-		<div class="row" id="result" style="display: none">
-			<div class="col" id="ptext"></div>
-			<p id="audioArea" style="display: none">
+		<div class="row" id="images" style="display: none">
+		</div>
+		<div class="row" id="text"  style="display: none">
+		</div>
+		<div class="row" id="audioArea" style="display: none">
+			<div class="col">
 				<audio id="paudio" controls="controls"></audio>
-			</p>
+			</div>
 		</div>
 	</div>
 </body>

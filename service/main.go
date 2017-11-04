@@ -1,13 +1,11 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"errors"
 	"flag"
 	"fmt"
-	"image"
 	"io/ioutil"
 	"log"
 	"net"
@@ -88,31 +86,45 @@ type predictserver struct{}
 func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictRequest) (*pb.PhotoPredictResponse, error) {
 	var response = &pb.PhotoPredictResponse{}
 
-	m, _, err := image.Decode(bytes.NewReader(in.Data))
-	if err != nil {
-		return nil, err
-	}
-	bounds := m.Bounds()
-	var histogram [16][4]int
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			r, g, b, a := m.At(x, y).RGBA()
-			// A color's RGBA method returns values in the range [0, 65535].
-			// Shifting by 12 reduces this to the range [0, 15].
-			histogram[r>>12][0]++
-			histogram[g>>12][1]++
-			histogram[b>>12][2]++
-			histogram[a>>12][3]++
-		}
-	}
+	// m, _, err := image.Decode(bytes.NewReader(in.Data))
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// bounds := m.Bounds()
+	// var histogram [16][4]int
+	// for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+	// 	for x := bounds.Min.X; x < bounds.Max.X; x++ {
+	// 		r, g, b, a := m.At(x, y).RGBA()
+	// 		// A color's RGBA method returns values in the range [0, 65535].
+	// 		// Shifting by 12 reduces this to the range [0, 15].
+	// 		histogram[r>>12][0]++
+	// 		histogram[g>>12][1]++
+	// 		histogram[b>>12][2]++
+	// 		histogram[a>>12][3]++
+	// 	}
+	// }
 
-	var b bytes.Buffer
-	fmt.Fprintf(&b, "%-14s %6s %6s %6s %6s\n", "bin", "red", "green", "blue", "alpha")
-	for i, x := range histogram {
-		fmt.Fprintf(&b, "0x%04x-0x%04x: %6d %6d %6d %6d\n", i<<12, (i+1)<<12-1, x[0], x[1], x[2], x[3])
-	}
-	response.Text = b.String()
-	response.AudioUrl = fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host)
+	// var b bytes.Buffer
+	// fmt.Fprintf(&b, "%-14s %6s %6s %6s %6s\n", "bin", "red", "green", "blue", "alpha")
+	// for i, x := range histogram {
+	// 	fmt.Fprintf(&b, "0x%04x-0x%04x: %6d %6d %6d %6d\n", i<<12, (i+1)<<12-1, x[0], x[1], x[2], x[3])
+	// }
+	// response.Text = b.String()
+
+	response.Results = []*pb.PhotoPredictResponse_Result{&pb.PhotoPredictResponse_Result{
+		Text:     "first match",
+		ImageUrl: fmt.Sprintf("%s/assets/predict/1.png", config.Web.Host),
+		AudioUrl: fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host),
+	}, &pb.PhotoPredictResponse_Result{
+		Text:     "second match",
+		ImageUrl: fmt.Sprintf("%s/assets/predict/2.png", config.Web.Host),
+	}, &pb.PhotoPredictResponse_Result{
+		Text:     "third match",
+		ImageUrl: fmt.Sprintf("%s/assets/predict/3.png", config.Web.Host),
+	}, &pb.PhotoPredictResponse_Result{
+		Text:     "fourth match",
+		ImageUrl: fmt.Sprintf("%s/assets/predict/4.png", config.Web.Host),
+	}}
 
 	return response, nil
 }

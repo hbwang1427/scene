@@ -8,6 +8,18 @@
   version = "v0.3.0"
 
 [[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
+  version = "v3.1.0"
+
+[[projects]]
+  name = "github.com/gin-contrib/cors"
+  packages = ["."]
+  revision = "cf4846e6a636a76237a28d9286f163c132e841bc"
+  version = "v1.2"
+
+[[projects]]
   branch = "master"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
@@ -24,6 +36,18 @@
   name = "github.com/golang/protobuf"
   packages = ["proto","protoc-gen-go/descriptor","ptypes","ptypes/any","ptypes/duration","ptypes/timestamp"]
   revision = "130e6b02ab059e7b717a096f397c5b60111cae74"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jmoiron/sqlx"
+  packages = [".","reflectx"]
+  revision = "3379e5993990b1f927fc8db926485e6f6becf2d2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [".","oid"]
+  revision = "b609790bd85edf8e9ab7e0f8912750a786177bcf"
 
 [[projects]]
   name = "github.com/mattn/go-isatty"
@@ -82,6 +106,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "330a6700479d70031cd84703dd071b39c6fc71943db840e7a837e5ac3a2897dc"
+  inputs-digest = "2fc920a8d1a43f25f8f168674917a3ecca32b59b0652fbf6c35efbd0cbe03418"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,0 +1,5 @@
+--- FAIL: TestUser (0.02s)
+	user_test.go:10: create user error:pq: 用户 "kingwang" Password 认证失败
+FAIL
+exit status 1
+FAIL	github.com/aitour/scene/model	0.057s

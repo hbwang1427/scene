@@ -61,11 +61,15 @@ message PhotoPredictRequest {
 	GeoPosition geo = 4;
 	bool acquire_text = 5;
 	bool acquire_audio = 6;
-	bool acquire_vedio = 7;
+	bool acquire_video = 7;
 }
 
 message PhotoPredictResponse {
-	string text = 1;
-	string audio_url = 2;
-	string vedio_url = 3;
+	message Result {
+		string text = 1;
+		string image_url = 2;
+		string audio_url = 3;
+		string video_url = 4;
+	}
+	repeated Result results = 1;
 }

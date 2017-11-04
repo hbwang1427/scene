@@ -2,15 +2,12 @@ package main
 
 import (
 	"context"
-	"encoding/base64"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
@@ -18,124 +15,65 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
-	pb "github.com/aitour/scene/serverpb"
+	"github.com/aitour/scene/auth"
+	"github.com/aitour/scene/web/config"
+	"github.com/aitour/scene/web/handler"
+	"github.com/gin-contrib/cors"
 
-	"github.com/BurntSushi/toml"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 )
 
 var (
-	conf   = flag.String("conf", "web.toml", "Specify a config file")
-	config *Config
+	conf          = flag.String("conf", "web.toml", "Specify a config file")
+	cfg           *config.Config
+	tokenProvider auth.TokenProvider
 )
 
-type Config struct {
-	Http struct {
-		Bind      string
-		AssetsDir string
-	}
-
-	Grpc struct {
-		Addr string
-		Cert string
-		Host string
-	}
-}
-
-func parseConfig(conf string) (*Config, error) {
-	var c Config
-	content, err := ioutil.ReadFile(conf)
-	if err != nil {
-		return nil, err
-	}
-	if _, err = toml.Decode(string(content), &c); err != nil {
-		return nil, err
-	}
-	return &c, nil
-}
-
-func getGrpcConn() (*grpc.ClientConn, error) {
-	var opts []grpc.DialOption
-	if len(config.Grpc.Cert) > 0 {
-		creds, err := credentials.NewClientTLSFromFile(config.Grpc.Cert, config.Grpc.Host)
-		if err != nil {
-			return nil, fmt.Errorf("Failed to create TLS credentials %v", err)
-		}
-		opts = append(opts, grpc.WithTransportCredentials(creds))
-	} else {
-		opts = append(opts, grpc.WithInsecure())
-	}
-
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(config.Grpc.Addr, opts...)
-	return conn, err
-}
-
 func createHttpServer() (*http.Server, error) {
+	log.SetOutput(gin.DefaultWriter)
+	var err error
+	tokenProvider, err = auth.CreateTokenProvider("simple", map[string]interface{}{
+		"tokenTTL": 10 * time.Second,
+		"tokenLen": 16,
+	})
+	if err != nil {
+		log.Fatalf("create TokenProvider error:%v", err)
+	}
+
 	r := gin.Default()
-	r.LoadHTMLGlob(config.Http.AssetsDir + "/templates/*")
-	r.Static("/assets", config.Http.AssetsDir)
+
+	//cross domain request config.
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+		//AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"POST", "GET", "DELETE", "PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin", "X-Requested-With", "Content-Type", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		// AllowOriginFunc: func(origin string) bool {
+		// 	return origin == "*"
+		// },
+		MaxAge: 12 * time.Hour,
+	}))
+
+	r.LoadHTMLGlob(cfg.Http.AssetsDir + "/templates/*")
+	r.Static("/assets", cfg.Http.AssetsDir)
+
+	authorized := r.Group("/user", handler.AuthChecker(tokenProvider))
+	authorized.GET("/profile", func(c *gin.Context) {
+		fmt.Fprintf(c.Writer, "when you see this page, you have passed the auth check!")
+	})
+
 	r.GET("/demo", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "demo.html", gin.H{
 			"title": "predict demo page",
 		})
 	})
 
-	r.POST("/predict", func(c *gin.Context) {
-		jpeg := c.PostForm("image")
-		if strings.Index(jpeg, "data:image/jpeg;base64,") == 0 {
-			jpeg = jpeg[23:]
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"error": "invalid image",
-			})
-			return
-		}
-
-		// get a connection to the server.
-		conn, err := getGrpcConn()
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer conn.Close()
-
-		imgdata, err := ioutil.ReadAll(base64.NewDecoder(base64.StdEncoding, strings.NewReader(jpeg)))
-		if err != nil {
-			log.Print(err)
-			c.JSON(http.StatusOK, gin.H{
-				"error": "invalid image",
-			})
-			return
-		}
-
-		//create client stub
-		client := pb.NewPredictClient(conn)
-		response, err := client.PredictPhoto(context.Background(), &pb.PhotoPredictRequest{
-			Type:         pb.PhotoPredictRequest_PNG,
-			Data:         imgdata,
-			Geo:          &pb.GeoPosition{},
-			AcquireText:  true,
-			AcquireAudio: true,
-			AcquireVedio: false,
-		})
-
-		if err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"error": err,
-			})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"text":  response.Text,
-			"audio": response.AudioUrl,
-		})
-	})
+	r.POST("/predict", handler.Predict)
 
 	s := &http.Server{
-		Addr:    config.Http.Bind,
+		Addr:    cfg.Http.Bind,
 		Handler: r,
 	}
 	return s, nil
@@ -146,10 +84,8 @@ func main() {
 
 	//parse config
 	var err error
-	if config, err = parseConfig(*conf); err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("%v", config)
+	config.SetConfigPath(*conf)
+	cfg = config.GetConfig()
 
 	//create http server
 	srv, err := createHttpServer()
