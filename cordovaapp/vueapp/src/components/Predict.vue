@@ -11,11 +11,15 @@
 			<p v-if="videoUrl">{{videoUrl}}</p>
 		</div>
 
-		<ul v-if="results" id="results">
-			<li v-for="(item, index) in results">
-				<img :src="item.image_url"  @click="displayText(index)"/>
-			</li>
-		</ul>
+		<div id="results" v-if="results.length>0">
+			<ul >
+				<li v-for="(item, index) in results">
+					<img :src="item.image_url"  @click="displayText(index)"/>
+				</li>
+			</ul>
+
+		</div>
+		<span v-else>please try take a photo ^_^</span>
 	</div>
 </template>
 
@@ -38,17 +42,6 @@ export default {
 
 	created () {
 		console.log("predict created");
-    	axios.post("http://100.0.245.19:8081/predict", qs.stringify({"image": this.photourl, "limits": 0})).then(response => {
-			if (response.data.error) {
-				this.error = response.data.error;
-			} else {
-				this.results = response.data.results;
-			}
-			this.isRequesting = false;
-		  }).catch(function(error) {
-		  	this.isRequesting = false;
-		  	alert(error);
-		  });
   	},
 
   	beforeRouteUpdate (to, from, next) {
