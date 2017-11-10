@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -47,12 +48,13 @@ func Predict(c *gin.Context) {
 		jpeg = jpeg[i+len(";base64,"):]
 	} else {
 		log.Printf("invalid image:%s", jpeg)
-		c.JSON(http.StatusOK, gin.H{
-			"error": "invalid image",
-		})
-		return
+		// c.JSON(http.StatusOK, gin.H{
+		// 	"error": "invalid image",
+		// })
+		// return
 	}
 
+	limits, _ := strconv.Atoi(c.PostForm("limits"))
 	// get a connection to the server.
 	conn, err := getGrpcConn()
 	if err != nil {
@@ -78,6 +80,7 @@ func Predict(c *gin.Context) {
 		AcquireText:  true,
 		AcquireAudio: true,
 		AcquireVideo: false,
+		MaxLimits:    int32(limits),
 	})
 
 	if err != nil {

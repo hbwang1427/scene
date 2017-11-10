@@ -1,0 +1,201 @@
+html, body {
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+}
+
+input, button {
+    outline: none;
+    border: none;
+}
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+#contentview {
+	margin-bottom: 30px;
+	margin-top: 40px;
+	height:100%;
+	overflow:scroll;
+}
+
+
+header {
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:40px;
+	line-height:40px;
+	background-color:#329CDC;
+	color:white;
+	text-align:center;
+	letter-spacing: 2px;
+}
+
+header {
+	#selmuseum {
+		position:absolute;
+		top: 8px;
+		left:10px;
+	}
+
+	#takephoto {
+		position:absolute;
+		top: 10px;
+		right:10px;
+	}
+}
+
+footer {
+	display: -webkit-flex;
+	position:absolute;
+	left: 0px;
+	bottom: 0px;
+	background-color:#F9F9F9;
+	width:100%;
+	padding:5px 0px;
+	margin:0;
+}
+
+footer {
+	ul {
+		margin: 3px 0 1px 0;
+		padding: 0;
+		list-style:none; 
+		display:-webkit-flex;
+		width:100%;
+	}
+
+	li {
+		display:inline-block;
+		width:50%;
+		padding:0;
+		margin:0;
+		text-align:center;
+	}
+
+	.active {
+		color: red;
+	}
+}
+
+
+
+#predict {
+	#detail {
+		width:100%;
+		min-height: 300px;
+	},
+
+	#srcphoto{
+		max-height:200px;
+	},
+
+	ul#results {
+	  margin: 0;
+	  padding: 0;
+	  white-space: nowrap;
+	  overflow-x: auto;
+	  background-color: #ddd;
+	  list-style:none;
+	}
+
+	ul#results li {
+	  display: inline;
+	  padding: 0 5px 0 5px;
+	  margin:0;
+	}
+
+	ul#results li img {
+	  border:0;
+	  display: inline;
+	  height:150px;
+	}
+}
+
+#loading {
+	margin-top: 10px;
+}
+
+
+
+#login {
+	position: relative;
+    height: 100%;
+    background-image: url(http://localhost:8081/assets/imgs/slider-2.jpg);
+    background-size: cover;
+    overflow: auto;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    display:flex;
+}
+
+
+#login {
+	.wrap {
+		max-width:600px;
+		margin:auto;
+	}
+	.row {
+		height: 20px;
+	    padding-top: 28px;
+	    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	    display:flex;
+	}
+
+	.icon {
+	    margin-bottom: -18px;
+	    margin-right: 10px;
+	}
+	
+	.svg-icon {
+	    cursor: pointer;
+	}
+	
+	svg {
+	    display: inline-block;
+	    width: 20px;
+	    height: 20px;
+	    overflow: visible;
+	}
+
+
+	.input {
+	    display: inline-block;
+	    height: 100%;
+	    padding-left: 19px;
+	    font-size: 12px;
+	    background: transparent;
+	    color: #FDFCFD;
+	}
+
+
+	.submit {
+	    position: relative;
+	    width: 100%;
+	    height: 30px;
+	    margin: 20px 0 16px;
+	    color: rgba(255, 255, 255, 0.8);
+	    background: #FF3366;
+	    font-size: 12px;
+	    border-radius: 5px;
+	    cursor: pointer;
+	    overflow: hidden;
+	    -webkit-transition: width 0.3s 0.15s, font-size 0.1s 0.15s;
+	    transition: width 0.3s 0.15s, font-size 0.1s 0.15s;
+	}
+
+	.signup {
+    	font-size: 12px;
+    	color: #ABA8AE;
+	}
+}

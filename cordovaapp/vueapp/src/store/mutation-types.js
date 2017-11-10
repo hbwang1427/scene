@@ -1,0 +1,2 @@
+export const UPDATE_GEOLOCATION = 'UPDATE_GEOLOCATION'
+export const SET_PAGE = 'SET_PAGE'

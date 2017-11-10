@@ -62,6 +62,7 @@ message PhotoPredictRequest {
 	bool acquire_text = 5;
 	bool acquire_audio = 6;
 	bool acquire_video = 7;
+	int32 max_limits = 8;
 }
 
 message PhotoPredictResponse {

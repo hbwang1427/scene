@@ -1,3 +1,5 @@
 *.exe 
 vendor
+cordovaapp/node_modules
+cordovaapp/platforms/android/build
 __pycache__

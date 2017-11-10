@@ -112,19 +112,35 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 	// response.Text = b.String()
 
 	response.Results = []*pb.PhotoPredictResponse_Result{&pb.PhotoPredictResponse_Result{
-		Text:     "first match",
-		ImageUrl: fmt.Sprintf("%s/assets/predict/1.png", config.Web.Host),
+		Text:     "a person picture",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/c1.jpg", config.Web.Host),
 		AudioUrl: fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host),
 	}, &pb.PhotoPredictResponse_Result{
-		Text:     "second match",
-		ImageUrl: fmt.Sprintf("%s/assets/predict/2.png", config.Web.Host),
+		Text:     "dish",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/c2.jpg", config.Web.Host),
 	}, &pb.PhotoPredictResponse_Result{
-		Text:     "third match",
-		ImageUrl: fmt.Sprintf("%s/assets/predict/3.png", config.Web.Host),
+		Text:     "building",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/c3.jpg", config.Web.Host),
 	}, &pb.PhotoPredictResponse_Result{
-		Text:     "fourth match",
-		ImageUrl: fmt.Sprintf("%s/assets/predict/4.png", config.Web.Host),
+		Text:     "220px-Buckman_Tavern_Lexington_Massachusetts",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/220px-Buckman_Tavern_Lexington_Massachusetts.jpg", config.Web.Host),
+	}, &pb.PhotoPredictResponse_Result{
+		Text:     "250px-Minute_Man_Statue_Lexington_Massachusetts",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/250px-Minute_Man_Statue_Lexington_Massachusetts.jpg", config.Web.Host),
+	}, &pb.PhotoPredictResponse_Result{
+		Text:     "3178927_orig",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/3178927_orig.jpg", config.Web.Host),
+	}, &pb.PhotoPredictResponse_Result{
+		Text:     "vt",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/vt.jpg", config.Web.Host),
+	}, &pb.PhotoPredictResponse_Result{
+		Text:     "images3.jpeg",
+		ImageUrl: fmt.Sprintf("%s/assets/imgs/images3.jpeg", config.Web.Host),
 	}}
+
+	if in.MaxLimits > 0 && len(response.Results) > int(in.MaxLimits) {
+		response.Results = response.Results[:in.MaxLimits]
+	}
 
 	return response, nil
 }
