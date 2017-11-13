@@ -25,6 +25,7 @@ import rpc_pb2
 import rpc_pb2_grpc
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
+webhost = ""
 
 
 #PredictServicer implements rpc_pb2_grpc.PredictServicer
@@ -39,11 +40,16 @@ class PredictServicer(rpc_pb2_grpc.PredictServicer):
     print("predict photo request received. " + photo_info)
 
     #write response
-    return rpc_pb2.PhotoPredictResponse(text=photo_info, audio_url="/assets/audio/sample_0.4mb.mp3")
+    return rpc_pb2.PhotoPredictResponse(results=[
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/3178927_orig.jpg" % (webhost), audio_url="/assets/audio/sample_0.4mb.mp3"),
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/c1.jpg" % (webhost)),
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/220px-Buckman_Tavern_Lexington_Massachusetts.jpg" % (webhost))
+    ])
 
 
 def serve():
   conf = toml.load("../service.toml")
+  webhost = conf['web']['host']
   bindaddr = conf['grpc']['bind']
   with open("../" + conf['grpc']['key']) as f:
     private_key = bytes(f.read(), "ascii")
