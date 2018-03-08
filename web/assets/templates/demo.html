@@ -22,7 +22,7 @@
 	<script type="text/javascript">
 		function selectFile(input) {
         	if (input.files && input.files[0]) {
-	            console.log('in select file!!')
+	            console.log('in select file!!', input.files[0])
 	            var reader = new FileReader();
 	            $('#centerDiv').show();
 	            $('#url').val('http://');
@@ -32,12 +32,20 @@
 	            reader.readAsDataURL(input.files[0]);
 	            loadImage(input.files[0],
 	              function(img){
-	              	var jpeg = img.toDataURL("image/jpeg");
-	                $("#data").val(jpeg); 
+	              	var fileName = input.files[0].name;
+	              	var imgdata;
+	              	if (fileName.endsWith(".png")) {
+	              		imgdata = img.toDataURL("image/png");	
+	              	//} else if (fileName.endsWidth(".jpg") || fileName.endsWidth(".jpeg")) {
+	              	} else {
+	              		imgdata = img.toDataURL("image/jpeg");
+	              	}
+	              	
+	                $("#data").val(imgdata); 
 	                app.results = [];
 	                app.isRequesting=true;
 	                $.post("/predict", {
-	                	"image": jpeg,
+	                	"image": imgdata,
 	                }).done(function(data) {
 	                	app.isRequesting=false;
 	                	if (data.results) {
