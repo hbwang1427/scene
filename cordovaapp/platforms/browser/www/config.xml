@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="org.aitour.scene" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>HelloWorld</name>
+    <name>AiTourGuide</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Ai tourist guide
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+        AiTour team
     </author>
+    <icon density="xxxhdpi" src="res/android/xxxhdpi.png" />
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

@@ -37,7 +37,7 @@ export default {
 	data() {
 		return {
 			error: '',
-			name: '123',
+			name: '',
 			password: ''
 		}
 	},

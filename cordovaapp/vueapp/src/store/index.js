@@ -8,6 +8,7 @@ const debug = process.env.NODE_ENV !== 'production'
 //initial state
 const state = {
 	page: "",
+	weather:{},
 	geo: {
 		latitude:0,
 		longitude:0
@@ -31,6 +32,10 @@ const actions = {
 		});
 	},
 
+	updateweather({commit, state}, weather) {
+		commit(types.UPDATE_WEATHER, weather);
+	},
+
 	setpage({commit, state}, page) {
 		commit(types.SET_PAGE, {page})
 	}
@@ -41,6 +46,10 @@ const actions = {
 const mutations = {
   [types.UPDATE_GEOLOCATION] (state, { latitude, longitude }) {
   	state.geo = {latitude, longitude}
+  },
+
+  [types.UPDATE_WEATHER] (state, weather) {
+  	state.weather = weather;
   },
 
   [types.SET_PAGE] (state, { page }) {

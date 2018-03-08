@@ -16,10 +16,11 @@
     "cordova-plugin-fullscreen": {
       "PACKAGE_NAME": "org.aitour.scene"
     },
-    "cordova-plugin-geolocation": {
+    "cordova-plugin-device": {
       "PACKAGE_NAME": "org.aitour.scene"
     },
-    "cordova-plugin-device": {
+    "cordova-plugin-baidu-geolocation": {
+      "API_KEY": "h7h5KR0fYpjV3S6k6nWn5D9tjfZbr4Ct",
       "PACKAGE_NAME": "org.aitour.scene"
     }
   },

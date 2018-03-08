@@ -21,11 +21,11 @@
               "count": 1
             },
             {
-              "xml": "<feature name=\"Geolocation\"><param name=\"android-package\" value=\"org.apache.cordova.geolocation.Geolocation\" /></feature>",
+              "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
               "count": 1
             },
             {
-              "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
+              "xml": "<feature name=\"BaiduGeolocation\"><param name=\"android-package\" value=\"com.eteng.geolocation.baidu.GeolocationPlugin\" /></feature>",
               "count": 1
             }
           ]
@@ -36,7 +36,7 @@
           "/*": [
             {
               "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-              "count": 1
+              "count": 2
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
@@ -47,13 +47,43 @@
               "count": 1
             },
             {
-              "xml": "<uses-feature android:name=\"android.hardware.location.gps\" />",
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\" />",
               "count": 1
             }
           ],
           "application": [
             {
               "xml": "<provider android:authorities=\"${applicationId}.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"android.support.v4.content.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/provider_paths\" /></provider>",
+              "count": 1
+            }
+          ],
+          "/manifest/application": [
+            {
+              "xml": "<service android:enabled=\"true\" android:name=\"com.baidu.location.f\" android:process=\":remote\" />",
+              "count": 1
+            },
+            {
+              "xml": "<meta-data android:name=\"com.baidu.lbsapi.API_KEY\" android:value=\"h7h5KR0fYpjV3S6k6nWn5D9tjfZbr4Ct\" />",
               "count": 1
             }
           ]
@@ -71,10 +101,11 @@
     "cordova-plugin-fullscreen": {
       "PACKAGE_NAME": "org.aitour.scene"
     },
-    "cordova-plugin-geolocation": {
+    "cordova-plugin-device": {
       "PACKAGE_NAME": "org.aitour.scene"
     },
-    "cordova-plugin-device": {
+    "cordova-plugin-baidu-geolocation": {
+      "API_KEY": "h7h5KR0fYpjV3S6k6nWn5D9tjfZbr4Ct",
       "PACKAGE_NAME": "org.aitour.scene"
     }
   },
@@ -121,25 +152,19 @@
       ]
     },
     {
-      "id": "cordova-plugin-geolocation.geolocation",
-      "file": "plugins/cordova-plugin-geolocation/www/android/geolocation.js",
-      "pluginId": "cordova-plugin-geolocation",
-      "clobbers": [
-        "navigator.geolocation"
-      ]
-    },
-    {
-      "id": "cordova-plugin-geolocation.PositionError",
-      "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
-      "pluginId": "cordova-plugin-geolocation",
-      "runs": true
-    },
-    {
       "id": "cordova-plugin-device.device",
       "file": "plugins/cordova-plugin-device/www/device.js",
       "pluginId": "cordova-plugin-device",
       "clobbers": [
         "device"
+      ]
+    },
+    {
+      "id": "cordova-plugin-baidu-geolocation.Geolocation",
+      "file": "plugins/cordova-plugin-baidu-geolocation/www/Geolocation.js",
+      "pluginId": "cordova-plugin-baidu-geolocation",
+      "clobbers": [
+        "window.navigator.geolocation"
       ]
     }
   ],
@@ -147,7 +172,7 @@
     "cordova-plugin-whitelist": "1.3.2",
     "cordova-plugin-camera": "2.4.1",
     "cordova-plugin-fullscreen": "1.1.0",
-    "cordova-plugin-geolocation": "2.4.3",
-    "cordova-plugin-device": "1.1.6"
+    "cordova-plugin-device": "1.1.6",
+    "cordova-plugin-baidu-geolocation": "0.2.3"
   }
 }

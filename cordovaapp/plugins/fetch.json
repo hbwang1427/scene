@@ -31,14 +31,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-geolocation": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-geolocation"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
   "cordova-plugin-device": {
     "source": {
       "type": "registry",
@@ -46,5 +38,26 @@
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "cordova-plugin-baidumaplocation": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-baidumaplocation@^3.2.0"
+    },
+    "is_top_level": true,
+    "variables": {
+      "ANDROID_KEY": "h7h5KR0fYpjV3S6k6nWn5D9tjfZbr4Ct",
+      "IOS_KEY": ""
+    }
+  },
+  "cordova-plugin-baidu-geolocation": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/ETENG-OSP/cordova-plugin-baidu-geolocation.git"
+    },
+    "is_top_level": true,
+    "variables": {
+      "API_KEY": "h7h5KR0fYpjV3S6k6nWn5D9tjfZbr4Ct"
+    }
   }
 }

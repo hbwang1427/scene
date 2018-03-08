@@ -18,6 +18,9 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+        <plugin name="cordova-plugin-baidu-geolocation" spec="https://github.com/ETENG-OSP/cordova-plugin-baidu-geolocation.git">
+            <variable name="API_KEY" value="h7h5KR0fYpjV3S6k6nWn5D9tjfZbr4Ct" />
+        </plugin>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -28,6 +31,8 @@
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-camera" spec="^2.4.1" />
     <plugin name="cordova-plugin-fullscreen" spec="^1.2.0" />
-    <plugin name="cordova-plugin-geolocation" spec="^2.4.3" />
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
+    <plugin name="cordova-plugin-baidu-geolocation" spec="git+https://github.com/ETENG-OSP/cordova-plugin-baidu-geolocation.git">
+        <variable name="API_KEY" value="h7h5KR0fYpjV3S6k6nWn5D9tjfZbr4Ct" />
+    </plugin>
 </widget>

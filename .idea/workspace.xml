@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c10598c1-3aa7-40dd-8564-a4c9fbbd364f" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/cordovaapp/config.xml" afterPath="$PROJECT_DIR$/cordovaapp/config.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/package-lock.json" afterPath="$PROJECT_DIR$/cordovaapp/package-lock.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/package.json" afterPath="$PROJECT_DIR$/cordovaapp/package.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/fileHashes.bin" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/taskArtifacts.lock" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/taskArtifacts/taskArtifacts.lock" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileReleaseJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileReleaseJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileReleaseJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_CordovaLib_compileReleaseJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.idea/libraries/support_v4_24_1_1.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.idea/libraries/support_v4_24_1_1.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.idea/misc.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.idea/misc.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/.idea/workspace.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/AndroidManifest.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/AndroidManifest.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/CordovaLib.iml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/CordovaLib.iml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build.gradle" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build.gradle" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/generated/source/buildConfig/release/org/apache/cordova/BuildConfig.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/bundles/debug/AndroidManifest.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/bundles/debug/AndroidManifest.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/bundles/release/AndroidManifest.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/bundles/release/classes.jar" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/AuthenticationToken.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/BuildConfig.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/BuildHelper.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CallbackContext.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CallbackMap.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/Config.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/ConfigXmlParser.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaActivity$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaActivity$2.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaActivity$3.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaActivity$4$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaActivity$4.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaActivity.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaArgs.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaBridge.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaClientCertRequest.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$2.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$3.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$4.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$5.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$6.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$7.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$8.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$9.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper$Result.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaDialogsHelper.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaHttpAuthHandler.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaInterface.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaInterfaceImpl$ActivityResultHolder.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaInterfaceImpl.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaPlugin.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaPreferences.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaResourceApi.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebView.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewEngine$Client.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewEngine$EngineView.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewEngine.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewImpl$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewImpl$2.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewImpl$3.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewImpl$EngineClient$1$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewImpl$EngineClient$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewImpl$EngineClient.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CordovaWebViewImpl.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CoreAndroid$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CoreAndroid$2.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CoreAndroid$3.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CoreAndroid$4.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CoreAndroid$5.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/CoreAndroid.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/ExposedJsApi.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/ICordovaClientCertRequest.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/ICordovaCookieManager.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/ICordovaHttpAuthHandler.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/LOG.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$BridgeMode.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$EvalBridgeMode$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$EvalBridgeMode.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$JsMessage.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$LoadUrlBridgeMode$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$LoadUrlBridgeMode.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$NoOpBridgeMode.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$OnlineEventsBridgeMode$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$OnlineEventsBridgeMode$2.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$OnlineEventsBridgeMode$OnlineEventsBridgeModeDelegate.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue$OnlineEventsBridgeMode.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/NativeToJsMessageQueue.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/PermissionHelper.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/PluginEntry.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/PluginManager.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/PluginResult$Status.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/PluginResult.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/ResumeCallback.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/Whitelist$URLPattern.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/Whitelist.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemCookieManager.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemExposedJsApi.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebChromeClient$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebChromeClient$2.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebChromeClient$3.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebChromeClient$4.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebChromeClient$5.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebChromeClient.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebView.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebViewClient.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebViewEngine$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebViewEngine$2.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/classes/release/org/apache/cordova/engine/SystemWebViewEngine.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental-safeguard/release/tag.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/compileReleaseAidl/dependency.store" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeDebugAssets/merger.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeDebugAssets/merger.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeDebugShaders/merger.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeDebugShaders/merger.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeReleaseAssets/merger.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/mergeReleaseShaders/merger.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/packageDebugResources/merger.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/packageDebugResources/merger.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/packageReleaseResources/compile-file-map.properties" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/incremental/packageReleaseResources/merger.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/manifests/aapt/debug/AndroidManifest.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/manifests/aapt/debug/AndroidManifest.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/intermediates/manifests/aapt/release/AndroidManifest.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/outputs/aar/CordovaLib-debug.aar" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/outputs/aar/CordovaLib-debug.aar" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/CordovaLib/build/outputs/aar/CordovaLib-release.aar" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/android.iml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/android.iml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/android.json" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/android.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/cordova_plugins.js" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/cordova_plugins.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/index.html" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/index.html" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/plugins/cordova-plugin-geolocation/www/PositionError.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/plugins/cordova-plugin-geolocation/www/android/geolocation.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/static/css/app.49d0d7310ed56beab03f0d83a1d92a39.css" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/static/js/app.4b736c522784a4647d56.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/static/js/app.4b736c522784a4647d56.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/static/js/manifest.266b3464a24e8f978d02.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/static/js/manifest.266b3464a24e8f978d02.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/static/js/vendor.c3a9f58e614177b7d480.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/assets/www/static/js/vendor.c3a9f58e614177b7d480.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/build.gradle" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/build.gradle" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/platform_www/cordova_plugins.js" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/platform_www/cordova_plugins.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/platform_www/plugins/cordova-plugin-geolocation/www/PositionError.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/platform_www/plugins/cordova-plugin-geolocation/www/android/geolocation.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/res/xml/config.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/android/res/xml/config.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/android/src/org/apache/cordova/geolocation/Geolocation.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/browser.json" afterPath="$PROJECT_DIR$/cordovaapp/platforms/browser/browser.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/config.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/browser/config.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/platform_www/cordova_plugins.js" afterPath="$PROJECT_DIR$/cordovaapp/platforms/browser/platform_www/cordova_plugins.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/config.xml" afterPath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/config.xml" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/cordova_plugins.js" afterPath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/cordova_plugins.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/index.html" afterPath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/index.html" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/manifest.json" afterPath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/manifest.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/css/app.7aa8dbe5475b9408e426be4c4e7c3ac3.css" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/img/travel-login.615762b.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/js/app.5c6752b24d7912523f5d.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/js/app.5c6752b24d7912523f5d.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/js/manifest.2f289e04673163a86aef.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/js/manifest.2f289e04673163a86aef.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/js/vendor.d584f81cd6138863eda5.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/platforms/browser/www/static/js/vendor.d584f81cd6138863eda5.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/android.json" afterPath="$PROJECT_DIR$/cordovaapp/plugins/android.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/browser.json" afterPath="$PROJECT_DIR$/cordovaapp/plugins/browser.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/CONTRIBUTING.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/LICENSE" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/NOTICE" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/RELEASENOTES.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/de/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/de/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/es/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/es/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/fr/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/fr/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/it/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/it/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/ja/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/ja/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/ko/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/ko/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/pl/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/pl/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/ru/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/zh/README.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/doc/zh/index.md" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/package.json" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/plugin.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/android/Geolocation.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/firefoxos/GeolocationProxy.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/ios/CDVLocation.h" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/ios/CDVLocation.m" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/ubuntu/geolocation.cpp" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/ubuntu/geolocation.h" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/windows/GeolocationProxy.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/src/wp/GeoLocation.cs" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/tests/package.json" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/tests/plugin.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/tests/tests.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/www/Coordinates.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/www/Position.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/www/PositionError.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/www/android/geolocation.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/www/blackberry10/GeolocationProxy.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/cordova-plugin-geolocation/www/geolocation.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/plugins/fetch.json" afterPath="$PROJECT_DIR$/cordovaapp/plugins/fetch.json" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/index.html" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/index.html" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/assets/app.scss" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/assets/app.scss" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/bootstrap.js" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/bootstrap.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/Login.vue" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/Login.vue" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/Main.vue" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/Main.vue" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/Predict.vue" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/Predict.vue" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/SearchMuseum.vue" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/components/SearchMuseum.vue" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/main.js" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/main.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/store/index.js" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/store/index.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/vueapp/src/store/mutation-types.js" afterPath="$PROJECT_DIR$/cordovaapp/vueapp/src/store/mutation-types.js" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/index.html" afterPath="$PROJECT_DIR$/cordovaapp/www/index.html" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/static/css/app.49d0d7310ed56beab03f0d83a1d92a39.css" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/static/js/app.4b736c522784a4647d56.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/static/js/app.4b736c522784a4647d56.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/static/js/manifest.266b3464a24e8f978d02.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/static/js/manifest.266b3464a24e8f978d02.js.map" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/static/js/vendor.c3a9f58e614177b7d480.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/cordovaapp/www/static/js/vendor.c3a9f58e614177b7d480.js.map" afterPath="" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/web/main.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="467">
+              <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="GOROOT" path="C:\Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/cordovaapp/node_modules" />
+    <handled-path value="$PROJECT_DIR$/cordovaapp/platforms/android/cordova/node_modules" />
+    <handled-path value="$PROJECT_DIR$/cordovaapp/platforms/browser/cordova/node_modules" />
+    <handled-path value="$PROJECT_DIR$/cordovaapp/vueapp/node_modules" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="10" />
+    <option name="y" value="20" />
+    <option name="width" value="1346" />
+    <option name="height" value="688" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="scene" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scene" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scene" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scene" type="462c0819:PsiDirectoryNode" />
+              <item name="web" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="go.sdk.automatically.set" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24304539" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/genpb.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="467">
+          <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

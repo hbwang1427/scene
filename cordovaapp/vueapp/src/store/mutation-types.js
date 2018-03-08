@@ -1,2 +1,3 @@
 export const UPDATE_GEOLOCATION = 'UPDATE_GEOLOCATION'
+export const UPDATE_WEATHER = 'UPDATE_WEATHER'
 export const SET_PAGE = 'SET_PAGE'

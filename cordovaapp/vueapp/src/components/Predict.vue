@@ -77,7 +77,7 @@ export default {
 			this.photourl = "data:image/jpeg;base64," + imageData;
 			this.isRequesting = true;
 			this.text = '';
-			axios.post("http://100.0.245.19:8081/predict", qs.stringify({"image": this.photourl, "limits": 0})).then(response => {
+			axios.post("http://www.aitour.ml/predict", qs.stringify({"image": this.photourl, "limits": 0})).then(response => {
 				console.log('aitourscene:'+response.data);
 				if (response.data.error) {
 					this.error = response.data.error;

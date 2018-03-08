@@ -60,8 +60,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.3.2",
     "cordova-plugin-camera": "2.4.1",
     "cordova-plugin-fullscreen": "1.1.0",
-    "cordova-plugin-geolocation": "2.4.3",
-    "cordova-plugin-device": "1.1.6"
+    "cordova-plugin-device": "1.1.6",
+    "cordova-plugin-baidu-geolocation": "0.2.3"
 }
 // BOTTOM OF METADATA
 });

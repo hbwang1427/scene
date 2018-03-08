@@ -41,6 +41,8 @@ func createHttpServer() (*http.Server, error) {
 	}
 
 	r := gin.Default()
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	//r.MaxMultipartMemory = 8 << 20 // 8 MiB
 
 	//cross domain request config.
 	r.Use(cors.New(cors.Config{

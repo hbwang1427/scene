@@ -1,11 +1,17 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "HelloWorld",
-  "short_name": "HelloWorld",
+  "name": "AiTourGuide",
+  "short_name": "AiTourGuide",
   "version": "org.aitour.scene",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
-  "author": "Apache Cordova Team",
-  "icons": [],
+  "description": "Ai tourist guide",
+  "author": "AiTour team",
+  "icons": [
+    {
+      "src": "res/android/xxxhdpi.png",
+      "type": "image/png",
+      "sizes": "undefinedxundefined"
+    }
+  ],
   "start_url": "index.html"
 }

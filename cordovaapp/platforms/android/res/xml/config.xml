@@ -10,11 +10,11 @@
     <feature name="AndroidFullScreen">
         <param name="android-package" value="com.mesmotronic.plugins.FullScreenPlugin" />
     </feature>
-    <feature name="Geolocation">
-        <param name="android-package" value="org.apache.cordova.geolocation.Geolocation" />
-    </feature>
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
+    <feature name="BaiduGeolocation">
+        <param name="android-package" value="com.eteng.geolocation.baidu.GeolocationPlugin" />
     </feature>
     <name>AiTourGuide</name>
     <description>

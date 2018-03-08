@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -20,6 +19,21 @@ import (
 
 var (
 	cfg *config.Config
+
+	supportedImageTypes = []struct {
+		header string
+		ptype  pb.PhotoPredictRequest_PhotoType
+	}{
+		{"data:image/jpg;base64,", pb.PhotoPredictRequest_JPG},
+		{"data:image/jpeg;base64,", pb.PhotoPredictRequest_JPG},
+		{"data:image/png;base64,", pb.PhotoPredictRequest_PNG},
+	}
+
+	imgTypes = map[string]pb.PhotoPredictRequest_PhotoType{
+		"jpg":  pb.PhotoPredictRequest_JPG,
+		"jpeg": pb.PhotoPredictRequest_JPG,
+		"png":  pb.PhotoPredictRequest_PNG,
+	}
 )
 
 func getGrpcConn() (*grpc.ClientConn, error) {
@@ -42,40 +56,82 @@ func getGrpcConn() (*grpc.ClientConn, error) {
 	return conn, err
 }
 
+//curl -X POST http://localhost:8081/predict -F "image=@C:\Users\kingwang\Desktop\PNG_transparency_demonstration_1.png" -F "imgtype=jpeg"
 func Predict(c *gin.Context) {
-	jpeg := c.PostForm("image")
-	if i := strings.Index(jpeg, ";base64,"); i > 0 {
-		jpeg = jpeg[i+len(";base64,"):]
-	} else {
-		log.Printf("invalid image:%s", jpeg)
-		// c.JSON(http.StatusOK, gin.H{
-		// 	"error": "invalid image",
-		// })
-		// return
+	var imgData []byte
+	var err error
+
+	//extract limits. default limits set to 10
+	limits, _ := strconv.Atoi(c.DefaultPostForm("limits", "10"))
+	if limits > 10 {
+		limits = 10
 	}
 
-	limits, _ := strconv.Atoi(c.PostForm("limits"))
+	//extract image type
+	var imgType pb.PhotoPredictRequest_PhotoType
+	if v := c.PostForm("imgtype"); len(v) > 0 {
+		//it's a multipart encoded request
+		var ok bool
+		imgType, ok = imgTypes[v]
+		if !ok {
+			//image type not acceptable
+			c.JSON(http.StatusOK, gin.H{
+				"error": "image type not support",
+			})
+			return
+		}
+
+		//extract image data
+		image, err := c.FormFile("image")
+		if err != nil {
+			//image type not acceptable
+			c.JSON(http.StatusOK, gin.H{
+				"error": "invalid image",
+			})
+			return
+		}
+
+		f, _ := image.Open()
+		imgData, _ = ioutil.ReadAll(f)
+		f.Close()
+	} else {
+		b64EncodedImage := c.PostForm("image")
+		//data:image/png;base64,
+		if i := strings.Index(b64EncodedImage, ";base64,"); i > 0 {
+			for _, t := range supportedImageTypes {
+				if i := strings.Index(b64EncodedImage, t.header); i >= 0 {
+					imgType = t.ptype
+					b64Decoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(b64EncodedImage[len(t.header):]))
+					if imgData, err = ioutil.ReadAll(b64Decoder); err != nil {
+						c.JSON(http.StatusOK, gin.H{
+							"error": "invalid image",
+						})
+						return
+					}
+				}
+			}
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"error": "invalid image",
+			})
+			return
+		}
+	}
+
 	// get a connection to the server.
 	conn, err := getGrpcConn()
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"error": "temporarily out of service",
+		})
 	}
 	defer conn.Close()
-
-	imgdata, err := ioutil.ReadAll(base64.NewDecoder(base64.StdEncoding, strings.NewReader(jpeg)))
-	if err != nil {
-		log.Print(err)
-		c.JSON(http.StatusOK, gin.H{
-			"error": "invalid image",
-		})
-		return
-	}
 
 	//create client stub
 	client := pb.NewPredictClient(conn)
 	response, err := client.PredictPhoto(context.Background(), &pb.PhotoPredictRequest{
-		Type:         pb.PhotoPredictRequest_PNG,
-		Data:         imgdata,
+		Type:         imgType,
+		Data:         imgData,
 		Geo:          &pb.GeoPosition{},
 		AcquireText:  true,
 		AcquireAudio: true,
