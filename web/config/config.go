@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	cfgPath string
+	cfgPath string = "web.toml"
 	cfg     *Config
 )
 
@@ -23,6 +23,12 @@ type Config struct {
 		Addr string
 		Cert string
 		Host string
+	}
+
+	Options struct {
+		WeatherApiKey   string
+		GoogleMapApiKey string
+		GoogleMapDomain string
 	}
 }
 
