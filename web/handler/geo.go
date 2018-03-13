@@ -22,6 +22,7 @@ var (
 	weatherApiKey     string = config.GetConfig().Options.WeatherApiKey
 	currentWeatherUrl string = "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&APPID=%s"
 	weatherForcastUrl string = "http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&APPID=%s"
+	geoPlaceUrl       string = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 	geoCodeUrl        string = "https://%s/maps/api/geocode/json"
 	googleMapApiKey   string = config.GetConfig().Options.GoogleMapApiKey //2,500 free requests per day, 50 requests per second
 	googleMapDomain   string = config.GetConfig().Options.GoogleMapDomain
@@ -190,7 +191,7 @@ func GeoCodeHandler(c *gin.Context) {
 	}
 }
 
-func FindNearestCityHandler(c *gin.Context) {
+func FindNearbyCityHandler(c *gin.Context) {
 	var lat, lng float64
 	if latlng, ok := c.GetQuery("latlng"); ok {
 		lat, lng = parseLatLng(latlng)
@@ -228,6 +229,55 @@ func FindNearestMuseumsHandler(c *gin.Context) {
 	points := FindNearest(museumIndex, lat, lng, km, int(n))
 	log.Printf("nearest museums:%v. cost:%#v", points, time.Now().Sub(start))
 	c.JSON(http.StatusOK, gin.H{"points": points})
+}
+
+func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
+	location, ok := c.GetQuery("location")
+	if !ok {
+		var lat, lng float64
+		if latlng, ok := c.GetQuery("latlng"); ok {
+			lat, lng = parseLatLng(latlng)
+		} else {
+			lat, _ = strconv.ParseFloat(c.Query("lat"), 2)
+			lng, _ = strconv.ParseFloat(c.Query("lng"), 2)
+		}
+		location = fmt.Sprintf("%f,%f", lat, lng)
+	}
+	radius, ok := c.GetQuery("radius")
+	if !ok {
+		radius = "10000"
+	}
+	if len(location) == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"error": "bad request parameter",
+		})
+		return
+	}
+	req, err := http.NewRequest("GET", geoPlaceUrl, nil)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"error": err,
+		})
+		return
+	}
+	q := req.URL.Query()
+	q.Add("key", googleMapApiKey)
+	q.Add("location", location)
+	q.Add("radius", radius)
+	q.Add("type", "museum")
+	q.Add("language", "en")
+	req.URL.RawQuery = q.Encode()
+	resp, err := http.DefaultClient.Do(req)
+
+	if err != nil || resp.StatusCode != http.StatusOK {
+		log.Printf("place request error:%v, status:%v", err, resp.StatusCode)
+		c.JSON(http.StatusOK, gin.H{
+			"error": "error google map api response",
+		})
+		return
+	}
+	defer resp.Body.Close()
+	io.Copy(c.Writer, resp.Body)
 }
 
 func scrabMuseumAddreses() {
