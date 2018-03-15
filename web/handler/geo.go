@@ -316,7 +316,7 @@ func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
 
 	radius, ok := c.GetQuery("radius")
 	if !ok {
-		radius = "10000"
+		radius = "50000"
 	}
 	if lat == LatError || lng == LngError {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -324,20 +324,14 @@ func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
 		})
 		return
 	}
-	req, err := http.NewRequest("GET", geoPlaceUrl, nil)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"error": err,
-		})
-		return
-	}
-	q := req.URL.Query()
-	q.Add("key", googleMapApiKey)
-	q.Add("location", fmt.Sprintf("%f,%f", lat, lng))
-	q.Add("radius", radius)
-	q.Add("type", "museum")
-	q.Add("language", language)
-	req.URL.RawQuery = q.Encode()
+
+	req, _ := makeHttpRequest(geoPlaceUrl, "GET", map[string]string{
+		"key":      googleMapApiKey,
+		"location": fmt.Sprintf("%f,%f", lat, lng),
+		"radius":   radius,
+		"type":     "museum",
+		"language": language,
+	})
 	resp, err := http.DefaultClient.Do(req)
 
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -350,7 +344,7 @@ func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
 	defer resp.Body.Close()
 	if city != nil {
 		content, _ := ioutil.ReadAll(resp.Body)
-		placeCache.Set(city, &SimpleCacheItem{time.Now(), -1, string(content)})
+		placeCache.Set(fmt.Sprintf("%d_%s", city.CityId, language), &SimpleCacheItem{time.Now(), -1, string(content)})
 		io.Copy(c.Writer, bytes.NewReader(content))
 	} else {
 		io.Copy(c.Writer, resp.Body)
