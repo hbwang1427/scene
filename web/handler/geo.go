@@ -54,9 +54,9 @@ func init() {
 		citys[cs[i].CityId] = &cs[i]
 		cityIndex.Add(geo.NewGeoPoint(strconv.Itoa(int(cs[i].CityId)), cs[i].Coord.Lat, cs[i].Coord.Lng))
 	}
-	os.MkdirAll("caches/photo", 0666)
-	os.MkdirAll("caches/placedetail", 0666)
-	os.MkdirAll("caches/place", 0666)
+	os.MkdirAll("caches/photo", 0777)
+	os.MkdirAll("caches/placedetail", 0777)
+	os.MkdirAll("caches/place", 0777)
 	// museums = model.GetMuseums()
 	// museumIndex = geo.NewClusteringIndex()
 	// for _, m := range museums {
@@ -353,13 +353,14 @@ func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
 
 func GetPlacePhoto(c *gin.Context) {
 	reference := c.Query("ref")
-	maxwidth := c.DefaultQuery("maxwidth", "200")
+	maxwidth := c.Query("maxwidth")
+	maxheight := c.Query("maxheight")
 	if len(reference) == 0 {
 		c.JSON(http.StatusBadRequest, nil)
 		return
 	}
 	//lookup cache
-	cacheFile := fmt.Sprintf("caches/photo/%s_%s", reference, maxwidth)
+	cacheFile := fmt.Sprintf("caches/photo/%s_w%s_h%s", reference, maxwidth, maxheight)
 	if r, err := os.Open(cacheFile); err == nil {
 		log.Printf("return photo from cache:%v", cacheFile)
 		io.Copy(c.Writer, r)
@@ -378,7 +379,12 @@ func GetPlacePhoto(c *gin.Context) {
 	q := req.URL.Query()
 	q.Add("key", googleMapApiKey)
 	q.Add("photoreference", reference)
-	q.Add("maxwidth", maxwidth)
+	if len(maxwidth) > 0 {
+		q.Add("maxwidth", maxwidth)
+	}
+	if len(maxheight) > 0 {
+		q.Add("maxheight", maxheight)
+	}
 	req.URL.RawQuery = q.Encode()
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
