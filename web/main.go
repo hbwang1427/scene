@@ -73,11 +73,13 @@ func createHttpServer() (*http.Server, error) {
 	})
 
 	r.POST("/predict", handler.Predict)
-	r.GET("/weather", handler.GetCurrentWeather)
-	r.GET("/weatherforecast", handler.GetWeatherForeCast)
+	r.GET("/weather/current", handler.GetCurrentWeather)
+	r.GET("/weather/forecast", handler.GetWeatherForeCast)
 	r.GET("/geocode", handler.GeoCodeHandler)
 	r.GET("/nearby/city", handler.FindNearbyCityHandler)
 	r.GET("/nearby/museum", handler.SearchNearbyMuseumsByGoogleMap)
+	r.GET("/place/photo", handler.GetPlacePhoto)
+	r.GET("/place/detail", handler.GetPlaceDetail)
 
 	s := &http.Server{
 		Addr:    cfg.Http.Bind,
