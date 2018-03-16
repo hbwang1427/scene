@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -24,6 +25,43 @@ const (
 	LngError float64 = 182.0
 )
 
+type GeoPosition struct {
+	Lat float64
+	Lng float64
+}
+
+type GeoPlace struct {
+	HtmlAttributions []string `json:"html_attributions"`
+	NextPageToken    string   `json:"next_page_token"`
+	Pages            int
+	CurrentPage      int
+	Results          []struct {
+		Geometry struct {
+			Location GeoPosition
+			ViewPort struct {
+				NorthEast GeoPosition `json:"northeast"`
+				SouthWest GeoPosition `json:"southwest"`
+			}
+		}
+		Icon      string
+		Id        string
+		Name      string
+		PlaceId   string `json:"place_id"`
+		Rating    float32
+		Reference string
+		Scope     string
+		Types     []string
+		Vicinity  string
+		Photos    []struct {
+			Width            int
+			Height           int
+			HtmlAttributions []string `json:"html_attributions"`
+			PhotoReference   string   `json:"photo_reference"`
+		} `json:",omitempty"`
+	}
+	Status string
+}
+
 var (
 	weatherApiKey     string = config.GetConfig().Options.WeatherApiKey
 	currentWeatherUrl string = "http://api.openweathermap.org/data/2.5/weather"
@@ -45,6 +83,7 @@ var (
 	weatherForcastCache = &SimpleCache{}
 	placeCache          = &SimpleCache{}
 	placeDetailCache    = &SimpleCache{}
+	placeTotalPages     = make(map[uint]int)
 )
 
 func init() {
@@ -294,61 +333,137 @@ func FindNearestMuseumsHandler(c *gin.Context) {
 }
 
 func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	lat, lng := getLatLng(c)
 	language := c.DefaultQuery("language", "en")
-	city := findCity(lat, lng)
-	if city != nil {
-		cacheKey := fmt.Sprintf("%d_%s", city.CityId, language)
-		if v, ok := placeCache.Get(cacheKey); ok {
-			log.Printf("return museums from cache:%v", city)
-			io.Copy(c.Writer, strings.NewReader(v.(*SimpleCacheItem).content))
-			return
-		}
-
-		//try read file
-		cacheFile := fmt.Sprint("caches/place/%d_%s", city.CityId, language)
-		if contents, err := ioutil.ReadFile(cacheFile); err == nil {
-			placeCache.Set(cacheKey, &SimpleCacheItem{time.Now(), -1, string(contents)})
-			io.Copy(c.Writer, bytes.NewReader(contents))
-			return
-		}
-	}
-
-	radius, ok := c.GetQuery("radius")
-	if !ok {
-		radius = "50000"
-	}
 	if lat == LatError || lng == LngError {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "bad request parameter",
 		})
 		return
 	}
-
-	req, _ := makeHttpRequest(geoPlaceUrl, "GET", map[string]string{
-		"key":      googleMapApiKey,
-		"location": fmt.Sprintf("%f,%f", lat, lng),
-		"radius":   radius,
-		"type":     "museum",
-		"language": language,
-	})
-	resp, err := http.DefaultClient.Do(req)
-
-	if err != nil || resp.StatusCode != http.StatusOK {
-		log.Printf("place request error:%v", err)
-		c.JSON(http.StatusOK, gin.H{
-			"error": "error google map api response",
+	city := findCity(lat, lng)
+	if city == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "can't find the city where you are",
 		})
 		return
 	}
-	defer resp.Body.Close()
-	if city != nil {
-		content, _ := ioutil.ReadAll(resp.Body)
-		placeCache.Set(fmt.Sprintf("%d_%s", city.CityId, language), &SimpleCacheItem{time.Now(), -1, string(content)})
-		io.Copy(c.Writer, bytes.NewReader(content))
-	} else {
-		io.Copy(c.Writer, resp.Body)
+
+	radius, ok := c.GetQuery("radius")
+	if !ok {
+		radius = "50000"
 	}
+
+	//try read from cache
+	cacheKey := fmt.Sprintf("%d_%s_%d", city.CityId, language, page)
+	if v, ok := placeCache.Get(cacheKey); ok {
+		log.Printf("return museums from memory cache:%v", city)
+		io.Copy(c.Writer, strings.NewReader(v.(*SimpleCacheItem).content))
+		return
+	}
+
+	//try read file
+	cacheFile := fmt.Sprintf("caches/place/%d_%s_%d", city.CityId, language, page)
+	if contents, err := ioutil.ReadFile(cacheFile); err == nil {
+		log.Printf("return museums from disk cache:%v", city)
+		placeCache.Set(cacheKey, &SimpleCacheItem{time.Now(), -1, string(contents)})
+		io.Copy(c.Writer, bytes.NewReader(contents))
+		return
+	}
+
+	//check to see if page is in [1, TotalPages] range
+	if count, ok := placeTotalPages[city.CityId]; ok {
+		if page > count {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "invalid page",
+			})
+			return
+		}
+	} else {
+		//if page 1 is a disk cache
+		cacheFile := fmt.Sprintf("caches/place/%d_%s_1", city.CityId, language)
+		if contents, err := ioutil.ReadFile(cacheFile); err == nil {
+			placeCache.Set(cacheKey, &SimpleCacheItem{time.Now(), -1, string(contents)})
+			var geoPlace GeoPlace
+			_ = json.Unmarshal(contents, &geoPlace)
+			placeTotalPages[city.CityId] = geoPlace.Pages
+			if page > geoPlace.Pages {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": "invalid page",
+				})
+				return
+			}
+		}
+	}
+
+	//remove previouse disk caches
+	for i := 1; i < 10; i++ {
+		cacheFile := fmt.Sprintf("caches/place/%d_%s_%d", city.CityId, language, i)
+		if err := os.Remove(cacheFile); err != nil {
+			break
+		}
+	}
+
+	var places []*GeoPlace
+	for {
+		params := map[string]string{
+			"key":      googleMapApiKey,
+			"location": fmt.Sprintf("%f,%f", lat, lng),
+			"radius":   radius,
+			"type":     "museum",
+			"language": language,
+		}
+		if len(places) > 0 {
+			params["pagetoken"] = places[len(places)-1].NextPageToken
+		}
+		req, _ := makeHttpRequest(geoPlaceUrl, "GET", params)
+		resp, err := http.DefaultClient.Do(req)
+
+		if err != nil || resp.StatusCode != http.StatusOK {
+			log.Printf("place request error:%v", err)
+			c.JSON(http.StatusOK, gin.H{
+				"error": "error google map api response",
+			})
+			return
+		}
+
+		content, _ := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
+		var geoPlace GeoPlace
+		if err = json.Unmarshal(content, &geoPlace); err != nil {
+			log.Printf("unmarshal place response error:%v", err)
+			return
+		}
+		if geoPlace.Status != "OK" {
+			log.Printf("place response status error:%s", content)
+			c.JSON(http.StatusOK, gin.H{
+				"error": "error google map api response",
+			})
+			break
+		}
+		places = append(places, &geoPlace)
+		if len(geoPlace.NextPageToken) == 0 {
+			break
+		}
+		time.Sleep(time.Second * 2)
+	}
+
+	//save to disk and cache
+	for i, p := range places {
+		p.CurrentPage = i + 1
+		p.Pages = len(places)
+		p.NextPageToken = ""
+		content, _ := json.Marshal(p)
+		cacheKey = fmt.Sprintf("%d_%s_%d", city.CityId, language, i+1)
+		placeCache.Set(cacheKey, &SimpleCacheItem{time.Now(), -1, string(content)})
+		ioutil.WriteFile(fmt.Sprintf("caches/place/%s", cacheKey), content, 0777)
+	}
+
+	if v, ok := placeCache.Get(fmt.Sprintf("%d_%s_%d", city.CityId, language, page)); ok {
+		io.Copy(c.Writer, strings.NewReader(v.(*SimpleCacheItem).content))
+	}
+	return
 }
 
 func GetPlacePhoto(c *gin.Context) {
