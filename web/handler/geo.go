@@ -25,41 +25,42 @@ const (
 	LngError float64 = 182.0
 )
 
+
 type GeoPosition struct {
-	Lat float64
-	Lng float64
+	Lat float64 `json:"lat"`
+	Lng float64 `json:"lng"`
 }
 
 type GeoPlace struct {
 	HtmlAttributions []string `json:"html_attributions"`
 	NextPageToken    string   `json:"next_page_token"`
-	Pages            int
-	CurrentPage      int
+	Pages            int      `json:"pages"`
+	CurrentPage      int      `json:"currentpage"`
 	Results          []struct {
 		Geometry struct {
-			Location GeoPosition
+			Location GeoPosition `json:"location"`
 			ViewPort struct {
 				NorthEast GeoPosition `json:"northeast"`
 				SouthWest GeoPosition `json:"southwest"`
-			}
-		}
-		Icon      string
-		Id        string
-		Name      string
-		PlaceId   string `json:"place_id"`
-		Rating    float32
-		Reference string
-		Scope     string
-		Types     []string
-		Vicinity  string
+			} `json:"viewport"`
+		} `json:"geometry"`
+		Icon      string   `json:"icon"`
+		Id        string   `json:"id"`
+		Name      string   `json:"name"`
+		PlaceId   string   `json:"place_id"`
+		Rating    float32  `json:"rating"`
+		Reference string   `json:"reference"`
+		Scope     string   `json:"scope"`
+		Types     []string `json:"types"`
+		Vicinity  string   `json:"vicinity"`
 		Photos    []struct {
-			Width            int
-			Height           int
+			Width            int      `json:"width"`
+			Height           int      `json:"height"`
 			HtmlAttributions []string `json:"html_attributions"`
 			PhotoReference   string   `json:"photo_reference"`
-		} `json:",omitempty"`
-	}
-	Status string
+		} `json:"photos,omitempty"`
+	} `json:"results"`
+	Status string `json:"status"`
 }
 
 var (
@@ -418,11 +419,12 @@ func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
 			params["pagetoken"] = places[len(places)-1].NextPageToken
 		}
 		req, _ := makeHttpRequest(geoPlaceUrl, "GET", params)
+		log.Printf("req:%v", req)
 		resp, err := http.DefaultClient.Do(req)
 
 		if err != nil || resp.StatusCode != http.StatusOK {
 			log.Printf("place request error:%v", err)
-			c.JSON(http.StatusOK, gin.H{
+			c.JSON(http.StatusOK, gin.H {
 				"error": "error google map api response",
 			})
 			return
