@@ -553,21 +553,27 @@ func GetPlaceDetail(c *gin.Context) {
 
 	//try fetch
 	log.Printf("cache not found:%v", cacheKey)
-	req, err := http.NewRequest("GET", geoPlaceDetailUrl, nil)
+	req, err := makeHttpRequest(geoPlaceDetailUrl, "GET", map[string]string{
+		"key": googleMapApiKey,
+		"placeid": placeId,
+		"language": language,
+	})
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": err,
 		})
 		return
 	}
-	q := req.URL.Query()
-	q.Add("key", googleMapApiKey)
-	q.Add("placeid", placeId)
-	q.Add("language", language)
-	req.URL.RawQuery = q.Encode()
+	log.Printf("place detail request:%v", req)
 	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": fmt.Sprintf("error google map api response: %d", err),
+		})
+		return
+	}
 
-	if err != nil || resp.StatusCode != http.StatusOK {
+	if resp != nil && resp.StatusCode != http.StatusOK {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": fmt.Sprintf("error google map api response: %d", resp.StatusCode),
 		})

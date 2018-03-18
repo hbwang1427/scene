@@ -2,4 +2,7 @@
 vendor
 cordovaapp/node_modules
 cordovaapp/platforms/android/build
+web/caches
+web/web
+service/service
 __pycache__
