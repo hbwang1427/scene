@@ -25,7 +25,6 @@ const (
 	LngError float64 = 182.0
 )
 
-
 type GeoPosition struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
@@ -424,7 +423,7 @@ func SearchNearbyMuseumsByGoogleMap(c *gin.Context) {
 
 		if err != nil || resp.StatusCode != http.StatusOK {
 			log.Printf("place request error:%v", err)
-			c.JSON(http.StatusOK, gin.H {
+			c.JSON(http.StatusOK, gin.H{
 				"error": "error google map api response",
 			})
 			return
@@ -505,6 +504,7 @@ func GetPlacePhoto(c *gin.Context) {
 	req.URL.RawQuery = q.Encode()
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		log.Printf("fetch image error:%v", err)
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "network error",
 		})
@@ -554,8 +554,8 @@ func GetPlaceDetail(c *gin.Context) {
 	//try fetch
 	log.Printf("cache not found:%v", cacheKey)
 	req, err := makeHttpRequest(geoPlaceDetailUrl, "GET", map[string]string{
-		"key": googleMapApiKey,
-		"placeid": placeId,
+		"key":      googleMapApiKey,
+		"placeid":  placeId,
 		"language": language,
 	})
 	if err != nil {
