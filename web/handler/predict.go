@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
