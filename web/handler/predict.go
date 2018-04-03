@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -72,6 +73,8 @@ func Predict(c *gin.Context) {
 	lat, _ = strconv.ParseFloat(c.PostForm("lat"), 64)
 	lng, _ = strconv.ParseFloat(c.PostForm("lng"), 64)
 	//log.Printf("lat:%f, lng:%f", lat, lng)
+	language := c.PostForm("language")
+	log.Printf("language: %s", language)
 
 	//extract image type
 	var imgType pb.PhotoPredictRequest_PhotoType
