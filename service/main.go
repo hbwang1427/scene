@@ -112,9 +112,11 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 	// response.Text = b.String()
 
 	response.Results = []*pb.PhotoPredictResponse_Result{&pb.PhotoPredictResponse_Result{
-		Text:     "a person picture",
-		ImageUrl: fmt.Sprintf("%s/assets/imgs/c1.jpg", config.Web.Host),
-		AudioUrl: fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host),
+		Text:      "a person picture",
+		ImageUrl:  fmt.Sprintf("%s/assets/imgs/c1.jpg", config.Web.Host),
+		AudioUrl:  fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host),
+		AudioSize: 443926,
+		AudioLen:  27,
 	}, &pb.PhotoPredictResponse_Result{
 		Text:     "dish",
 		ImageUrl: fmt.Sprintf("%s/assets/imgs/c2.jpg", config.Web.Host),
@@ -160,7 +162,11 @@ func createGrpcServer() (*grpc.Server, error) {
 	// if err != nil {
 	// 	return nil, fmt.Errorf("Failed to generate credentials %v", err)
 	// }
-	opts := []grpc.ServerOption{grpc.Creds(creds)}
+	opts := []grpc.ServerOption{
+		grpc.Creds(creds),
+		grpc.MaxSendMsgSize(20 * 1024 * 1024), //max send message size set to 20MB
+		grpc.MaxRecvMsgSize(20 * 1024 * 1024), //max recv message size set to 20MB
+	}
 
 	//create grpc server
 	grpc.EnableTracing = config.Grpc.TraceEnable

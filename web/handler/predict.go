@@ -141,6 +141,7 @@ func Predict(c *gin.Context) {
 	response, err := client.PredictPhoto(context.Background(), &pb.PhotoPredictRequest{
 		Type:         imgType,
 		Data:         imgData,
+		Language:     language,
 		Geo:          &pb.GeoPosition{lat, lng},
 		AcquireText:  true,
 		AcquireAudio: true,
