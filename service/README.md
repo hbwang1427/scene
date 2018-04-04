@@ -5,3 +5,6 @@
 
 ## run
 `service`
+
+## stop 
+`sudo supervisorctl stop aiserver`

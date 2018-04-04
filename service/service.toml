@@ -6,4 +6,5 @@ traceenable=true
 tracebind = "[::]:50052"
 
 [web]
-host = "http://localhost:8081"
+host = "http://aitour.ml:8081"
+#host = "http://146.115.70.196:8081"

@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -60,12 +61,20 @@ func getGrpcConn() (*grpc.ClientConn, error) {
 func Predict(c *gin.Context) {
 	var imgData []byte
 	var err error
+	var lat = LatError
+	var lng = LngError
 
 	//extract limits. default limits set to 10
 	limits, _ := strconv.Atoi(c.DefaultPostForm("limits", "10"))
 	if limits > 10 {
 		limits = 10
 	}
+
+	lat, _ = strconv.ParseFloat(c.PostForm("lat"), 64)
+	lng, _ = strconv.ParseFloat(c.PostForm("lng"), 64)
+	//log.Printf("lat:%f, lng:%f", lat, lng)
+	language := c.PostForm("language")
+	log.Printf("language: %s", language)
 
 	//extract image type
 	var imgType pb.PhotoPredictRequest_PhotoType
@@ -132,7 +141,8 @@ func Predict(c *gin.Context) {
 	response, err := client.PredictPhoto(context.Background(), &pb.PhotoPredictRequest{
 		Type:         imgType,
 		Data:         imgData,
-		Geo:          &pb.GeoPosition{},
+		Language:     language,
+		Geo:          &pb.GeoPosition{lat, lng},
 		AcquireText:  true,
 		AcquireAudio: true,
 		AcquireVideo: false,
