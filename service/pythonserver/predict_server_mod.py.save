@@ -12,16 +12,14 @@ details refer to:
 	https://grpc.io/docs/quickstart/python.html#update-and-run-the-application
 '''
 
-
 from concurrent import futures
 import cv2
 import numpy as np
-import os
 import time
 import grpc
 import toml
+import os
 import logging
-
 
 import rpc_pb2
 import rpc_pb2_grpc
@@ -34,51 +32,55 @@ from features.feature_io import load_model
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 VISUAL_FEATURE_DIR = '../../../../../../../work/data/visual_features'
 
-webhost = ""
-
 
 #PredictServicer implements rpc_pb2_grpc.PredictServicer
 class PredictServicer(rpc_pb2_grpc.PredictServicer):
   def __init__(self):
-#      logging.debug("create PredictServer. loading model")
-#      rmac_model_proto = './features/deploy_resnet101_normpython.prototxt'
-#      rmac_model_weights = './features/rmac_model.caffemodel'
-#      print rmac_model_proto
-#      self._fDesc = RMACDescriptor(rmac_model_proto, rmac_model_weights)
-      self._fDesc = None
-      index_feat_path = os.path.join(VISUAL_FEATURE_DIR, 'finearts', 'rmac_index.csv')
-      self._searcher = Searcher(index_feat_path, cosine_distance)
-      logging.debug("model load successfully")
- 
-  def getDescriptor(self):
-    if self._fDesc is None: 
       logging.debug("create PredictServer. loading model")
       rmac_model_proto = './features/deploy_resnet101_normpython.prototxt'
       rmac_model_weights = './features/rmac_model.caffemodel'
       print rmac_model_proto
       self._fDesc = RMACDescriptor(rmac_model_proto, rmac_model_weights)
-    return self._fDesc
-
+      index_feat_path = os.path.join(VISUAL_FEATURE_DIR, 'finearts', 'rmac_index.csv')
+      self._searcher = Searcher(index_feat_path, cosine_distance)
+      logging.debug("model load successfully")
+ 
   def PredictPhoto(self, request, context):
+    logging.info("PredictPhoto request received")
     #decode image from request
     img_array = np.asarray(bytearray(request.data), dtype=np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-  
-    t0 = time.time()
-    fdesc = self.getDescriptor()
-    features = fdesc.describe(img)
-    print ('feature extraction took {:.3f}s').format(time.time() - t0)
-    t0 = time.time()
+    height, width = img.shape[:2]
+    if height > 400 or width > 400:
+	if height > width: 
+		sw, sh = 400 * width/height, 400 
+	else:
+		sw, sh = 400, 400 * height/width
+        img = cv2.resize(img, (sw, sh), interpolation = cv2.INTER_CUBIC)
+	logging.debug("img width=%d, height=%d, resize to width=%d, height=%d" % (width, height, sw, sh))
+    
+    
+    logging.debug("decode request image ok")
+    photo_info = ''
+    features = self._fDesc.describe(img)
     if features is not None:
         results = self._searcher.search(features, 5)
-    print ('Matching took {:.3f}s').format(time.time() - t0)
+        #print results
+        for res in results:
+            if photo_info == '': # first one
+                photo_info = res[0]
+            else:
+                photo_info = photo_info + ';' + res[0]
+    logging.debug("predict ok, photo_info:%s" % (photo_info))
 
-    #print results
     #process image
-    photo_info = "image shape:%s, size:%d, dtype:%s" % (img.shape, img.size, img.dtype)
-  #  print("predict photo request received. " + photo_info)
+    #photo_info = "image shape:%s, size:%d, dtype:%s" % (img.shape, img.size, img.dtype)
+    #print("predict photo request received. " + photo_info)
 
     #write response
+    #two-way return: first return N matched images; 
+    #only after user clicks the right image, return the corresponding text and audio 
+    #return rpc_pb2.PhotoPredictResponse(text=photo_info, audio_url="/assets/audio/sample_0.4mb.mp3")
     return rpc_pb2.PhotoPredictResponse(results=[
       rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url= "%s/assets/%s" % (webhost, results[0][0]), audio_url="/assets/audio/sample_0.4mb.mp3"),
       rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/%s" % (webhost, results[1][0])),
@@ -88,15 +90,13 @@ class PredictServicer(rpc_pb2_grpc.PredictServicer):
 
 def serve():
   conf = toml.load("../service.toml")
-  webhost = conf['web']['host']
   bindaddr = conf['grpc']['bind']
   with open("../" + conf['grpc']['key']) as f:
     #private_key = bytes(f.read(), "ascii")
     private_key = bytes(f.read())
   with open("../" + conf['grpc']['cert']) as f:
-    #certificate_chain = bytes(f.read(), "ascii")
+    #certificate_chain = bytes(f.read(), 'ascii')
     certificate_chain = bytes(f.read())
-
   server_credentials = grpc.ssl_server_credentials(
       ((private_key, certificate_chain,),))
 
@@ -113,4 +113,6 @@ def serve():
     server.stop(0)
 
 if __name__ == '__main__':
-  serve()
+    #config log 
+    logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
+    serve()

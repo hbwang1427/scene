@@ -1,0 +1,77 @@
+'''
+install grpc:  
+	python -m pip install grpcio
+
+install grpc-tools:  
+	python -m pip install grpcio-tools
+
+to recompile proto files:  
+	python -m grpc_tools.protoc -I../../serverpb --python_out=. --grpc_python_out=. ../../serverpb/rpc.proto
+
+details refer to:
+	https://grpc.io/docs/quickstart/python.html#update-and-run-the-application
+'''
+
+
+from concurrent import futures
+import cv2
+import numpy as np
+import time
+import grpc
+import toml
+
+
+import rpc_pb2
+import rpc_pb2_grpc
+
+_ONE_DAY_IN_SECONDS = 60 * 60 * 24
+webhost = ""
+
+
+#PredictServicer implements rpc_pb2_grpc.PredictServicer
+class PredictServicer(rpc_pb2_grpc.PredictServicer):
+  def PredictPhoto(self, request, context):
+    #decode image from request
+    img_array = np.asarray(bytearray(request.data), dtype=np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+    #process image
+    photo_info = "image shape:%s, size:%d, dtype:%s" % (img.shape, img.size, img.dtype)
+    print("predict photo request received. " + photo_info)
+
+    #write response
+    return rpc_pb2.PhotoPredictResponse(results=[
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/3178927_orig.jpg" % (webhost), audio_url="/assets/audio/sample_0.4mb.mp3"),
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/c1.jpg" % (webhost)),
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/220px-Buckman_Tavern_Lexington_Massachusetts.jpg" % (webhost))
+    ])
+
+
+def serve():
+  conf = toml.load("../service.toml")
+  webhost = conf['web']['host']
+  bindaddr = conf['grpc']['bind']
+  with open("../" + conf['grpc']['key']) as f:
+    #private_key = bytes(f.read(), "ascii")
+    private_key = bytes(f.read())
+  with open("../" + conf['grpc']['cert']) as f:
+    #certificate_chain = bytes(f.read(), "ascii")
+    certificate_chain = bytes(f.read())
+
+  server_credentials = grpc.ssl_server_credentials(
+      ((private_key, certificate_chain,),))
+
+  server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+  rpc_pb2_grpc.add_PredictServicer_to_server(PredictServicer(), server)
+  #server.add_insecure_port('[::]:50051')
+  server.add_secure_port(bindaddr, server_credentials)
+  server.start()
+  print("service runing on " + bindaddr)
+  try:
+    while True:
+      time.sleep(_ONE_DAY_IN_SECONDS)
+  except KeyboardInterrupt:
+    server.stop(0)
+
+if __name__ == '__main__':
+  serve()
