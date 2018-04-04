@@ -111,10 +111,20 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 	// }
 	// response.Text = b.String()
 
+	var audiourl string
+	language := in.Language
+	if language == "zh" {
+		audiourl = fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host)
+	} else if language == "en" {
+		audiourl = fmt.Sprintf("%s/assets/audio/sample_0.4mb_en.mp3", config.Web.Host)
+	} else {
+		//other languages: de fr it ...
+	}
+
 	response.Results = []*pb.PhotoPredictResponse_Result{&pb.PhotoPredictResponse_Result{
 		Text:      "a person picture",
 		ImageUrl:  fmt.Sprintf("%s/assets/imgs/c1.jpg", config.Web.Host),
-		AudioUrl:  fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host),
+		AudioUrl:  audiourl,
 		AudioSize: 443926,
 		AudioLen:  27,
 	}, &pb.PhotoPredictResponse_Result{
