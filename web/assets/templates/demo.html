@@ -288,6 +288,15 @@
 	</script>
 
 	<script>
+		function onaudioplay(event) {
+			//mut other playing audios
+			$("audio", ".grid").each(function(i, elem) {
+				if (elem != event.target && !elem.paused) {
+					elem.pause();
+				}
+			});
+		}
+
 		var app = new Vue({
 		  el: '#app',
 		  delimiters: ['${', '}'],
@@ -302,8 +311,8 @@
 					  	<div v-for="item in results" class="grid-item">\
 					  		<div class="item-card">\
 						  		<img :src="item.image_url" @click="display(item)"/>\
-							  		<p>${item.text}</p>\
-							  		<audio v-if="item.audio_url" :src="item.audio_url" controls="controls" controlsList="nodownload"></audio>\
+							  		<p style="text-align:left; padding:10px">${item.text}</p>\
+							  		<audio v-if="item.audio_url" :src="item.audio_url" preload="metadata" controls="controls" controlsList="nodownload" onPlaying="onaudioplay(event)"></audio>\
 					  		</div>\
 					  	</div>\
 				  	</div>\

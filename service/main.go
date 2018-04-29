@@ -132,8 +132,11 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 		Text:     "dish",
 		ImageUrl: fmt.Sprintf("%s/assets/imgs/c2.jpg", config.Web.Host),
 	}, &pb.PhotoPredictResponse_Result{
-		Text:     "building",
-		ImageUrl: fmt.Sprintf("%s/assets/imgs/c3.jpg", config.Web.Host),
+		Text:      "building",
+		ImageUrl:  fmt.Sprintf("%s/assets/imgs/c3.jpg", config.Web.Host),
+		AudioUrl:  audiourl,
+		AudioSize: 443926,
+		AudioLen:  27,
 	}, &pb.PhotoPredictResponse_Result{
 		Text:     "220px-Buckman_Tavern_Lexington_Massachusetts",
 		ImageUrl: fmt.Sprintf("%s/assets/imgs/220px-Buckman_Tavern_Lexington_Massachusetts.jpg", config.Web.Host),
