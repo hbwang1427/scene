@@ -12,3 +12,4 @@ service/aiserver
 service/service
 *.pyc
 __pycache__
+.DS_Store

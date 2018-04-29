@@ -115,10 +115,11 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 	language := in.Language
 	if language == "zh" {
 		audiourl = fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host)
-	} else if language == "en" {
-		audiourl = fmt.Sprintf("%s/assets/audio/sample_0.4mb_en.mp3", config.Web.Host)
+	} else if language == "de" {
+		audiourl = fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host)
 	} else {
 		//other languages: de fr it ...
+		audiourl = fmt.Sprintf("%s/assets/audio/sample_0.4mb.mp3", config.Web.Host)
 	}
 
 	response.Results = []*pb.PhotoPredictResponse_Result{&pb.PhotoPredictResponse_Result{
@@ -153,7 +154,7 @@ func (s *predictserver) PredictPhoto(ctx context.Context, in *pb.PhotoPredictReq
 	if in.MaxLimits > 0 && len(response.Results) > int(in.MaxLimits) {
 		response.Results = response.Results[:in.MaxLimits]
 	}
-
+	//time.Sleep(20 * time.Second)
 	return response, nil
 }
 
