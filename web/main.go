@@ -66,6 +66,10 @@ func createHttpServer() (*http.Server, error) {
 		fmt.Fprintf(c.Writer, "when you see this page, you have passed the auth check!")
 	})
 
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{})
+	})
+
 	r.GET("/demo", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "demo.html", gin.H{
 			"title": "predict demo page",
