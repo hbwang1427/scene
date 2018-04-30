@@ -346,8 +346,8 @@
 					  	<div v-for="item in results" class="grid-item">\
 					  		<div class="item-card">\
 						  		<img :data-src="item.image_url" @click="display(item)"/>\
-						  		<p style="text-align:left; padding:10px">${item.text}</p>\
 						  		<audio v-if="item.audio_url" :src="item.audio_url" preload="metadata" controls="controls" controlsList="nodownload" onPlaying="onaudioplay(event)"></audio>\
+						  		<p style="text-align:left; padding:10px">${item.text}</p>\
 					  		</div>\
 					  	</div>\
 				  	</div>\
