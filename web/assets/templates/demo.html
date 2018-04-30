@@ -11,6 +11,7 @@
     <script src="//unpkg.com/jquery"></script>
     <script src="//unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="//unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
 	<script src="/assets/js/load-image.all.min.js"></script>
 	
     <style>
@@ -78,9 +79,45 @@
     		font-size: 14px;
 		}
 
+		.item-card img {
+			width:100%;
+		}
+
+		.item-card p.limitheight {
+			max-height: 94px;
+			overflow: hidden;
+		}
+
 		.item-card audio {
 			width:100%;
 		}
+
+		.fadecover {
+		    position: relative; 
+		    bottom: 42px;
+		    height: 42px;
+		    background: -webkit-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    ); 
+		    background-image: -moz-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		    background-image: -o-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		    background-image: linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		    background-image: -ms-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		}
+
 
 		/* results grid */
 		.grid {
@@ -107,7 +144,7 @@
 
 		.grid-item {
 		  float: left;
-		  margin-bottom: 16px;
+		  margin-bottom: 26px;
 		}
 
 		.grid-item:last-child {
@@ -172,13 +209,6 @@
 		function selectFile(input) {
         	if (input.files && input.files[0]) {
 	            //console.log('in select file!!', input.files[0])
-	            var reader = new FileReader();
-	            $('#centerDiv').show();
-	            $('#url').val('http://');
-	            reader.onload = function (e) {
-	                app.uploadimg = e.target.result; //result =  data:image/bmp;base64,...
-	            }
-	            reader.readAsDataURL(input.files[0]);
 	            loadImage(input.files[0],
 	              function(img){
 	              	var fileName = input.files[0].name;
@@ -189,8 +219,7 @@
 	              	} else {
 	              		imgdata = img.toDataURL("image/jpeg");
 	              	}
-	              	
-	                $("#data").val(imgdata); 
+	              	app.uploadimg = imgdata
 	                app.results = [];
 	                app.isRequesting = true;
 	                $.post("/predict", {
@@ -208,7 +237,7 @@
 	                	app.isRequesting=false;
 	                });
 	              },
-	              {maxWidth: 400, maxHeight: 400, canvas: true, orientation: true}
+	              {maxWidth: 400, maxHeight: 400, downsamplingRatio: 0.01, pixelRatio:window.devicePixelRatio, canvas: true, orientation: true}
 	            );
 	        }
     }
@@ -297,6 +326,12 @@
 			});
 		}
 
+		function showall(event) {
+			$(event.target).prev().removeClass('limitheight');
+			$(event.target).remove();
+			$("#predicts").masonry('layout');
+		}
+
 		var app = new Vue({
 		  el: '#app',
 		  delimiters: ['${', '}'],
@@ -305,14 +340,14 @@
 			  	<div v-if="error" class="alert alert-danger">${error}</div>\
 			  	<div v-if="results.length>0">\
 				  	<p class="title1">possible predictions</p>\
-				  	<div class="grid">\
+				  	<div id="predicts" class="grid">\
 				  		<div class="grid-sizer"></div>\
   						<div class="gutter-sizer"></div>\
 					  	<div v-for="item in results" class="grid-item">\
 					  		<div class="item-card">\
-						  		<img :src="item.image_url" @click="display(item)"/>\
-							  		<p style="text-align:left; padding:10px">${item.text}</p>\
-							  		<audio v-if="item.audio_url" :src="item.audio_url" preload="metadata" controls="controls" controlsList="nodownload" onPlaying="onaudioplay(event)"></audio>\
+						  		<img :data-src="item.image_url" @click="display(item)"/>\
+						  		<p style="text-align:left; padding:10px">${item.text}</p>\
+						  		<audio v-if="item.audio_url" :src="item.audio_url" preload="metadata" controls="controls" controlsList="nodownload" onPlaying="onaudioplay(event)"></audio>\
 					  		</div>\
 					  	</div>\
 				  	</div>\
@@ -358,6 +393,24 @@
 			$grid.imagesLoaded().progress( function() {
 			  $grid.masonry('layout');
 			});
+
+			//add read more link if text length is large
+			$('.item-card', '#predicts').children('p').each(function(i, p) {
+				var el = $(p);
+				var lineHeight = parseInt(el.css('line-height').replace('px', ''));
+				var height = el.height();
+				if (height > 4*lineHeight) {
+					//more than 4 lines
+					$(p).addClass('limitheight');
+					if (p.innerText.length > 10) {
+						$('<div class="fadecover" onclick="showall(event)"></div>').insertAfter($(p));
+					}
+				}
+			});
+
+			//lazyload images
+			//$("#predicts .item-card img").lazyload();
+			var myLazyLoad = new LazyLoad();
 		  },
 		  methods:{
 		  	display(item) {
