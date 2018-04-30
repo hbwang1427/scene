@@ -410,7 +410,12 @@
 
 			//lazyload images
 			//$("#predicts .item-card img").lazyload();
-			var myLazyLoad = new LazyLoad();
+			var myLazyLoad = new LazyLoad({
+				callback_load: function(){
+					//after lazy loaded images loaded. layout the grid.
+					$("#predicts").masonry('layout');
+				}
+			});
 		  },
 		  methods:{
 		  	display(item) {
