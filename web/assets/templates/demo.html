@@ -206,6 +206,11 @@
     </style>
 	
 	<script type="text/javascript">
+		var language = "en";
+		function selectLanguage() {
+			language = $('#lang_sel select')[0].value;
+			console.log(language)
+		}
 		function selectFile(input) {
         	if (input.files && input.files[0]) {
 	            //console.log('in select file!!', input.files[0])
@@ -224,6 +229,7 @@
 	                app.isRequesting = true;
 	                $.post("/predict", {
 	                	"image": imgdata,
+	                	"language": language
 	                }).done(function(data) {
 	                	app.isRequesting=false;
 	                	if (data.results) {
@@ -248,15 +254,21 @@
 		<input type="file" name="file_name" id="fileinput" accept="image/*" onchange="selectFile(this);" style="display: none;">
     </form>
 
-
 	<div id="snap_photo">
+		<div id="lang_sel" class="custom-select">
+	       <select onchange="selectLanguage()">
+	         <option value="en"><strong>Select a language</strong></option>
+	         <option value="en"><strong>English (default)</strong></option>
+	         <option value="zh"><strong>Chinese</strong></option>
+	       </select>
+	     </div>
 		<p style="">Snap a photo to recognize it</p>
 		<i class="material-icons md-48" onclick="document.getElementById('fileinput').click();">photo_camera</i>
 	</div>
 
 	<div id="upload_img" class="item-card" style="display: none">
 		<p class="title1">your uploaded photo</p>
-		<img style="width:auto; max-height: 450px; margin:15px;"></img>
+		<img class="item-card"></img>
 	</div>
 
 	<canvas id="mycanvas" width="800" height="80" style="margin:0 auto; padding:0; display: none"></canvas>
