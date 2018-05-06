@@ -75,6 +75,8 @@ func Predict(c *gin.Context) {
 	//log.Printf("lat:%f, lng:%f", lat, lng)
 	language := c.PostForm("language")
 	log.Printf("language: %s", language)
+	site := c.PostForm("site")
+	log.Printf("site: %s", site)
 
 	//extract image type
 	var imgType pb.PhotoPredictRequest_PhotoType
@@ -142,7 +144,8 @@ func Predict(c *gin.Context) {
 		Type:         imgType,
 		Data:         imgData,
 		Language:     language,
-		Geo:          &pb.GeoPosition{lat, lng},
+        Site:         site,
+		Geo:          &pb.GeoPosition{Latitude:lat, Longitude:lng},
 		AcquireText:  true,
 		AcquireAudio: true,
 		AcquireVideo: false,

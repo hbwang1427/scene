@@ -64,6 +64,7 @@ message PhotoPredictRequest {
 	bool acquire_video = 7;
 	int32 max_limits = 8;
 	string language = 9;
+	string site = 10; 
 }
 
 message PhotoPredictResponse {
