@@ -63,6 +63,8 @@ message PhotoPredictRequest {
 	bool acquire_audio = 6;
 	bool acquire_video = 7;
 	int32 max_limits = 8;
+	string language = 9;
+	string site = 10; 
 }
 
 message PhotoPredictResponse {
@@ -71,6 +73,10 @@ message PhotoPredictResponse {
 		string image_url = 2;
 		string audio_url = 3;
 		string video_url = 4;
+		int32 image_width = 5;
+		int32 image_height = 6;
+		int32 audio_size = 7;
+		int32 audio_len = 8;
 	}
 	repeated Result results = 1;
 }

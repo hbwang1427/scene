@@ -27,7 +27,7 @@ dep: check
 
 serverpb/rpc.pb.go: serverpb/rpc.proto
 	@protoc -I serverpb/ \
-			--go_out=plugins=grpc:. \
+			--go_out=plugins=grpc:./serverpb \
 			serverpb/rpc.proto
 
 protogen: serverpb/rpc.pb.go
@@ -51,5 +51,5 @@ cpresource:
 clean:
 	@rm $(SERVER_OUT) $(WEB_OUT)
 
-all: dep server web cpresource
+all: dep server web
 

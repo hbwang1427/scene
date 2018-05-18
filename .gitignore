@@ -1,8 +1,15 @@
 *.exe 
+*.caffemodel
 vendor
 cordovaapp/node_modules
 cordovaapp/platforms/android/build
 web/caches
+web/aiweb
 web/web
+web/assets/Images
+web/assets/apk
+service/aiserver
 service/service
+*.pyc
 __pycache__
+.DS_Store
