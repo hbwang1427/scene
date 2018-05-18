@@ -27,7 +27,7 @@
 
 [[constraint]]
   name = "github.com/gin-gonic/gin"
-  version = "1.2.0"
+  branch = "master"
 
 [[constraint]]
   branch = "master"
@@ -40,3 +40,15 @@
 [[constraint]]
   name = "google.golang.org/grpc"
   version = "1.6.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/dchest/captcha"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+
+[[constraint]]
+  name = "github.com/speps/go-hashids"
+  branch= "master"

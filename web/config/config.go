@@ -16,6 +16,7 @@ type Config struct {
 	Http struct {
 		Bind      string
 		AssetsDir string
+		UploadDir string
 		SecretKey string
 	}
 
@@ -29,6 +30,14 @@ type Config struct {
 		WeatherApiKey   string
 		GoogleMapApiKey string
 		GoogleMapDomain string
+	}
+
+	Db struct {
+		Host     string
+		Port     int
+		User     string
+		Password string
+		DbName   string
 	}
 }
 

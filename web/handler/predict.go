@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -117,6 +118,10 @@ func Predict(c *gin.Context) {
 			return
 		}
 	}
+
+	photoStore := NewDiskPhotoStore(config.GetConfig().Http.UploadDir)
+	url, err := photoStore.Store(1781143536087860227, imgData)
+	log.Printf("%v %v", url, err)
 
 	// get a connection to the server.
 	conn, err := getGrpcConn()

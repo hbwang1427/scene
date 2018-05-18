@@ -17,12 +17,12 @@ type simpleToken struct {
 	sync.Mutex
 	keeper *tokenKeeper
 
-	//tokens: token -> username
+	//tokens: token -> userId
 	tokenLen int
-	tokens   map[string]string
+	tokens   map[string]int64
 }
 
-func (st *simpleToken) AssignToken(userName string) (string, error) {
+func (st *simpleToken) AssignToken(userId int64) (string, error) {
 	buf := make([]byte, st.tokenLen)
 
 	for i := 0; i < st.tokenLen; i++ {
@@ -36,7 +36,7 @@ func (st *simpleToken) AssignToken(userName string) (string, error) {
 
 	token := string(buf)
 	st.Lock()
-	st.tokens[token] = userName
+	st.tokens[token] = userId
 	st.keeper.addToken(token)
 	st.Unlock()
 	return token, nil
@@ -56,10 +56,10 @@ func (st *simpleToken) GetAuthInfo(token string) (*AuthInfo, error) {
 	}
 	var authInfo *AuthInfo
 	st.Lock()
-	if userName, ok := st.tokens[token]; ok {
+	if userId, ok := st.tokens[token]; ok {
 		st.keeper.resetTokenExpire(token)
 		authInfo = &AuthInfo{
-			UserName: userName,
+			UserId: userId,
 		}
 	}
 	st.Unlock()
@@ -67,8 +67,8 @@ func (st *simpleToken) GetAuthInfo(token string) (*AuthInfo, error) {
 }
 
 func (st *simpleToken) deleteToken(token string) {
-	if username, ok := st.tokens[token]; ok {
-		log.Debugf("deleting token %s for user %s", token, username)
+	if userId, ok := st.tokens[token]; ok {
+		log.Debugf("deleting token %s for user %s", token, userId)
 		delete(st.tokens, token)
 	}
 }
@@ -90,7 +90,7 @@ func createSimpleTokenProvider(opts map[string]interface{}) (*simpleToken, error
 	tp := &simpleToken{
 		//keeper: newTokenKeeper(tp.deleteToken, tokenTTL),
 		tokenLen: tokenLen,
-		tokens:   make(map[string]string),
+		tokens:   make(map[string]int64),
 	}
 	tp.keeper = newTokenKeeper(tp.deleteToken, tokenTTL)
 

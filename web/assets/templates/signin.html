@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:600,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+    body {
+        font-family: Raleway;
+        background-color: #f0f0f0;
+    }
+
+    #form-container {
+        background-color: #fff;
+        padding: 20px;
+        max-width: 480px;
+        width: 100%;
+        margin-top: 80px;
+    }
+
+    #form-container h3 {
+    	font-color: blue;
+    	display: block;
+    	text-align: center;
+    	margin-left:auto;
+    	margin-right:auto;
+        margin-bottom: 40px;
+        font-color: black;
+        font-weight: bold;
+    }
+
+     p.error {
+     	position: fixed;
+     	top:0;
+     	width:100%;
+     	background-color: #F8D7DA;
+     	font-color: #fff;
+     	font-size: 16px;
+     	padding: 20px;
+     	text-align: center;
+     }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+</head>
+
+<body>
+	{{if .error}} <p class="error">{{.error}}</p> {{end}}
+    <div class="container" id="form-container">
+    <h3>Sign In</h3>
+    <form method="post" action="/user/signin">
+        <div class="form-group">
+            <label for="emailInput">Email address</label>
+            <input type="email" name="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Password</label>
+            <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="vcode">Check code</label>
+            <input type="text" class="form-control" id="vcode" name="vcode" placeholder="Check code" autocomplete="off">
+            <img id="vcodeimg" src="/vcode/{{.cv}}.png" onclick="reloadcv({{.cv}})" alt="click to refresh" />
+        </div>
+        <input type="hidden" name="vcodeid" value="{{.cv}}" />
+        <input type="hidden" id="forwardurl" name="forwardurl" value="{{.forwardurl}}" />
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
+</div>
+ <script type="text/javascript">
+    function reloadcv(id) {
+        $("#vcodeimg").attr("src", "/vcode/" + id + ".png?reload=" + Math.random());
+    }
+    $(function(){
+        var index = window.location.search.indexOf("redirect=");
+        if (index > 0) {
+            $("#forwardurl").val(window.location.search.substr(index + 9));
+        }
+    });
+    </script>
+</body>
+
+</html>

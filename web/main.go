@@ -15,30 +15,21 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
-	"github.com/aitour/scene/auth"
 	"github.com/aitour/scene/web/config"
 	"github.com/aitour/scene/web/handler"
 	"github.com/gin-contrib/cors"
 
+	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	conf          = flag.String("conf", "web.toml", "Specify a config file")
-	cfg           *config.Config
-	tokenProvider auth.TokenProvider
+	conf = flag.String("conf", "web.toml", "Specify a config file")
+	cfg  *config.Config
 )
 
 func createHttpServer() (*http.Server, error) {
 	log.SetOutput(gin.DefaultWriter)
-	var err error
-	tokenProvider, err = auth.CreateTokenProvider("simple", map[string]interface{}{
-		"tokenTTL": 10 * time.Second,
-		"tokenLen": 16,
-	})
-	if err != nil {
-		log.Fatalf("create TokenProvider error:%v", err)
-	}
 
 	r := gin.Default()
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
@@ -60,10 +51,28 @@ func createHttpServer() (*http.Server, error) {
 
 	r.LoadHTMLGlob(cfg.Http.AssetsDir + "/templates/*")
 	r.Static("/assets", cfg.Http.AssetsDir)
+	r.Static("/photo", cfg.Http.UploadDir)
 
-	authorized := r.Group("/user", handler.AuthChecker(tokenProvider))
+	r.GET("/user/register", func(c *gin.Context) {
+		id := captcha.New()
+		c.HTML(http.StatusOK, "register.html", gin.H{
+			"cv": id,
+		})
+	})
+	r.POST("/user/register", handler.CreateUser)
+	r.GET("/user/activate", handler.ActivateUser)
+	r.GET("/user/signin", handler.UserLogin)
+	r.POST("/user/signin", handler.AuthUser)
+	r.GET("/user/logout", handler.Logout)
+	authorized := r.Group("/user", handler.AuthChecker())
 	authorized.GET("/profile", func(c *gin.Context) {
 		fmt.Fprintf(c.Writer, "when you see this page, you have passed the auth check!")
+	})
+
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title": "pangolins ai",
+		})
 	})
 
 	r.GET("/demo", func(c *gin.Context) {
@@ -80,6 +89,8 @@ func createHttpServer() (*http.Server, error) {
 	r.GET("/nearby/museum", handler.SearchNearbyMuseumsByGoogleMap)
 	r.GET("/place/photo", handler.GetPlacePhoto)
 	r.GET("/place/detail", handler.GetPlaceDetail)
+	r.GET("/vcode/:img", gin.WrapH(captcha.Server(200, 60)))
+	r.GET("/vcode", handler.NewCaptacha)
 
 	s := &http.Server{
 		Addr:    cfg.Http.Bind,

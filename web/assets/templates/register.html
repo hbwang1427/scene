@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:600,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+    body {
+        font-family: Raleway;
+        background-color: #f0f0f0;
+    }
+
+    #reg-container {
+        background-color: #fff;
+        padding: 20px;
+        max-width: 480px;
+        width: 100%;
+        margin-top: 80px;
+    }
+
+    #reg-container h3 {
+    	font-color: blue;
+    	display: block;
+    	text-align: center;
+    	margin-left:auto;
+    	margin-right:auto;
+        margin-bottom: 40px;
+        font-color: black;
+        font-weight: bold;
+    }
+
+     p.error {
+     	position: fixed;
+     	top:0;
+     	width:100%;
+     	background-color: #F8D7DA;
+     	font-color: #fff;
+     	font-size: 16px;
+     	padding: 20px;
+     	text-align: center;
+     }
+
+     p.success {
+     	text-align:center;
+     	margin-top:80px;
+     	padding: 30px;
+     	background-color: #D4EDDA;
+     	font-size: 22px;
+     	color: #000;
+     	max-width: 800px;
+     	margin-left: auto;
+     	margin-right: auto;
+     }
+
+     p.fail {
+     	text-align:center;
+     	margin-top:80px;
+     	padding: 30px;
+     	background-color: #F8D7DA;
+     	font-size: 22px;
+     	color: #000;
+     	max-width: 800px;
+     	margin-left: auto;
+     	margin-right: auto;
+     }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+</head>
+
+<body>
+	{{if .regok}}
+		<p class="success">Thanks for registration! <br><br>An email was sent to you, please check your email and follow the instructions to activate your account.</p> 
+	{{else if .activateok}}
+		<p class="success">Your account was sucessfully activated</p> 
+	{{else if .activatefail}} 
+		<p class="success">Account activation failed</p> 
+	{{else}}
+	{{if .error}} <p class="error">{{.error}}</p> {{end}}
+    <div class="container" id="reg-container">
+    <h3>Create your account</h3>
+    <form method="post" action="/user/register">
+        <div class="form-group">
+            <label for="emailInput">Email address</label>
+            <input type="email" name="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Password</label>
+            <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="vcode">Check code</label>
+            <input type="text" class="form-control" id="vcode" name="vcode" placeholder="Check code">
+            <img id="cvcode" src="/vcode/{{.cv}}.png" onclick="reloadcv({{.cv}})" title="click to refresh" style="cursor: pointer"/>
+        </div>
+        <input type="hidden" name="vcodeid" value="{{.cv}}" />
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+ <script type="text/javascript">
+    function reloadcv(id) {
+        $("#cvcode").attr("src", "/vcode/" + id + ".png?reload=" + Math.random());
+    }
+    </script>
+    {{end}}
+</body>
+
+</html>

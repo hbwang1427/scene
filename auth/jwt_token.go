@@ -21,7 +21,7 @@ func (p *jwtToken) GetAuthInfo(token string) (*AuthInfo, error) {
 	}
 
 	var (
-		username string
+		userId int64
 	)
 
 	parsed, err := jwt.Parse(string(token), func(token *jwt.Token) (interface{}, error) {
@@ -35,9 +35,9 @@ func (p *jwtToken) GetAuthInfo(token string) (*AuthInfo, error) {
 		}
 
 		claims := parsed.Claims.(jwt.MapClaims)
-		username = claims["username"].(string)
+		userId = claims["userId"].(int64)
 		p.keeper.resetTokenExpire(token)
-		return &AuthInfo{UserName: username}, nil
+		return &AuthInfo{UserId: userId}, nil
 	default:
 		return nil, fmt.Errorf("failed to parse jwt token: %s", err)
 	}
@@ -48,10 +48,10 @@ func (p *jwtToken) RevokeToken(token string) error {
 	return nil
 }
 
-func (p *jwtToken) AssignToken(userName string) (string, error) {
+func (p *jwtToken) AssignToken(userId int64) (string, error) {
 	tk := jwt.NewWithClaims(jwt.GetSigningMethod(p.signMethod),
 		jwt.MapClaims{
-			"username": userName,
+			"userId": userId,
 		})
 
 	token, err := tk.SignedString([]byte(p.hmacSignKey))
