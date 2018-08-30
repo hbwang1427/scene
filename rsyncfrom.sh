@@ -1,1 +1,0 @@
-rsync -zPrv --exclude=service --exclude=*.exe --exclude=web/web --exclude=web/web.toml --exclude=cordovaapp --exclude=.git --exclude=web/caches kingwang@aitour.ml:/home/pangolins/go/src/github.com/aitour/scene/ /Users/yu/go/src/github.com/aitour/scene/
