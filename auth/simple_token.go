@@ -5,8 +5,6 @@ import (
 	"math/big"
 	"sync"
 	"time"
-
-	"github.com/aitour/scene/log"
 )
 
 var (
@@ -15,14 +13,14 @@ var (
 
 type simpleToken struct {
 	sync.Mutex
-	keeper *tokenKeeper
+	keeper tokenKeeper
 
-	//tokens: token -> username
+	//tokens: token -> userId
 	tokenLen int
 	tokens   map[string]string
 }
 
-func (st *simpleToken) AssignToken(userName string) (string, error) {
+func (st *simpleToken) AssignToken(user string) (string, error) {
 	buf := make([]byte, st.tokenLen)
 
 	for i := 0; i < st.tokenLen; i++ {
@@ -36,7 +34,7 @@ func (st *simpleToken) AssignToken(userName string) (string, error) {
 
 	token := string(buf)
 	st.Lock()
-	st.tokens[token] = userName
+	st.tokens[token] = user
 	st.keeper.addToken(token)
 	st.Unlock()
 	return token, nil
@@ -56,10 +54,10 @@ func (st *simpleToken) GetAuthInfo(token string) (*AuthInfo, error) {
 	}
 	var authInfo *AuthInfo
 	st.Lock()
-	if userName, ok := st.tokens[token]; ok {
+	if userId, ok := st.tokens[token]; ok {
 		st.keeper.resetTokenExpire(token)
 		authInfo = &AuthInfo{
-			UserName: userName,
+			User: userId,
 		}
 	}
 	st.Unlock()
@@ -67,8 +65,7 @@ func (st *simpleToken) GetAuthInfo(token string) (*AuthInfo, error) {
 }
 
 func (st *simpleToken) deleteToken(token string) {
-	if username, ok := st.tokens[token]; ok {
-		log.Debugf("deleting token %s for user %s", token, username)
+	if _, ok := st.tokens[token]; ok {
 		delete(st.tokens, token)
 	}
 }
@@ -92,8 +89,8 @@ func createSimpleTokenProvider(opts map[string]interface{}) (*simpleToken, error
 		tokenLen: tokenLen,
 		tokens:   make(map[string]string),
 	}
-	tp.keeper = newTokenKeeper(tp.deleteToken, tokenTTL)
+	tp.keeper = newMemoryTokenKeeper(tp.deleteToken, tokenTTL)
 
-	go tp.keeper.run()
+	//go tp.keeper.run()
 	return tp, nil
 }

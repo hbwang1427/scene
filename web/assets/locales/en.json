@@ -1,0 +1,27 @@
+{
+    "email": "Email address",
+    "password": "Password",
+    "origin-password" : "original password",
+    "verifycode": "Verify code",
+    "verifycode-placeholder": "Please input the verify code",
+    "signin": "Sign in",
+    "signup": "Sign up",
+    "not-registered-yet": "Not registered yet?",
+    "museum": "Museum",
+    "language" : "Language",
+    "demo": {
+      "snaptitle": "Snap a photo to recognize it",
+      "your-upload-photo": "Your uploaded photo", 
+      "test-imgs": "Images for test",
+      "possible-predictions": "Possible predictions"
+    },
+    "register": {
+        "title": "Create your account",
+    	"language": "Your prefered language"
+    },
+    "changepwd": {
+        "title": "Change password",
+        "repeat-password": "Repeat the above password",
+        "reset-password": "Reset password"
+    }
+}

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='rpc.proto',
   package='serverpb',
   syntax='proto3',
-  serialized_pb=_b('\n\trpc.proto\x12\x08serverpb\"<\n\x0b\x41uthRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"A\n\x0c\x41uthResponse\x12\x15\n\rrequire_login\x18\x01 \x01(\x08\x12\r\n\x05token\x18\x02 \x01(\t\x12\x0b\n\x03msg\x18\x03 \x01(\t\"2\n\x0bGeoPosition\x12\x10\n\x08latitude\x18\x01 \x01(\x01\x12\x11\n\tlongitude\x18\x02 \x01(\x01\"\x93\x01\n\x08SignSpot\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12-\n\x04type\x18\x03 \x01(\x0e\x32\x1f.serverpb.SignSpot.SignSpotType\x12\"\n\x03geo\x18\x04 \x01(\x0b\x32\x15.serverpb.GeoPosition\"\x1a\n\x0cSignSpotType\x12\n\n\x06Museum\x10\x00\"\x8d\x02\n\x13PhotoPredictRequest\x12\x35\n\x04type\x18\x01 \x01(\x0e\x32\'.serverpb.PhotoPredictRequest.PhotoType\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x16\n\x0e\x62\x61se64_encoded\x18\x03 \x01(\x08\x12\"\n\x03geo\x18\x04 \x01(\x0b\x32\x15.serverpb.GeoPosition\x12\x14\n\x0c\x61\x63quire_text\x18\x05 \x01(\x08\x12\x15\n\racquire_audio\x18\x06 \x01(\x08\x12\x15\n\racquire_video\x18\x07 \x01(\x08\x12\x12\n\nmax_limits\x18\x08 \x01(\x05\"\x1d\n\tPhotoType\x12\x07\n\x03PNG\x10\x00\x12\x07\n\x03JPG\x10\x01\"\x9f\x01\n\x14PhotoPredictResponse\x12\x36\n\x07results\x18\x01 \x03(\x0b\x32%.serverpb.PhotoPredictResponse.Result\x1aO\n\x06Result\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x11\n\timage_url\x18\x02 \x01(\t\x12\x11\n\taudio_url\x18\x03 \x01(\t\x12\x11\n\tvideo_url\x18\x04 \x01(\t2G\n\x04\x41uth\x12?\n\x0c\x41uthenticate\x12\x15.serverpb.AuthRequest\x1a\x16.serverpb.AuthResponse\"\x00\x32Z\n\x07Predict\x12O\n\x0cPredictPhoto\x12\x1d.serverpb.PhotoPredictRequest\x1a\x1e.serverpb.PhotoPredictResponse\"\x00\x42&\n\x0e\x63om.aitour.rpcB\tAuthProtoP\x01\xa2\x02\x06\x61itourb\x06proto3')
+  serialized_pb=_b('\n\trpc.proto\x12\x08serverpb\"<\n\x0b\x41uthRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"A\n\x0c\x41uthResponse\x12\x15\n\rrequire_login\x18\x01 \x01(\x08\x12\r\n\x05token\x18\x02 \x01(\t\x12\x0b\n\x03msg\x18\x03 \x01(\t\"2\n\x0bGeoPosition\x12\x10\n\x08latitude\x18\x01 \x01(\x01\x12\x11\n\tlongitude\x18\x02 \x01(\x01\"\x93\x01\n\x08SignSpot\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12-\n\x04type\x18\x03 \x01(\x0e\x32\x1f.serverpb.SignSpot.SignSpotType\x12\"\n\x03geo\x18\x04 \x01(\x0b\x32\x15.serverpb.GeoPosition\"\x1a\n\x0cSignSpotType\x12\n\n\x06Museum\x10\x00\"\xad\x02\n\x13PhotoPredictRequest\x12\x35\n\x04type\x18\x01 \x01(\x0e\x32\'.serverpb.PhotoPredictRequest.PhotoType\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x16\n\x0e\x62\x61se64_encoded\x18\x03 \x01(\x08\x12\"\n\x03geo\x18\x04 \x01(\x0b\x32\x15.serverpb.GeoPosition\x12\x14\n\x0c\x61\x63quire_text\x18\x05 \x01(\x08\x12\x15\n\racquire_audio\x18\x06 \x01(\x08\x12\x15\n\racquire_video\x18\x07 \x01(\x08\x12\x12\n\nmax_limits\x18\x08 \x01(\x05\x12\x10\n\x08language\x18\t \x01(\t\x12\x0c\n\x04site\x18\n \x01(\t\"\x1d\n\tPhotoType\x12\x07\n\x03PNG\x10\x00\x12\x07\n\x03JPG\x10\x01\"\xf2\x01\n\x14PhotoPredictResponse\x12\x36\n\x07results\x18\x01 \x03(\x0b\x32%.serverpb.PhotoPredictResponse.Result\x1a\xa1\x01\n\x06Result\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x11\n\timage_url\x18\x02 \x01(\t\x12\x11\n\taudio_url\x18\x03 \x01(\t\x12\x11\n\tvideo_url\x18\x04 \x01(\t\x12\x13\n\x0bimage_width\x18\x05 \x01(\x05\x12\x14\n\x0cimage_height\x18\x06 \x01(\x05\x12\x12\n\naudio_size\x18\x07 \x01(\x05\x12\x11\n\taudio_len\x18\x08 \x01(\x05\x32G\n\x04\x41uth\x12?\n\x0c\x41uthenticate\x12\x15.serverpb.AuthRequest\x1a\x16.serverpb.AuthResponse\"\x00\x32Z\n\x07Predict\x12O\n\x0cPredictPhoto\x12\x1d.serverpb.PhotoPredictRequest\x1a\x1e.serverpb.PhotoPredictResponse\"\x00\x42&\n\x0e\x63om.aitour.rpcB\tAuthProtoP\x01\xa2\x02\x06\x61itourb\x06proto3')
 )
 
 
@@ -59,8 +59,8 @@ _PHOTOPREDICTREQUEST_PHOTOTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=595,
-  serialized_end=624,
+  serialized_start=627,
+  serialized_end=656,
 )
 _sym_db.RegisterEnumDescriptor(_PHOTOPREDICTREQUEST_PHOTOTYPE)
 
@@ -78,21 +78,21 @@ _AUTHREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='password', full_name='serverpb.AuthRequest.password', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='token', full_name='serverpb.AuthRequest.token', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -123,21 +123,21 @@ _AUTHRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='token', full_name='serverpb.AuthResponse.token', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='msg', full_name='serverpb.AuthResponse.msg', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -168,14 +168,14 @@ _GEOPOSITION = _descriptor.Descriptor(
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='longitude', full_name='serverpb.GeoPosition.longitude', index=1,
       number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -206,28 +206,28 @@ _SIGNSPOT = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='name', full_name='serverpb.SignSpot.name', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='type', full_name='serverpb.SignSpot.type', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='geo', full_name='serverpb.SignSpot.geo', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -259,56 +259,70 @@ _PHOTOPREDICTREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='data', full_name='serverpb.PhotoPredictRequest.data', index=1,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='base64_encoded', full_name='serverpb.PhotoPredictRequest.base64_encoded', index=2,
       number=3, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='geo', full_name='serverpb.PhotoPredictRequest.geo', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='acquire_text', full_name='serverpb.PhotoPredictRequest.acquire_text', index=4,
       number=5, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='acquire_audio', full_name='serverpb.PhotoPredictRequest.acquire_audio', index=5,
       number=6, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='acquire_video', full_name='serverpb.PhotoPredictRequest.acquire_video', index=6,
       number=7, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='max_limits', full_name='serverpb.PhotoPredictRequest.max_limits', index=7,
       number=8, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='language', full_name='serverpb.PhotoPredictRequest.language', index=8,
+      number=9, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='site', full_name='serverpb.PhotoPredictRequest.site', index=9,
+      number=10, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -323,7 +337,7 @@ _PHOTOPREDICTREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=355,
-  serialized_end=624,
+  serialized_end=656,
 )
 
 
@@ -340,28 +354,56 @@ _PHOTOPREDICTRESPONSE_RESULT = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='image_url', full_name='serverpb.PhotoPredictResponse.Result.image_url', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='audio_url', full_name='serverpb.PhotoPredictResponse.Result.audio_url', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='video_url', full_name='serverpb.PhotoPredictResponse.Result.video_url', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='image_width', full_name='serverpb.PhotoPredictResponse.Result.image_width', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='image_height', full_name='serverpb.PhotoPredictResponse.Result.image_height', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='audio_size', full_name='serverpb.PhotoPredictResponse.Result.audio_size', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='audio_len', full_name='serverpb.PhotoPredictResponse.Result.audio_len', index=7,
+      number=8, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -374,8 +416,8 @@ _PHOTOPREDICTRESPONSE_RESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=707,
-  serialized_end=786,
+  serialized_start=740,
+  serialized_end=901,
 )
 
 _PHOTOPREDICTRESPONSE = _descriptor.Descriptor(
@@ -391,7 +433,7 @@ _PHOTOPREDICTRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -404,8 +446,8 @@ _PHOTOPREDICTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=627,
-  serialized_end=786,
+  serialized_start=659,
+  serialized_end=901,
 )
 
 _SIGNSPOT.fields_by_name['type'].enum_type = _SIGNSPOT_SIGNSPOTTYPE
@@ -484,8 +526,8 @@ _AUTH = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=788,
-  serialized_end=859,
+  serialized_start=903,
+  serialized_end=974,
   methods=[
   _descriptor.MethodDescriptor(
     name='Authenticate',
@@ -508,8 +550,8 @@ _PREDICT = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   options=None,
-  serialized_start=861,
-  serialized_end=951,
+  serialized_start=976,
+  serialized_end=1066,
   methods=[
   _descriptor.MethodDescriptor(
     name='PredictPhoto',
@@ -525,232 +567,4 @@ _sym_db.RegisterServiceDescriptor(_PREDICT)
 
 DESCRIPTOR.services_by_name['Predict'] = _PREDICT
 
-try:
-  # THESE ELEMENTS WILL BE DEPRECATED.
-  # Please use the generated *_pb2_grpc.py files instead.
-  import grpc
-  from grpc.beta import implementations as beta_implementations
-  from grpc.beta import interfaces as beta_interfaces
-  from grpc.framework.common import cardinality
-  from grpc.framework.interfaces.face import utilities as face_utilities
-
-
-  class AuthStub(object):
-    # missing associated documentation comment in .proto file
-    pass
-
-    def __init__(self, channel):
-      """Constructor.
-
-      Args:
-        channel: A grpc.Channel.
-      """
-      self.Authenticate = channel.unary_unary(
-          '/serverpb.Auth/Authenticate',
-          request_serializer=AuthRequest.SerializeToString,
-          response_deserializer=AuthResponse.FromString,
-          )
-
-
-  class AuthServicer(object):
-    # missing associated documentation comment in .proto file
-    pass
-
-    def Authenticate(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-
-  def add_AuthServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-        'Authenticate': grpc.unary_unary_rpc_method_handler(
-            servicer.Authenticate,
-            request_deserializer=AuthRequest.FromString,
-            response_serializer=AuthResponse.SerializeToString,
-        ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-        'serverpb.Auth', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
-  class PredictStub(object):
-    # missing associated documentation comment in .proto file
-    pass
-
-    def __init__(self, channel):
-      """Constructor.
-
-      Args:
-        channel: A grpc.Channel.
-      """
-      self.PredictPhoto = channel.unary_unary(
-          '/serverpb.Predict/PredictPhoto',
-          request_serializer=PhotoPredictRequest.SerializeToString,
-          response_deserializer=PhotoPredictResponse.FromString,
-          )
-
-
-  class PredictServicer(object):
-    # missing associated documentation comment in .proto file
-    pass
-
-    def PredictPhoto(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-
-  def add_PredictServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-        'PredictPhoto': grpc.unary_unary_rpc_method_handler(
-            servicer.PredictPhoto,
-            request_deserializer=PhotoPredictRequest.FromString,
-            response_serializer=PhotoPredictResponse.SerializeToString,
-        ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-        'serverpb.Predict', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
-  class BetaAuthServicer(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def Authenticate(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-
-
-  class BetaAuthStub(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def Authenticate(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    Authenticate.future = None
-
-
-  def beta_create_Auth_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_deserializers = {
-      ('serverpb.Auth', 'Authenticate'): AuthRequest.FromString,
-    }
-    response_serializers = {
-      ('serverpb.Auth', 'Authenticate'): AuthResponse.SerializeToString,
-    }
-    method_implementations = {
-      ('serverpb.Auth', 'Authenticate'): face_utilities.unary_unary_inline(servicer.Authenticate),
-    }
-    server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
-    return beta_implementations.server(method_implementations, options=server_options)
-
-
-  def beta_create_Auth_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_serializers = {
-      ('serverpb.Auth', 'Authenticate'): AuthRequest.SerializeToString,
-    }
-    response_deserializers = {
-      ('serverpb.Auth', 'Authenticate'): AuthResponse.FromString,
-    }
-    cardinalities = {
-      'Authenticate': cardinality.Cardinality.UNARY_UNARY,
-    }
-    stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-    return beta_implementations.dynamic_stub(channel, 'serverpb.Auth', cardinalities, options=stub_options)
-
-
-  class BetaPredictServicer(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def PredictPhoto(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-
-
-  class BetaPredictStub(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def PredictPhoto(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    PredictPhoto.future = None
-
-
-  def beta_create_Predict_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_deserializers = {
-      ('serverpb.Predict', 'PredictPhoto'): PhotoPredictRequest.FromString,
-    }
-    response_serializers = {
-      ('serverpb.Predict', 'PredictPhoto'): PhotoPredictResponse.SerializeToString,
-    }
-    method_implementations = {
-      ('serverpb.Predict', 'PredictPhoto'): face_utilities.unary_unary_inline(servicer.PredictPhoto),
-    }
-    server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
-    return beta_implementations.server(method_implementations, options=server_options)
-
-
-  def beta_create_Predict_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_serializers = {
-      ('serverpb.Predict', 'PredictPhoto'): PhotoPredictRequest.SerializeToString,
-    }
-    response_deserializers = {
-      ('serverpb.Predict', 'PredictPhoto'): PhotoPredictResponse.FromString,
-    }
-    cardinalities = {
-      'PredictPhoto': cardinality.Cardinality.UNARY_UNARY,
-    }
-    stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-    return beta_implementations.dynamic_stub(channel, 'serverpb.Predict', cardinalities, options=stub_options)
-except ImportError:
-  pass
 # @@protoc_insertion_point(module_scope)

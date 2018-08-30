@@ -13,31 +13,20 @@ check:
 ifndef GO
 	$(error "please install golang first")
 endif
-ifeq ($(GOPATH),)
-	$(error "please set GOPATH env variable first")
-endif
-	@if [ ! -d "${GOPATH}/src/github.com/golang/dep/cmd/dep" ]; then \
-		echo "fetching go dep..."; \
-		go get -u github.com/golang/dep/cmd/dep; \
-	fi
-
-dep: check
-	$(GOPATH)/bin/dep ensure
-
 
 serverpb/rpc.pb.go: serverpb/rpc.proto
 	@protoc -I serverpb/ \
-			--go_out=plugins=grpc:./serverpb \
+			--go_out=plugins=grpc:. \
 			serverpb/rpc.proto
 
 protogen: serverpb/rpc.pb.go
 
 
-server: protogen
+build-server: protogen
 	@echo "building aiserver"
 	@go build -o $(SERVER_OUT) $(SERVER_PKG)
 
-web: protogen
+build-web: protogen
 	@echo "building aiweb"
 	@go build -o $(WEB_OUT) $(WEB_PKG)
 
@@ -51,5 +40,5 @@ cpresource:
 clean:
 	@rm $(SERVER_OUT) $(WEB_OUT)
 
-all: dep server web
+all: build-server build-web cpresource
 

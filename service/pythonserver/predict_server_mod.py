@@ -31,8 +31,11 @@ from imagesearch.searcher import Searcher, cosine_distance
 from features.feature_io import load_model
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
-VISUAL_FEATURE_DIR = '../../../../../../../work/data/visual_features'
-WEB_HOST = "http://216.15.112.63:8081"
+MUSEUM_BASE_DIR = '../../web/assets/Images/Museum'
+MUSEUM_DATA_DIR= {'fine-arts':'Boston-FineArts', 'met':'MET', 'boston-ica':'Boston-ICA'}
+
+WEB_HOST = "http://aitour.ml:8081"
+#WEB_HOST = "http://216.15.112.63:8081"
 #WEB_HOST = "http://146.115.70.196:8081"
 
 #PredictServicer implements rpc_pb2_grpc.PredictServicer
@@ -43,11 +46,20 @@ class PredictServicer(rpc_pb2_grpc.PredictServicer):
  #     print rmac_model_proto
       logging.debug("loading model")
       self._fDesc = RMACDescriptor(rmac_model_proto, rmac_model_weights)
-      logging.debug("model load successfully")
+      logging.debug("model loaded successfully")
 
-      index_feat_path = os.path.join(VISUAL_FEATURE_DIR, 'finearts-highlights', 'rmac_index.csv')
-      self._searcher = Searcher(index_feat_path, cosine_distance)
+      #index_feat_path = os.path.join(MUSEUM_DATA_DIR, MUSEUM, 'visual_features', 'rmac_index.csv')
+      #self._searcher = Searcher(index_feat_path, cosine_distance)
+      self._searcher = {}
+      logging.debug("features loaded successfully")
  
+  def _get_searcher(self, museum):
+      if museum not in self._searcher:
+          index_feat_path = os.path.join(MUSEUM_BASE_DIR, MUSEUM_DATA_DIR[museum], 'visual_features', 'rmac_index.csv')
+          self._searcher[museum] = Searcher(index_feat_path, cosine_distance)
+
+      return self._searcher[museum]  
+
   def PredictPhoto(self, request, context):
     logging.info("PredictPhoto request received")
     #decode image from request
@@ -63,7 +75,6 @@ class PredictServicer(rpc_pb2_grpc.PredictServicer):
 #        img = img[:, :, ::-1].copy() 
 	logging.debug("img width=%d, height=%d, resize to width=%d, height=%d" % (width, height, sw, sh))
     
-    
     logging.debug("decode request image ok")
 
     # postpone model loadint untile seeing the first image
@@ -74,17 +85,39 @@ class PredictServicer(rpc_pb2_grpc.PredictServicer):
     caffe.set_mode_gpu()
     caffe.set_device(0)
 
+    # which site
+    museum = request.site
+    # what language
+    language = request.language
+    print 'Museum: %s Language %s' % (museum, language)
+    
+
     features = self._fDesc.describe(img)
     logging.debug('feature extraction took %.3f'% (time.time() - t0))
     t0 = time.time()
     if features is not None:
-        results = self._searcher.search(features, 5)
+        results = self._get_searcher(museum).search(features, 5)
         logging.debug('Matching took %.3f' % (time.time() - t0))
         #print results
-        response = [rpc_pb2.PhotoPredictResponse.Result(text="score: %6.2f" % (res[1]), \
-                    image_url= "%s/assets/%s" % (WEB_HOST, res[0]), \
-                    audio_url="%s/assets/%s.mp3" % (WEB_HOST, res[0].split('_small.')[0])) \
-                    for res in results]
+        response = []
+        for res in results:
+            img_path, file_name = os.path.split(res[0])
+            [img_name, img_ext] = file_name.split('.')
+            img_url = "%s/assets/Images/%s/%s" % (WEB_HOST, img_path, img_name + '_small.' + img_ext)
+            lang_suffix = '_en'
+            if language in ['zh', 'zh-hans', 'zh-Hans','zh_hans', 'zh_Hans', 'zh_hant', 'zh_Hant']:
+                lang_suffix = '_zh' 
+            audio_path = os.path.split(img_path)[0] + '/Audio'
+            audio_url = "%s/assets/Images/%s/%s.mp3" % (WEB_HOST, audio_path, img_name + lang_suffix)
+            desc_file = os.path.join('../../web/assets/Images', os.path.split(img_path)[0], 'Description', img_name+lang_suffix+'.txt')
+            #print desc_file
+            text = ''
+            if os.path.isfile(desc_file):
+                with open(desc_file, 'rt') as fid:
+                    text = fid.read()
+            #print text
+            response.append(rpc_pb2.PhotoPredictResponse.Result(text=text, image_url=img_url, audio_url=audio_url))
+
         logging.debug(response)
 #        for res in results:
 #            if photo_info == '': # first one

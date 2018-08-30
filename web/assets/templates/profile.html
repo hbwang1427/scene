@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link href='//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="//unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-container grid-list-md>
+                <v-layout column text-xs-center>
+                    <v-flex xs4 justify-align-center mt-3>
+                        <v-avatar :tile="tile" :size="56" color="grey lighten-4">
+                            <img :src="profile.avatar" alt="avatar">
+                        </v-avatar>
+                    </v-flex>
+
+                    <v-flex xs4 mt-1 align-content-center>
+                        <v-text-field v-show="isNickNameEditing" ref="nickNameEdit" v-model="profile.nickname" single-line @blur="nickNameInputComplete"></v-text-field>
+                        <span v-show="!isNickNameEditing" v-text="nickName" @click="editNickName"></span>
+                    </v-flex>
+
+                    <v-flex xs12 md-6 pa-1 mt-5>
+                        <v-select :items="langs" v-model="profile.lang" label="Your prefered language" @change="updateProfile"></v-select>
+                    </v-flex>
+
+                    <v-flex xs12 md-6 pa-1 mt-5>
+                        <v-expansion-panel>
+                            <v-expansion-panel-content @input="loadPhoto($event)">
+                                <div slot="header">your uploaded photos</div>
+                                <v-card>
+                                    <v-container grid-list-md fluid>
+                                        <v-layout row wrap>
+                                            <v-flex v-for="(photo,index) in photos" :key="index" xs4>
+                                                <v-card flat tile>
+                                                    <v-card-media :src="photo.url" height="150px">
+                                                    </v-card-media>
+                                                </v-card>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
+                                </v-card>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-flex>
+
+                    <v-flex md12>
+                        <v-btn block color="secondary" dark @click="logout">
+                            Sign out
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-app>
+    </div>
+
+    <script src="//unpkg.com/vue/dist/vue.js"></script>
+    <script src="//unpkg.com/vuetify/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+
+            beforeMount: () => {
+
+            },
+
+            mounted: function () {
+                var self = this;
+                $.getJSON("/user/profile", function (response) {
+                    if (response.profile.nickname) {
+                        self.profile.nickname = response.profile.nickname;
+                    }
+                    if (response.profile.avatar) {
+                        self.profile.avatar = response.profile.avatar;
+                    }
+                    self.profile.lang = response.profile.lang || "en";
+                });
+            },
+
+            data: () => ({
+                isNickNameEditing: false,
+                langs: [
+                    { text: "English", value: "en" },
+                    { text: "简体中文", value: "zh-hans" },
+                    { text: "繁体中文", value: "zh-hant" },
+                    { text: "français", value: "fr" },
+                    { text: "Español", value: "es" },
+                    { text: "العربية", value: "ar" },
+                    { text: "日本語", value: "ja" },
+                ],
+                photos: [],
+                profile: {
+                    lang: "",
+                    avatar: "https://vuetifyjs.com/static/apple-touch-icon-180x180.png",
+                    nickname: "",
+                },
+                tile: false
+            }),
+
+            methods: {
+                logout: function () {
+                    $.get("/user/logout", function () {
+                        window.location.replace("/demo");
+                    });
+                },
+
+                loadPhoto: function (v) {
+                    var self = this;
+                    if (v && this.photos.length == 0) {
+                        console.log("load photos");
+                        $.getJSON("/user/photos", function (response) {
+                            self.photos = response.photos || [];
+                            if (self.photos.length == 0) {
+                                for (var i = 0; i < 9; i++) {
+                                    self.photos.push({url:"https://unsplash.it/150/300?image="+Math.floor(Math.random() * 100) + 1});
+                                }
+                            }
+                        });
+                    }
+                },
+
+                editNickName: function () {
+                    this.isNickNameEditing = true;
+                    this.$nextTick(this.$refs.nickNameEdit.focus);
+                },
+
+                updateProfile: function () {
+                    var self = this;
+                    this.$nextTick(function () {
+                        console.log("updateProfile:", self.profile.lang);
+                        $.ajax({
+                            type: "POST",
+                            url: "/user/setprofile",
+                            data: {
+                                nickname: self.profile.nickname,
+                                lang: self.profile.lang
+                            },
+                            success: function () {
+                                console.log("save ok");
+                            }
+                        });
+                    });
+                },
+
+                nickNameInputComplete: function () {
+                    this.profile.nickname = this.$refs.nickNameEdit.value;
+                    this.isNickNameEditing = false;
+                    this.updateProfile();
+                }
+            },
+
+            computed: {
+                nickName: function () {
+                    return this.profile.nickname || "Click to set nickname";
+                },
+
+                userLang: function () {
+                    return this.profile.lang || "en";
+                }
+            },
+
+            watch: {
+                "profile.lang": function(v) {
+                    var d = new Date();
+                    d.setTime(d.getTime() + (365*24*60*60*1000));
+                    var expires = "expires="+ d.toUTCString();
+                    document.cookie = "lang=" + v + ";" + expires + ";path=/";
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

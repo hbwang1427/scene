@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{.title}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href='http://fonts.googleapis.com/css?family=Raleway:600,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="//unpkg.com/vue"></script>
+    <script src="//unpkg.com/jquery"></script>
+    <script src="//unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="//unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
+	<script src="/assets/js/load-image.all.min.js"></script>
+	
+    <style>
+    	* {margin:0; padding:0;}
+    	body {width:100%;height:100%;}
+    	/*img { 
+			max-width:550px; 
+			_width:expression(this.width>550?"550px":this.width); 
+			max-height:550px; 
+			_height:expression(this.height>550?"550px":this.height); 
+		}*/
+		.material-icons.md-18 { font-size: 18px; }
+		.material-icons.md-24 { font-size: 24px; }
+		.material-icons.md-36 { font-size: 36px; }
+		.material-icons.md-48 { font-size: 48px; }
+
+		.title1 {
+			text-align: center;
+			font-family: 'Raleway'; 
+			font-size:20px; 
+			text-transform: capitalize;
+			padding:20px;
+		}
+
+		#snap_photo {
+			position: relative;
+			text-align: center;
+			z-index: 100;
+			top: -500px;
+			transition: top 1s;
+		}
+		#snap_photo.topdown {
+			top:0px;
+		}
+		#snap_photo p {
+			font-family: 'Roboto Slab'; 
+			padding:100px 15px 40px 15px; 
+			/*margin:0 auto;*/
+			font-size:20px;
+		}
+
+
+		.align-center {
+			margin:auto;
+			text-align: center;
+		}
+
+		.item-card {
+			/*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+			background-color: white;
+			display: flex;
+			flex-direction: column;
+    		text-align: center;
+    		min-width: 0;
+		    word-wrap: break-word;
+		    background-color: #fff;
+		    background-clip: border-box;
+		    /*border: 1px solid rgba(0,0,0,.125);
+		    border-radius: .25rem;*/
+		}
+
+		.item-card p {
+			margin:0;
+			padding: 15px 0;
+    		font-size: 14px;
+		}
+
+		.item-card img {
+			width:100%;
+		}
+
+		.item-card p.limitheight {
+			max-height: 94px;
+			overflow: hidden;
+		}
+
+		.item-card audio {
+			width:100%;
+		}
+
+		.fadecover {
+		    position: relative; 
+		    bottom: 42px;
+		    height: 42px;
+		    background: -webkit-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    ); 
+		    background-image: -moz-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		    background-image: -o-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		    background-image: linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		    background-image: -ms-linear-gradient(
+		        rgba(255, 255, 255, 0) 0%,
+		        rgba(255, 255, 255, 1) 100%
+		    );
+		}
+
+
+		/* results grid */
+		.grid {
+		  background: #f5f5f5;
+		  margin-bottom: 60px;
+		}
+
+		/* clear fix */
+		.grid:after {
+		  content: '';
+		  display: block;
+		  clear: both;
+		}
+
+		/* ---- .grid-item ---- */
+
+		/* Extra small devices (portrait phones, less than 576px) */
+	    .grid-sizer,
+		.grid-item {
+		  width: 100%;
+		}
+
+		.gutter-sizer { width: 0; }
+
+		.grid-item {
+		  float: left;
+		  margin-bottom: 26px;
+		}
+
+		.grid-item:last-child {
+			margin-bottom: 0;
+		}
+
+		.grid-item img {
+		  display: block;
+		  max-width: 100%;
+		}
+		
+
+		/*Small devices (landscape phones, 576px and up)*/
+		@media only screen and (min-width: 576px) {
+			.grid-sizer,
+			.grid-item {
+			  width: 49%;
+			}
+			.gutter-sizer { width: 2%; }
+		}
+
+		/*Medium devices (tablets, 768px and up)*/
+		@media only screen and (min-width: 768px) {
+		    .grid-sizer,
+			.grid-item {
+			  width: 32%;
+			}
+			.gutter-sizer { width: 2%; }
+			.grid-item:last-child {
+				margin-bottom: 20px;
+			}
+		}
+
+		/*Large devices (desktops, 992px and up)*/
+		@media (min-width: 992px) { 
+			.grid {width:96%; margin-left:auto; margin-right:auto;}
+			.grid-sizer,
+			.grid-item {
+			  width: 24%;
+			}
+			.gutter-sizer { width: 1.333%; }
+			.grid-item:last-child {
+				margin-bottom: 20px;
+			}
+		}
+
+		/*Extra large devices (large desktops, 1200px and up)*/
+		@media (min-width: 1200px) { 
+			.grid {width:96%; margin-left:auto; margin-right:auto;}
+			.grid-sizer,
+			.grid-item {
+			  width: 19%;
+			}
+			.gutter-sizer { width: 1.25%; }
+			.grid-item:last-child {
+				margin-bottom: 20px;
+			}
+		}
+    </style>
+	
+	<script type="text/javascript">
+		var language = "en";
+		function selectLanguage() {
+			language = $('#lang_sel select')[0].value;
+			console.log(language)
+		}
+		function selectFile(input) {
+        	if (input.files && input.files[0]) {
+	            //console.log('in select file!!', input.files[0])
+	            loadImage(input.files[0],
+	              function(img){
+	              	var fileName = input.files[0].name;
+	              	var imgdata;
+	              	if (fileName.endsWith(".png")) {
+	              		imgdata = img.toDataURL("image/png");	
+	              	//} else if (fileName.endsWidth(".jpg") || fileName.endsWidth(".jpeg")) {
+	              	} else {
+	              		imgdata = img.toDataURL("image/jpeg");
+	              	}
+	              	app.uploadimg = imgdata
+	                app.results = [];
+	                app.isRequesting = true;
+	                $.post("/predict", {
+	                	"image": imgdata,
+	                	"language": language
+	                }).done(function(data) {
+	                	app.isRequesting=false;
+	                	if (data.results) {
+	                		app.results = data.results;
+	                	} else if (data.error) {
+	                		app.error = data.error;
+	                	}
+	                }).fail(function() {
+	                	app.error = "server error";
+	                }).always(function(){
+	                	app.isRequesting=false;
+	                });
+	              },
+	              {maxWidth: 400, maxHeight: 400, downsamplingRatio: 0.01, pixelRatio:window.devicePixelRatio, canvas: true, orientation: true}
+	            );
+	        }
+    }
+	</script>
+</head>
+<body>
+	<form id="file_form">
+		<input type="file" name="file_name" id="fileinput" accept="image/*" onchange="selectFile(this);" style="display: none;">
+    </form>
+
+	<div id="snap_photo">
+		<div id="lang_sel" class="custom-select">
+	       <select onchange="selectLanguage()">
+	         <option value="en"><strong>Select a language</strong></option>
+	         <option value="en"><strong>English (default)</strong></option>
+	         <option value="zh"><strong>Chinese</strong></option>
+	       </select>
+	     </div>
+		<p style="">Snap a photo to recognize it</p>
+		<i class="material-icons md-48" onclick="document.getElementById('fileinput').click();">photo_camera</i>
+	</div>
+
+	<div id="upload_img" class="item-card" style="display: none">
+		<p class="title1">your uploaded photo</p>
+		<img class="item-card"></img>
+	</div>
+
+	<canvas id="mycanvas" width="800" height="80" style="margin:0 auto; padding:0; display: none"></canvas>
+
+	<div id="app">
+	</div>
+
+
+	<script type="text/javascript">
+		var ds = document.getElementById('mycanvas');
+		ds.width = screen.width;
+		var theta1 = 0, period1 = ds.width * 0.9, amp1 = Math.min(ds.height * 0.15, 20);
+		var theta2 = Math.PI/3, period2 = ds.width * 0.75, amp2 = Math.min(ds.height * 0.2, 30);
+		var fps = 40;
+		var ctx = ds.getContext('2d');
+		ctx.font = "12px Arial";
+		function draw(period, theta, amp, color, linewidth, text) {
+			var start = false;
+			var textX = {};
+			if (text) {
+				var xspan = text.length * 15 + (text.length - 1) * 3;
+				var firstX = (ds.width - xspan) / 2;
+				for (var i = 0; i < text.length; i++) {
+					var x = firstX + 18 * i;
+					textX[x] = i;
+				}
+			}
+			ctx.beginPath();
+			for (var x = 0, y =0; x < ds.width; x++) {
+				var offset = Math.sin(2*x/period * Math.PI + theta);
+				y = ds.height/2 - amp * offset;
+				ctx.lineTo(x, y);
+				if (x in textX) {
+					ctx.fillText(text.substr(textX[x],1), x, y - 5);
+				}
+			}
+			ctx.strokeStyle = color;
+			ctx.lineWidth = linewidth;
+			ctx.stroke();
+		}
+
+		var drawTimer = null;
+
+		function showComuputing(show) {
+	  		ds.style.display = show ? "block" : "none";
+	  		if (drawTimer) {
+	  			clearInterval(drawTimer);
+	  			drawTimer = null;
+	  		}
+	  		if (show) {
+	  			drawTimer = setInterval(function(){
+					ctx.clearRect(0, 0, ds.width, ds.height);
+					draw(period1, theta1, amp1, 'rgba(230, 230, 230, 0.5)', 0.5); theta1 += Math.PI * 0.01;
+					draw(period2, theta2, amp2, "rgba(210, 210, 210, 0.5)", 1, 'computing'); theta2 += Math.PI * 0.01;
+				}, 1000/fps);
+	  		}
+		}
+	</script>
+
+	<script>
+		function onaudioplay(event) {
+			//mut other playing audios
+			$("audio", ".grid").each(function(i, elem) {
+				if (elem != event.target && !elem.paused) {
+					elem.pause();
+				}
+			});
+		}
+
+		function showall(event) {
+			$(event.target).prev().removeClass('limitheight');
+			$(event.target).remove();
+			$("#predicts").masonry('layout');
+		}
+
+		var app = new Vue({
+		  el: '#app',
+		  delimiters: ['${', '}'],
+		  template: '\
+		  	<div>\
+			  	<div v-if="error" class="alert alert-danger">${error}</div>\
+			  	<div v-if="results.length>0">\
+				  	<p class="title1">possible predictions</p>\
+				  	<div id="predicts" class="grid">\
+				  		<div class="grid-sizer"></div>\
+  						<div class="gutter-sizer"></div>\
+					  	<div v-for="item in results" class="grid-item">\
+					  		<div class="item-card">\
+						  		<img :data-src="item.image_url" @click="display(item)"/>\
+						  		<audio v-if="item.audio_url" :src="item.audio_url" preload="metadata" controls="controls" controlsList="nodownload" onPlaying="onaudioplay(event)"></audio>\
+						  		<p style="text-align:left; padding:10px">${item.text}</p>\
+					  		</div>\
+					  	</div>\
+				  	</div>\
+			  	</div>\
+		  	</div>\
+		  ',
+		  data: {
+		  	error:"",
+		  	uploadimg:"",
+		  	isRequesting: false,
+		    results: []
+		  },
+		  watch: {
+		  	//when property changes...
+		  	uploadimg: function(val) {
+		  		$("#upload_img").css({display:'block'});
+		  		$("#upload_img img").attr({src: val});
+		  	},
+		  	isRequesting: function(val) {
+		  		showComuputing(val==true);
+		  		$("#snap_photo p").css({display: 'none'});
+		  		$("#snap_photo #lang_sel").css({display: 'none'});
+		  		$("#snap_photo").css({position: 'fixed', textAlign:'right', right:0, bottom:0, top:'auto', opacity: 0.5, display:'inline'});
+		  	},
+		  	error: function(val) {
+		  		showComuputing(val && val.length == 0);
+		  	},
+		  	results: function(val) {
+		  		showComuputing(val && val.length == 0);
+		  	}
+		  },
+		  updated: function() {
+		  	//when data changes and dom have been rendered. use masonry to re arrany images
+		  	// init Masonry
+			var $grid = $('.grid').masonry({
+			  // set itemSelector so .grid-sizer is not used in layout
+			  itemSelector: '.grid-item',
+			  // use element for option
+			  columnWidth: '.grid-sizer',
+			  gutter: '.gutter-sizer',
+			  percentPosition: true
+			});
+			// layout Masonry after each image loads
+			$grid.imagesLoaded().progress( function() {
+			  $grid.masonry('layout');
+			});
+
+			//add read more link if text length is large
+			$('.item-card', '#predicts').children('p').each(function(i, p) {
+				var el = $(p);
+				var lineHeight = parseInt(el.css('line-height').replace('px', ''));
+				var height = el.height();
+				if (height > 4*lineHeight) {
+					//more than 4 lines
+					$(p).addClass('limitheight');
+					if (p.innerText.length > 10) {
+						$('<div class="fadecover" onclick="showall(event)"></div>').insertAfter($(p));
+					}
+				}
+			});
+
+			//lazyload images
+			//$("#predicts .item-card img").lazyload();
+			var myLazyLoad = new LazyLoad({
+				callback_load: function(){
+					//after lazy loaded images loaded. layout the grid.
+					$("#predicts").masonry('layout');
+				}
+			});
+		  },
+		  methods:{
+		  	display(item) {
+
+		  	}
+		  }
+		});
+	</script>
+
+	<script>
+		setTimeout(function(){
+			//animation effect
+			$("#snap_photo").addClass("topdown");
+		}, 100);
+	</script>
+</body>
+</html>

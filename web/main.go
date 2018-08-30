@@ -3,8 +3,7 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
-	"log"
+	"html/template"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,30 +14,23 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
-	"github.com/aitour/scene/auth"
 	"github.com/aitour/scene/web/config"
 	"github.com/aitour/scene/web/handler"
 	"github.com/gin-contrib/cors"
 
+	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var (
-	conf          = flag.String("conf", "web.toml", "Specify a config file")
-	cfg           *config.Config
-	tokenProvider auth.TokenProvider
+	conf = flag.String("conf", "web.toml", "Specify a config file")
+	cfg  *config.Config
 )
 
 func createHttpServer() (*http.Server, error) {
 	log.SetOutput(gin.DefaultWriter)
-	var err error
-	tokenProvider, err = auth.CreateTokenProvider("simple", map[string]interface{}{
-		"tokenTTL": 10 * time.Second,
-		"tokenLen": 16,
-	})
-	if err != nil {
-		log.Fatalf("create TokenProvider error:%v", err)
-	}
 
 	r := gin.Default()
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
@@ -58,23 +50,51 @@ func createHttpServer() (*http.Server, error) {
 		MaxAge: 12 * time.Hour,
 	}))
 
-	r.LoadHTMLGlob(cfg.Http.AssetsDir + "/templates/*")
-	r.Static("/assets", cfg.Http.AssetsDir)
+	r.Use(handler.AttachUserInfo())
 
-	authorized := r.Group("/user", handler.AuthChecker(tokenProvider))
-	authorized.GET("/profile", func(c *gin.Context) {
-		fmt.Fprintf(c.Writer, "when you see this page, you have passed the auth check!")
+	r.SetFuncMap(template.FuncMap{
+		"T": handler.Tr,
 	})
+	r.LoadHTMLGlob(cfg.Http.AssetsDir + "/templates/*.html")
+	r.Static("/assets", cfg.Http.AssetsDir)
+	r.Static("/photo", cfg.Http.UploadDir)
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{})
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title": "pangolins ai",
+		})
 	})
 
+	handler.SetupThirdPartyAuthHandlers(r)
+
+	r.GET("/user/register", func(c *gin.Context) {
+		id := captcha.New()
+		c.HTML(http.StatusOK, "register.html", gin.H{
+			"cv":   id,
+			"lang": c.DefaultQuery("lang", "en"),
+		})
+	})
+	r.POST("/user/register", handler.CreateUser)
+	r.GET("/user/activate", handler.ActivateUser)
+	r.GET("/user/signin", handler.UserLogin)
+	r.POST("/user/signin", handler.AuthUser)
+	r.GET("/user/logout", handler.Logout)
+
+	authorized := r.Group("/", handler.AuthChecker())
+	authorized.GET("/user", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "profile.html", gin.H{})
+	})
+	authorized.GET("/user/photos", handler.GetUserPhotos)
+	authorized.GET("/user/profile", handler.GetUserProfile)
+	authorized.POST("/user/setprofile", handler.SetUserProfile)
+	authorized.GET("/user/changepwd", handler.ChangePwd)
+	authorized.POST("/user/changepwd", handler.ChangePwd)
 	r.GET("/demo", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "demo.html", gin.H{
 			"title": "predict demo page",
 		})
 	})
+	r.GET("/demo/testimgs/:site", handler.FetchTestImages)
 
 	r.POST("/predict", handler.Predict)
 	r.GET("/weather/current", handler.GetCurrentWeather)
@@ -84,6 +104,8 @@ func createHttpServer() (*http.Server, error) {
 	r.GET("/nearby/museum", handler.SearchNearbyMuseumsByGoogleMap)
 	r.GET("/place/photo", handler.GetPlacePhoto)
 	r.GET("/place/detail", handler.GetPlaceDetail)
+	r.GET("/vcode/:img", gin.WrapH(captcha.Server(200, 60)))
+	r.GET("/vcode", handler.NewCaptacha)
 
 	s := &http.Server{
 		Addr:    cfg.Http.Bind,
@@ -108,6 +130,7 @@ func main() {
 
 	//startup http server
 	go func() {
+		//if err := srv.ListenAndServeTLS("server.crt", "server.key"); err != nil {
 		if err := srv.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}

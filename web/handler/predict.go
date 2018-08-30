@@ -1,19 +1,28 @@
 package handler
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"fmt"
+	"image"
+	"image/jpeg"
+	"image/png"
 	"io/ioutil"
-	"log"
 	"net/http"
+	"os"
+	"path"
 	"strconv"
 	"strings"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/gin-gonic/gin"
+	"github.com/nfnt/resize"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
+	"github.com/aitour/scene/model"
 	pb "github.com/aitour/scene/serverpb"
 	"github.com/aitour/scene/web/config"
 )
@@ -35,6 +44,8 @@ var (
 		"jpeg": pb.PhotoPredictRequest_JPG,
 		"png":  pb.PhotoPredictRequest_PNG,
 	}
+
+	testImages = make(map[string][]string)
 )
 
 func getGrpcConn() (*grpc.ClientConn, error) {
@@ -129,6 +140,22 @@ func Predict(c *gin.Context) {
 		}
 	}
 
+	//save user image
+	if v, ok := c.Get(gin.AuthUserKey); ok {
+		uid, _ := strconv.ParseInt(v.(string), 10, 64)
+		photoStore := NewDiskPhotoStore(config.GetConfig().Http.UploadDir)
+		url, err := photoStore.Store(uid, imgData)
+		if err == nil {
+			photo := &model.UserAlbumPhoto{UserId: uid, Url: url}
+			err := model.AddPhoto(photo)
+			if err != nil {
+				log.Printf("add photo error:%v", err)
+			}
+		} else {
+			log.WithError(err).Error("store image error")
+		}
+	}
+
 	// get a connection to the server.
 	conn, err := getGrpcConn()
 	if err != nil {
@@ -144,8 +171,8 @@ func Predict(c *gin.Context) {
 		Type:         imgType,
 		Data:         imgData,
 		Language:     language,
-        Site:         site,
-		Geo:          &pb.GeoPosition{Latitude:lat, Longitude:lng},
+		Site:         site,
+		Geo:          &pb.GeoPosition{Latitude: lat, Longitude: lng},
 		AcquireText:  true,
 		AcquireAudio: true,
 		AcquireVideo: false,
@@ -162,4 +189,79 @@ func Predict(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"results": response.Results,
 	})
+}
+
+func resizeImage(fname string) (string, error) {
+	file, err := os.Open(fname)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	fnameLower := strings.ToLower(fname)
+	var img image.Image
+	if strings.HasSuffix(fnameLower, "jpg") || strings.HasSuffix(fnameLower, "jpeg") {
+		if img, err = jpeg.Decode(file); err != nil {
+			return "", err
+		}
+	} else {
+		if img, err = png.Decode(file); err != nil {
+			return "", err
+		}
+	}
+
+	var resizedImage image.Image
+	if img.Bounds().Dx() > img.Bounds().Dy() {
+		resizedImage = resize.Resize(600, 0, img, resize.Lanczos3)
+	} else {
+		resizedImage = resize.Resize(0, 600, img, resize.Lanczos3)
+	}
+
+	out := &bytes.Buffer{}
+	if err := jpeg.Encode(out, resizedImage, nil); err != nil {
+		return "", err
+	}
+
+	contents, err := ioutil.ReadAll(out)
+	if err != nil {
+		return "", err
+	}
+
+	return "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(contents), nil
+}
+
+func FetchTestImages(c *gin.Context) {
+	site := c.Param("site")
+	if len(site) == 0 {
+		c.JSON(http.StatusOK, gin.H{})
+		return
+	}
+
+	if v, ok := testImages[site]; ok {
+		c.JSON(http.StatusOK, gin.H{
+			"images": v,
+		})
+		return
+	}
+
+	testImages[site] = make([]string, 0)
+	fis, err := ioutil.ReadDir("assets/demo/" + site)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{})
+	}
+	for _, fi := range fis {
+		if !fi.IsDir() {
+			base64EncodedImage, err := resizeImage(path.Join("assets/demo", site, fi.Name()))
+			if err == nil {
+				testImages[site] = append(testImages[site], base64EncodedImage)
+			} else {
+				log.WithError(err).Error("load image error")
+			}
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"images": testImages[site],
+	})
+	return
 }

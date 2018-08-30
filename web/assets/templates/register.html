@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ T .lang "register.title" }} </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:600,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+    html {
+        /* To make use of full height of page*/
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Raleway;
+        background-color: #f0f0f0;
+    }
+    
+
+    #form-container {
+        background-color: #fff;
+        padding: 20px;
+        max-width: 480px;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    #form-container h3 {
+    	font-color: blue;
+    	display: block;
+    	text-align: center;
+    	margin-left:auto;
+    	margin-right:auto;
+        margin-bottom: 40px;
+        font-color: black;
+        font-weight: bold;
+    }
+
+     p.error {
+     	position: fixed;
+     	top:0;
+     	width:100%;
+     	background-color: #F8D7DA;
+     	font-color: #fff;
+     	font-size: 16px;
+     	padding: 20px;
+     	text-align: center;
+     }
+
+     p.success {
+     	text-align:center;
+     	margin-top:80px;
+     	padding: 30px;
+     	background-color: #D4EDDA;
+     	font-size: 22px;
+     	color: #000;
+     	max-width: 800px;
+     	margin-left: auto;
+     	margin-right: auto;
+     }
+
+     p.fail {
+     	text-align:center;
+     	margin-top:80px;
+     	padding: 30px;
+     	background-color: #F8D7DA;
+     	font-size: 22px;
+     	color: #000;
+     	max-width: 800px;
+     	margin-left: auto;
+     	margin-right: auto;
+     }
+
+
+    /*Large devices (desktops, 992px and up)*/
+    @media (min-width: 992px) { 
+        #form-container {
+            margin-top: 80px;
+            min-height: auto;
+        }
+    }
+
+    /*Extra large devices (large desktops, 1200px and up)*/
+    @media (min-width: 1200px) { 
+        
+    }
+
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="//unpkg.com/vue"></script>
+    <script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
+</head>
+
+<body>
+	{{if .regok}}
+		<p class="success">Thanks for registration! <br><br>An email was sent to you, please check your email and follow the instructions to activate your account.</p> 
+	{{else if .activateok}}
+		<p class="success">Your account was sucessfully activated</p> 
+	{{else if .activatefail}} 
+		<p class="success">Account activation failed</p> 
+	{{else}}
+	{{if .error}} <p class="error">{{.error}}</p> {{end}}
+    <div class="container" id="form-container">
+        <h3>{{ T .lang "register.title" }}</h3>
+        <form method="post" action="/user/register">
+            <div class="form-group">
+                <label for="languageInput">{{ T .lang "register.language" }} </label>
+                <select name="language" id="languageInput" class="form-control" onchange="changelang()">
+                    <option value="en">English</option>
+                    <option value="zh-Hans">简体中文</option>
+                    <option value="zh-Hant">繁体中文</option>
+                    <option value="fr">français</option>
+                    <option value="es">Español</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="ru">английский</option>
+                    <option value="ar">الإنجليزية</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="emailInput">{{ T .lang "email" }}</label>
+                <input type="email" name="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email" autocomplete="off">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+                <label for="passwordInput">{{ T .lang "password" }}</label>
+                <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Password" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="vcode">{{ T .lang "checkcode" }}</label>
+                <input type="text" class="form-control" id="vcode" name="vcode" placeholder="Check code" autocomplete="off">
+                <img id="cvcode" src="/vcode/{{.cv}}.png" onclick="reloadcv({{.cv}})" title="click to refresh" style="cursor: pointer"/>
+            </div>
+            <input type="hidden" name="vcodeid" value="{{.cv}}" />
+            <button type="submit" class="btn btn-primary">{{ T .lang "signup" }}</button>
+        </form>
+    </div>
+    <script type="text/javascript">
+        function reloadcv(id) {
+            $("#cvcode").attr("src", "/vcode/" + id + ".png?reload=" + Math.random());
+        }
+        function changelang() {
+            window.location = window.location.pathname + "?lang=" + $("#languageInput").val();
+        }
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        $(function(){
+            var lang = getParameterByName("lang");
+            if (lang) {
+                $("#languageInput").val(lang);
+            }
+        });
+    </script>
+    {{end}}
+</body>
+
+</html>

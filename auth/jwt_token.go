@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aitour/scene/log"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
@@ -12,16 +11,16 @@ type jwtToken struct {
 	signMethod  string
 	hmacSignKey string
 
-	keeper *tokenKeeper
+	keeper tokenKeeper
 }
 
 func (p *jwtToken) GetAuthInfo(token string) (*AuthInfo, error) {
 	if !p.keeper.isValid(token) {
-		return nil, nil
+		return nil, fmt.Errorf("invalid token")
 	}
 
 	var (
-		username string
+		user string
 	)
 
 	parsed, err := jwt.Parse(string(token), func(token *jwt.Token) (interface{}, error) {
@@ -35,9 +34,9 @@ func (p *jwtToken) GetAuthInfo(token string) (*AuthInfo, error) {
 		}
 
 		claims := parsed.Claims.(jwt.MapClaims)
-		username = claims["username"].(string)
+		user = claims["user"].(string)
 		p.keeper.resetTokenExpire(token)
-		return &AuthInfo{UserName: username}, nil
+		return &AuthInfo{User: user}, nil
 	default:
 		return nil, fmt.Errorf("failed to parse jwt token: %s", err)
 	}
@@ -48,19 +47,16 @@ func (p *jwtToken) RevokeToken(token string) error {
 	return nil
 }
 
-func (p *jwtToken) AssignToken(userName string) (string, error) {
+func (p *jwtToken) AssignToken(user string) (string, error) {
 	tk := jwt.NewWithClaims(jwt.GetSigningMethod(p.signMethod),
 		jwt.MapClaims{
-			"username": userName,
+			"user": user,
 		})
 
 	token, err := tk.SignedString([]byte(p.hmacSignKey))
 	if err != nil {
-		log.Debugf("failed to sign jwt token: %s", err)
 		return "", err
 	}
-
-	log.Debugf("jwt token: %s", token)
 
 	p.keeper.addToken(token)
 
@@ -93,9 +89,9 @@ func createJWTTokenProvider(opts map[string]interface{}) (*jwtToken, error) {
 	tp := &jwtToken{
 		signMethod:  signMethod,
 		hmacSignKey: hmacSignKey,
-		keeper:      newTokenKeeper(func(token string) {}, tokenTTL),
+		keeper:      newFileTokenKeeper(func(token string) {}, tokenTTL, "tokens.json"),
 	}
 
-	go tp.keeper.run()
+	//go tp.keeper.run()
 	return tp, nil
 }
