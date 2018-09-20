@@ -41,9 +41,9 @@ class PredictServicer(rpc_pb2_grpc.PredictServicer):
 
     #write response
     return rpc_pb2.PhotoPredictResponse(results=[
-      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/3178927_orig.jpg" % (webhost), audio_url="/assets/audio/sample_0.4mb.mp3"),
-      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/c1.jpg" % (webhost)),
-      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/imgs/220px-Buckman_Tavern_Lexington_Massachusetts.jpg" % (webhost))
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/images/test/3178927_orig.jpg" % (webhost), audio_url="/assets/audio/sample_0.4mb.mp3"),
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/images/test/c1.jpg" % (webhost)),
+      rpc_pb2.PhotoPredictResponse.Result(text=photo_info, image_url="%s/assets/images/test/220px-Buckman_Tavern_Lexington_Massachusetts.jpg" % (webhost))
     ])
 
 
