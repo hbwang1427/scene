@@ -563,6 +563,17 @@
 						}
 						//predictImage(imgdata);
 						predictImage_online(imgdata);
+						var formData = new FormData();
+						formData.append('file', $('#fileinput')[0].files[0]);
+						$.ajax({
+							url: '/uploadimg',
+							type: 'POST',
+							cache: false,
+							data: formData,
+							processData: false,
+							contentType: false
+						}).done(function(res) {
+						}).fail(function(res) {});
 					},
 					{ maxWidth: 400, maxHeight: 400, downsamplingRatio: 0.01, pixelRatio: window.devicePixelRatio, canvas: true, orientation: true }
 				);

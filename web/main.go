@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"path"
 	"context"
 	"flag"
 	"html/template"
@@ -100,6 +102,13 @@ func createHttpServer() (*http.Server, error) {
 		c.HTML(http.StatusOK, "demo_porcelain.html", gin.H{
 			"title": "predict demo page",
 		})
+	})
+
+	r.POST("/uploadimg", func(c *gin.Context) {
+		file, _ := c.FormFile("file")
+		dst := path.Join(cfg.Http.UploadDir, fmt.Sprintf("%d.bmp", time.Now().UnixNano()))
+		c.SaveUploadedFile(file, dst)
+		//log.Println("upload:" + file.Filename + " -> " + dst)
 	})
 
 	r.POST("/predict", handler.Predict)
