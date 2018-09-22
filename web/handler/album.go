@@ -106,6 +106,9 @@ func UploadAnonomousePhoto(c *gin.Context) {
 
 	//c.SaveUploadedFile(file)
 	uploadFrom := c.Request.RemoteAddr
+	if rip := c.Request.Header.Get("X-Forwarded-For"); len(rip) > 0 {
+		uploadFrom = rip
+	}
 	if i := strings.Index(uploadFrom, ":"); i > 0 {
 		uploadFrom = uploadFrom[:i]
 	}
