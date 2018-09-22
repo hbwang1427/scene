@@ -595,10 +595,9 @@
 						var formData = new FormData();
 						formData.append('file', $('#fileinput')[0].files[0]);
 						//gen random 8 bytes for filekey
-						var rndarr = new Uint8Array(8);
+						var rndarr = new Uint32Array(2);
 						window.crypto.getRandomValues(rndarr);
-						var dv = new DataView(rndarr.buffer);
-						$("#filekey").val(dv.getBigUint64());
+						$("#filekey").val(rndarr.join(","));
 						formData.append('filekey', $("#filekey").val());
 						$.ajax({
 							url: '/uploadimg',

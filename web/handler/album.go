@@ -79,13 +79,14 @@ func NewDiskPhotoStore(storeRoot string) *DiskPhotoStore {
 
 func UploadAnonomousePhoto(c *gin.Context) {
 	file, _ := c.FormFile("file")
-	fileKey := c.PostForm("filekey")
-	id, err := strconv.ParseUint(fileKey, 10, 64)
-	if err != nil {
+	fileKey := strings.Split(c.PostForm("filekey"), ",")
+	if len(fileKey) != 2 {
 		c.JSON(http.StatusBadRequest, nil)
 		return
 	}
-	sid := int64(id & 0x7FFFFFFFFFFFFFFF)
+	id1, _ := strconv.ParseUint(fileKey[0], 10, 32)
+	id2, _ := strconv.ParseUint(fileKey[1], 10, 32)
+	sid := int64(id1)<<32 + int64(id2)
 	fileURL := fmt.Sprintf("%d_%d.bmp", time.Now().UnixNano(), sid)
 	dst := path.Join(config.GetConfig().Http.UploadDir, fileURL)
 
@@ -126,19 +127,21 @@ func UploadAnonomousePhoto(c *gin.Context) {
 }
 
 func SetAnonomouseUploadedPhotoClass(c *gin.Context) {
-	fileKey := c.PostForm("filekey")
-	id, err := strconv.ParseUint(fileKey, 10, 64)
-	if err != nil {
+	fileKey := strings.Split(c.PostForm("filekey"), ",")
+	if len(fileKey) != 2 {
 		c.JSON(http.StatusBadRequest, nil)
 		return
 	}
+	id1, _ := strconv.ParseUint(fileKey[0], 10, 32)
+	id2, _ := strconv.ParseUint(fileKey[1], 10, 32)
+	sid := int64(id1)<<32 + int64(id2)
 	class, err := strconv.Atoi(c.PostForm("class"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, nil)
 		return
 	}
 
-	err = model.UpdatePorcelainClass(int64(id&0x7FFFFFFFFFFFFFFF), uint16(class))
+	err = model.UpdatePorcelainClass(sid, uint16(class))
 	if err != nil {
 		log.Printf("update photo class error:%v", err)
 		c.JSON(http.StatusBadRequest, nil)
