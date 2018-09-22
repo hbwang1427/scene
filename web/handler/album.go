@@ -125,7 +125,10 @@ func UploadAnonomousePhoto(c *gin.Context) {
 	}
 	defer out.Close()
 
-	io.Copy(out, src)
+	if s := src.(io.ReadSeeker); s != nil {
+		s.Seek(0, 0)
+		io.Copy(out, src)
+	}
 }
 
 func SetAnonomouseUploadedPhotoClass(c *gin.Context) {
