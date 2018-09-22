@@ -607,7 +607,9 @@
 							processData: false,
 							contentType: false
 						}).done(function(res) {
-						}).fail(function(res) {});
+						}).fail(function(response) {
+							alert(response.status + " " + response.statusText);
+						});
 					},
 					{ maxWidth: 400, maxHeight: 400, downsamplingRatio: 0.01, pixelRatio: window.devicePixelRatio, canvas: true, orientation: true }
 				);

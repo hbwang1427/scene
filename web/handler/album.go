@@ -93,6 +93,7 @@ func UploadAnonomousePhoto(c *gin.Context) {
 	//save upload file
 	src, err := file.Open()
 	if err != nil {
+		fmt.Printf("open upload file error:%v", err)
 		c.JSON(http.StatusInternalServerError, nil)
 		return
 	}
@@ -118,6 +119,7 @@ func UploadAnonomousePhoto(c *gin.Context) {
 	//if md5 was not violate the filehash unique constraint then we save it to disk
 	out, err := os.Create(dst)
 	if err != nil {
+		log.Printf("create file %s error:%v", dst, err)
 		c.JSON(http.StatusInternalServerError, nil)
 		return
 	}
