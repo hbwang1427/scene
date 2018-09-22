@@ -8,6 +8,7 @@ web/aiweb
 web/web
 web/assets/Images
 web/assets/apk
+web/web.toml
 service/aiserver
 service/service
 *.pyc
