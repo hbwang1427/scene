@@ -5,10 +5,19 @@ import (
 	"crypto/md5"
 	"encoding/binary"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path"
+	"strconv"
+	"strings"
+	"time"
 
+	"github.com/aitour/scene/model"
+	"github.com/aitour/scene/web/config"
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	hashids "github.com/speps/go-hashids"
 )
 
@@ -66,4 +75,73 @@ func (store *DiskPhotoStore) Store(userId int64, photo []byte) (url string, err 
 
 func NewDiskPhotoStore(storeRoot string) *DiskPhotoStore {
 	return &DiskPhotoStore{storeRoot}
+}
+
+func UploadAnonomousePhoto(c *gin.Context) {
+	file, _ := c.FormFile("file")
+	fileKey := c.PostForm("filekey")
+	id, err := strconv.ParseUint(fileKey, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	sid := int64(id & 0x7FFFFFFFFFFFFFFF)
+	fileURL := fmt.Sprintf("%d_%d.bmp", time.Now().UnixNano(), sid)
+	dst := path.Join(config.GetConfig().Http.UploadDir, fileURL)
+
+	//save upload file
+	src, err := file.Open()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+	defer src.Close()
+
+	//calc the md5
+	md5h := md5.New()
+	io.Copy(md5h, src)
+	fileHash := fmt.Sprintf("%x", md5h.Sum([]byte("")))
+
+	//c.SaveUploadedFile(file)
+	uploadFrom := c.Request.RemoteAddr
+	if i := strings.Index(uploadFrom, ":"); i > 0 {
+		uploadFrom = uploadFrom[:i]
+	}
+	err = model.InsertPorcelainPhoto(sid, fileURL, -1, uploadFrom, fileHash)
+	if err != nil {
+		log.Printf("upload anonomouse photo error:%v", err)
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	//if md5 was not violate the filehash unique constraint then we save it to disk
+	out, err := os.Create(dst)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+	defer out.Close()
+
+	io.Copy(out, src)
+}
+
+func SetAnonomouseUploadedPhotoClass(c *gin.Context) {
+	fileKey := c.PostForm("filekey")
+	id, err := strconv.ParseUint(fileKey, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	class, err := strconv.Atoi(c.PostForm("class"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
+
+	err = model.UpdatePorcelainClass(int64(id&0x7FFFFFFFFFFFFFFF), uint16(class))
+	if err != nil {
+		log.Printf("update photo class error:%v", err)
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
 }

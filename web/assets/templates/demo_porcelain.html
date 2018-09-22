@@ -9,9 +9,12 @@
 	<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
 	 crossorigin="anonymous">
+
+	 <script src="//unpkg.com/jquery"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script src="//unpkg.com/vue"></script>
 	<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-	<script src="//unpkg.com/jquery"></script>
 	<script src="//unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 	<script src="//unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
@@ -158,6 +161,7 @@
 		#lpcontainer {
 			text-align:center;
 			margin-top:20px;
+			display: none;
 		}
 
 		#lpcontainer img {
@@ -507,16 +511,43 @@
 		async function showLocalPredictionResults(classesProbs, imagesrc) {
 			$("#snap_photo p").css({ display: 'none' });
 			$("#snap_photo #lang_sel").css({ display: 'none' });
-			$("#snap_photo").css({ position: 'fixed', textAlign: 'right', right: 0, bottom: 0, top: 'auto', opacity: 0.5, display: 'inline' });
+			$("#snap_photo").css({ position: 'fixed', textAlign: 'right', right: 0, bottom: 0, top: 'auto', opacity: 0.5, display: 'inline', zIndex:1000 });
 
-			var container = $("#lpcontainer").show().empty();
+			$("#lpcontainer").show();
+			var container = $("#lpresults").empty();
 			$("<img/>").attr("src", imagesrc).appendTo(container);
 			var predicts = await classesProbs;
 			var ul = $("<ul/>");
 			for (var i=0; i<predicts.length; i++) {
-				$("<li><span>" + predicts[i].className + "</span><span style=\"color:red;margin-left:10px\">" + predicts[i].probability + "</span></li>").appendTo(ul);
+				var li = $("<li/>").appendTo(ul);
+				var className = $("<span>" + predicts[i].className + "</span>").appendTo(li);
+				var prob = $("<span style=\"color:red;margin-left:10px\">" + predicts[i].probability + "</span>").appendTo(li);
+				if (i == 0) {
+					var pin = $('<button">📌</button>').appendTo(li);
+					pin.on("click", function(){
+						$("#classModal").modal();
+					});
+				}
 			}
 			ul.appendTo(container);
+
+			var lpclass = $("#lpclass");
+			if (lpclass.children().length == 0) {
+				if (typeof(PORCELAIN_CLASSES) != 'undefined') {
+					for (var key in PORCELAIN_CLASSES) {
+						$('<option value="'+key+'">' + PORCELAIN_CLASSES[key]+ '</option>').appendTo(lpclass);
+					}
+				}
+				lpclass.on("change", function(){
+					$.ajax({
+						url: '/setimgclass',
+						type: 'POST',
+						data: {filekey: $("#filekey").val(), class: $(this).val()}
+					}).done(function(res) {
+						alert("thanks for your contribute");
+					});
+				});
+			}
 		}
 	</script>
 
@@ -546,8 +577,6 @@
 		}
 
 
-
-
 		function selectFile(input) {
 			if (input.files && input.files[0]) {
 				//console.log('in select file!!', input.files[0])
@@ -565,6 +594,12 @@
 						predictImage_online(imgdata);
 						var formData = new FormData();
 						formData.append('file', $('#fileinput')[0].files[0]);
+						//gen random 8 bytes for filekey
+						var rndarr = new Uint8Array(8);
+						window.crypto.getRandomValues(rndarr);
+						var dv = new DataView(rndarr.buffer);
+						$("#filekey").val(dv.getBigUint64());
+						formData.append('filekey', $("#filekey").val());
 						$.ajax({
 							url: '/uploadimg',
 							type: 'POST',
@@ -589,6 +624,7 @@
 <body>
 	<form id="file_form">
 		<input type="file" name="file_name" id="fileinput" accept="image/*" onchange="selectFile(this);" style="display: none;">
+		<input type="hidden" name="file_key" id="filekey"/>
 	</form>
 	<div id="app">
 		<div id="header">
@@ -658,7 +694,31 @@
 	</div>
 
 	<div id="lpcontainer">
+		<div id="lpresults"></div>
 
+		<!-- Modal -->
+		<div class="modal fade" id="classModal" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">correct the category</h4>
+						</div>
+						<div class="modal-body">
+							<p style="text-align:left">If the prediction was not the actual result. please help to point out by selecting an actual classification:</p>
+							<select id="lpclass" style="margin-top:10px;width:90%;overflow:hidden;">
+							</select>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- <div style="width: 90%; margin: 20px auto; background-color: #fff">
+			
+		</div> -->
 	</div>
 
 
