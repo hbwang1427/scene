@@ -86,7 +86,7 @@ func UploadAnonomousePhoto(c *gin.Context) {
 	}
 	id1, _ := strconv.ParseUint(fileKey[0], 10, 32)
 	id2, _ := strconv.ParseUint(fileKey[1], 10, 32)
-	sid := int64(id1)<<32 + int64(id2)
+	sid := (int64(id1)<<32 + int64(id2)) & 0x7FFFFFFFFFFFFFFF
 	fileURL := fmt.Sprintf("%d_%d.bmp", time.Now().UnixNano(), sid)
 	dst := path.Join(config.GetConfig().Http.UploadDir, fileURL)
 
@@ -139,7 +139,7 @@ func SetAnonomouseUploadedPhotoClass(c *gin.Context) {
 	}
 	id1, _ := strconv.ParseUint(fileKey[0], 10, 32)
 	id2, _ := strconv.ParseUint(fileKey[1], 10, 32)
-	sid := int64(id1)<<32 + int64(id2)
+	sid := (int64(id1)<<32 + int64(id2)) & 0x7FFFFFFFFFFFFFFF
 	class, err := strconv.Atoi(c.PostForm("class"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, nil)

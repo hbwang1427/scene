@@ -594,7 +594,7 @@
 						predictImage_online(imgdata);
 						var formData = new FormData();
 						formData.append('file', $('#fileinput')[0].files[0]);
-						//gen random 8 bytes for filekey
+						//gen random 64bits for filekey
 						var rndarr = new Uint32Array(2);
 						window.crypto.getRandomValues(rndarr);
 						$("#filekey").val(rndarr.join(","));
