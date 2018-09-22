@@ -523,7 +523,7 @@
 				var className = $("<span>" + predicts[i].className + "</span>").appendTo(li);
 				var prob = $("<span style=\"color:red;margin-left:10px\">" + predicts[i].probability + "</span>").appendTo(li);
 				if (i == 0) {
-					var pin = $('<button">📌</button>').appendTo(li);
+					var pin = $('<button style="margin-left:10px;" title="click to help correct the prediction">📌</button>').appendTo(li);
 					pin.on("click", function(){
 						$("#classModal").modal();
 					});
