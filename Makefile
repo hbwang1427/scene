@@ -32,13 +32,11 @@ build-web: protogen
 
 cpresource:
 	@/bin/cp -r certs $(DEPLOY_DIR)/
-	@/bin/cp service/service.toml $(DEPLOY_DIR)/aiserver/
-	@/bin/cp web/web.toml  $(DEPLOY_DIR)/aiweb/
 	@/bin/cp -r web/assets $(DEPLOY_DIR)/aiweb
 	@/bin/cp supervisord.ini $(DEPLOY_DIR)/
 
 clean:
 	@rm $(SERVER_OUT) $(WEB_OUT)
 
-all: build-server build-web cpresource
+all: build-server build-web cpresource 
 
