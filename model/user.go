@@ -114,6 +114,7 @@ func init() {
 		cfg.Db.Host, cfg.Db.Port, cfg.Db.User, cfg.Db.Password, cfg.Db.DbName))
 	if err != nil {
 		log.Fatalln(err)
+		//log.Println(err)
 	} else {
 		log.Printf("db connected")
 	}

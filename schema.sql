@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS ai_album_photo (
 	width INTEGER,
 	height INTEGER,
 	memo TEXT,
+	feature bytea,
 	upload_at TIMESTAMP
 );
 ALTER TABLE ai_album_photo OWNER TO aitour;
@@ -90,3 +91,82 @@ CREATE TABLE IF NOT EXISTS ai_porcelain_photo (
 	file_hash TEXT UNIQUE
 );
 ALTER TABLE ai_porcelain_photo OWNER TO aitour;
+
+
+--ai_museum--
+CREATE TABLE IF NOT EXISTS public.ai_museum
+(
+    id bigint PRIMARY KEY DEFAULT id_generator(),
+    name text,
+    address text,
+    city text,
+    country text,
+    lat numeric,
+    lng numeric
+);
+ALTER TABLE ai_museum OWNER TO aitour;
+
+
+-- ai_artist--
+CREATE TABLE public.ai_artist
+(
+    id bigint PRIMARY KEY DEFAULT id_generator(),
+    first_name text,
+    last_name text,
+    middle_name text,
+    country text,
+    birth_year date,
+    death_year date,
+    gender text,
+    bio text
+);
+ALTER TABLE ai_artist OWNER TO aitour;
+
+
+--ai_art--
+CREATE TABLE ai_art
+(
+    id bigint PRIMARY KEY DEFAULT id_generator(),
+    museum_id bigint REFERENCES ai_museum(id),
+    artist_id bigint REFERENCES ai_artist(id),
+    creation_year date,
+    title text,
+    category text,
+    price numeric
+)；
+ALTER TABLE ai_art OWNER TO aitour;
+
+
+--ai_art_photo--
+CREATE TABLE IF NOT EXISTS ai_art_photo (
+	id bigint PRIMARY KEY DEFAULT id_generator(),
+	art_id bigint REFERENCES ai_art(id),
+	url text,
+	feature bytea,
+	width int,
+	height int
+);
+ALTER TABLE ai_art_photo OWNER TO aitour;
+
+
+--ai_art_media--
+CREATE TABLE IF NOT EXISTS ai_art_media (
+	id bigint PRIMARY KEY DEFAULT id_generator(),
+	art_id bigint REFERENCES ai_art(id),
+	type int,
+	url text,
+	size int,
+	duration int
+);
+ALTER TABLE ai_art_media OWNER TO aitour;
+
+
+--ai_art_memo
+CREATE TABLE IF NOT EXISTS ai_art_memo (
+	art_id bigint REFERENCES ai_art(id),
+	lang varchar(10),
+	memo text,
+	CONSTRAINT ai_art_memo_pk PRIMARY KEY(art_id, lang)
+);
+ALTER TABLE ai_art_memo OWNER TO aitour;
+
