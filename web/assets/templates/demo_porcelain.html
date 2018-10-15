@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Porcelain Appraisal (瓷器鉴定)</title>
+	<title>Porcelain Aging beta (瓷器断代测试版)</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href='//fonts.googleapis.com/css?family=Raleway:600,300' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
@@ -18,9 +18,10 @@
 	<script src="//unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 	<script src="//unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5"> </script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"> </script> 
 	<script src="/assets/js/load-image.all.min.js"></script>
-    <script src="/assets/js/porcelain_classes.js"></script>
+        <script src="/assets/js/porcelain_classes.js"></script>
+        <script src="/assets/js/porcelain_user_labels.js"></script>
 	<style>
 		* {
 			margin: 0;
@@ -421,25 +422,52 @@
 		/**
 		   * Crops an image tensor so we get a square image with no white space.
 		   * @param {Tensor4D} img An input image Tensor to crop.
-		*/
-		function cropImage(img) {
-			const size = Math.min(img.shape[0], img.shape[1]);
-			const centerHeight = img.shape[0] / 2;
-			const beginHeight = centerHeight - (size / 2);
-			const centerWidth = img.shape[1] / 2;
-			const beginWidth = centerWidth - (size / 2);
-			return img.slice([beginHeight, beginWidth, 0], [IMAGE_SIZE, IMAGE_SIZE, 3]);
+		**/
+		function resize_keep_aspect(img_Tensor){
+			//resize but keep the aspect ratio
+          		// Take the greater value, and use it for the ratio 
+                        min_ = Math.min(img_Tensor.shape[0], img_Tensor.shape[1]);
+                        ratio = tf.to_float(min_) / tf.constant(IMAGE_SIZE, dtype=tf.float32);
+
+                        new_width = tf.to_float(img_Tensor.shape[0])/ratio;
+                        new_height = tf.to_float(img_Tensor.shape[1])/ratio;
+                        return tf.image.resizeBilinear(img_Tensor,[tf.to_int32(new_width), tf.to_int32(new_height)]);
 		}
 
-		function resizeImage(img_Tensor) {
-			//resize to IMAGE_SIZE 
-			return tf.image.resizeBilinear(img_Tensor, [IMAGE_SIZE, IMAGE_SIZE]);
-		}
+                function preprocessImage(img){
+			//resize first then crop
+			console.log(img.shape);
+                        img_resized = resize_keep_aspect(img);
+                        var img_Tensors = new Array(3);
+                        if (img_resized.shape[0] >= img_resized.shape[1]){
+			    img_Tensors[0] = img_resized.slide([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    const shift1 = (img_resized.shape[0]-img_resized.shape[1])/2;
+			    const shift2 = shift1*2;
+                            img_Tensors[1] = img_resized.slide([shift1,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                            img_Tensors[2] = img_resized.slide([shift2,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                        }
+                        else{
+			    img_Tensors[0] = img_resized.slide([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    const shift1 = (img_resized.shape[1]-img_resized.shape[0])/2;
+			    const shift2 = shift1*2;
+                            img_Tensors[1] = img_resized.slide([0,shift1,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                            img_Tensors[2] = img_resized.slide([0,shift2,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                        }
+                        return img_Tensors;
+                     
+                }     
 
-		async function loadModel() {
-			return tf.loadModel('/assets/dl_models/model.json')
+        	async function loadModel() {
+			return tf.loadModel('/assets/dl_models/model.json');
 		}
-
+   
+                Array.prototype.SumArray = function (arri,ratio) {
+                    var sum = this.map(function (num, idx) {
+                      return (num + arr[idx]*ratio);
+                    });
+                    return sum;
+                }
+	
 		async function predictImage_online(imgsrc) {
 			if (model == null) {
 				var flag = $("#loading_flag").show();
@@ -453,22 +481,30 @@
 				const startTime = performance.now();
 				const logits = tf.tidy(() => {
 					// tf.fromPixels() returns a Tensor from an image element.
-					const img = tf.fromPixels(image).toFloat();
-					const cropped = cropImage(img);
+					const img = tf.fromPixels(cropped_imgs[i]).toFloat();
+					const cropped_imgs = preprocessImage(img);
+					console.log(cropped_imgs.length);
+                                        var i;
+                                        var weights = [0.3,0.4,0.3];
+					const predicted = new Float32Array(PORCELAIN_CLASSES.length);
+					predicted.map(function(x){return 0;});
 					const offset = tf.scalar(127.5);
-					// Normalize the image from [0, 255] to [-1, 1].
-					const normalized = cropped.sub(offset).div(offset);
-					// Reshape to a single-element batch so we can pass it to predict.
-					const batched = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
-					// Make a prediction through mobilenet.
-					return model.predict(batched);
+                                        for (i=0; i<cropped_imgs.length; i++){
+					   // Normalize the image from [0, 255] to [-1, 1].
+					   const normalized = img.sub(offset).div(offset);
+					   // Reshape to a single-element batch so we can pass it to predict.
+					   const batched = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
+					   // Make a prediction through mobilenet.
+					   const p = model.predict(batched);
+					   predicted.SumArray(p,weights[i]);
+					}
+					return predicted;
+                                        
 				});
 				// Convert logits to probabilities and class names.
 				const classesProbs = getTopKClasses(logits, TOPK_PREDICTIONS);
 				const totalTime = performance.now() - startTime;
 				console.log(`Done in ${Math.floor(totalTime)}ms`);
-				// Show the classes in the DOM.
-				//showResults(imgElement, classes);
 				//console.log(classesProbs);
 				showLocalPredictionResults(classesProbs, imgsrc);
 			}
@@ -533,9 +569,9 @@
 
 			var lpclass = $("#lpclass");
 			if (lpclass.children().length == 0) {
-				if (typeof(PORCELAIN_CLASSES) != 'undefined') {
-					for (var key in PORCELAIN_CLASSES) {
-						$('<option value="'+key+'">' + PORCELAIN_CLASSES[key]+ '</option>').appendTo(lpclass);
+		               if (typeof(PORCELAIN_USER_LABELS) != 'undefined') {
+					for (var key in PORCELAIN_USER_LABELS) {
+						$('<option value="'+key+'">' + PORCELAIN_USER_LABELS[key]+ '</option>').appendTo(lpclass);
 					}
 				}
 				lpclass.on("change", function(){
@@ -640,6 +676,7 @@
 					<li data="porcelain_ming" class="active">Ming dynasty(明代)</li>
 					<li data="porcelain_qing">Qing dynasty(清代)</li>
 					<li data="porcelain_republic">Republic dynasty(民国)</li>
+                                        <li data="porcelain_jianguo">1950s,60s,70s(567年代)</li>
 				</ul>
 			</div>
 			<div id="langs">
@@ -706,7 +743,7 @@
 							<h4 class="modal-title">correct the category</h4>
 						</div>
 						<div class="modal-body">
-							<p style="text-align:left">If the prediction was not the actual result. please help to point out by selecting an actual classification:</p>
+							<p style="text-align:left">Not right? Please help correct it for us (请悄悄告诉我们答案，努力向您学习):</p>
 							<select id="lpclass" style="margin-top:10px;width:90%;overflow:hidden;">
 							</select>
 						</div>
