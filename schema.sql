@@ -94,7 +94,7 @@ ALTER TABLE ai_porcelain_photo OWNER TO aitour;
 
 
 --ai_museum--
-CREATE TABLE IF NOT EXISTS public.ai_museum
+CREATE TABLE IF NOT EXISTS ai_museum
 (
     id bigint PRIMARY KEY DEFAULT id_generator(),
     name text,
@@ -108,7 +108,7 @@ ALTER TABLE ai_museum OWNER TO aitour;
 
 
 -- ai_artist--
-CREATE TABLE public.ai_artist
+CREATE TABLE  IF NOT EXISTS ai_artist
 (
     id bigint PRIMARY KEY DEFAULT id_generator(),
     first_name text,
@@ -124,11 +124,11 @@ ALTER TABLE ai_artist OWNER TO aitour;
 
 
 --ai_art--
-CREATE TABLE ai_art
+CREATE TABLE IF NOT EXISTS ai_art
 (
     id bigint PRIMARY KEY DEFAULT id_generator(),
     museum_id bigint REFERENCES ai_museum(id),
-    artist_id bigint REFERENCES ai_artist(id),
+    artist_id bigint,
     creation_year date,
     title text,
     category text,
@@ -161,12 +161,12 @@ CREATE TABLE IF NOT EXISTS ai_art_media (
 ALTER TABLE ai_art_media OWNER TO aitour;
 
 
---ai_art_memo
+--ai_art_memo--
 CREATE TABLE IF NOT EXISTS ai_art_memo (
 	art_id bigint REFERENCES ai_art(id),
 	lang varchar(10),
 	memo text,
-	CONSTRAINT ai_art_memo_pk PRIMARY KEY(art_id, lang)
+	CONSTRAINT ai_art_memo_pk PRIMARY KEY(art_id),
+	CONSTRAINT ai_art_memo_uk UNIQUE (art_id, lang)
 );
 ALTER TABLE ai_art_memo OWNER TO aitour;
-
