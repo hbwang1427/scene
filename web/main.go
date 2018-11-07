@@ -94,6 +94,12 @@ func createHttpServer() (*http.Server, error) {
 			"title": "predict demo page",
 		})
 	})
+	r.GET("/demo2", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "demo2.html", gin.H{
+			"title": "predict demo page offline",
+		})
+	})
+	
 	r.GET("/demo/testimgs/:site", handler.FetchTestImages)
 
 	r.GET("/demo_porcelain", func(c *gin.Context) {
