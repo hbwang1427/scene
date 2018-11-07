@@ -141,20 +141,23 @@ func Predict(c *gin.Context) {
 	}
 
 	//save user image
+	var uid int64 = -1
 	if v, ok := c.Get(gin.AuthUserKey); ok {
-		uid, _ := strconv.ParseInt(v.(string), 10, 64)
-		photoStore := NewDiskPhotoStore(config.GetConfig().Http.UploadDir)
-		url, err := photoStore.Store(uid, imgData)
-		if err == nil {
-			photo := &model.UserAlbumPhoto{UserId: uid, Url: url}
-			err := model.AddPhoto(photo)
-			if err != nil {
-				log.Printf("add photo error:%v", err)
-			}
-		} else {
-			log.WithError(err).Error("store image error")
-		}
+		uid, _ = strconv.ParseInt(v.(string), 10, 64)
 	}
+
+	photoStore := NewDiskPhotoStore(config.GetConfig().Http.UploadDir)
+	url, err := photoStore.Store(uid, imgData)
+	if err == nil {
+		photo := &model.UserAlbumPhoto{UserId: uid, Url: url}
+		err := model.AddPhoto(photo)
+		if err != nil {
+			log.Printf("add photo error:%v", err)
+		}
+	} else {
+		log.WithError(err).Error("store image error")
+	}
+	
 
 	// get a connection to the server.
 	conn, err := getGrpcConn()
