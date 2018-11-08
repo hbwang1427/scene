@@ -52,7 +52,7 @@ func (store *DiskPhotoStore) Store(userId int64, photo []byte) (url string, err 
 
 	hd := hashids.NewData()
 	h, _ := hashids.NewWithData(hd)
-	userKey, _ := h.EncodeInt64([]int64{userId})
+	
 	hash := md5.Sum(photo)
 	photoKey, err := h.EncodeInt64([]int64{
 		int64(binary.BigEndian.Uint64(hash[:8]) & 0x7FFFFFFFFFFFFFFF),
@@ -62,14 +62,18 @@ func (store *DiskPhotoStore) Store(userId int64, photo []byte) (url string, err 
 		return "", err
 	}
 
-	url = fmt.Sprintf("%s/%s.%s", userKey, photoKey, photoSuffix)
-	err = nil
+	if userId > 0 {
+		userKey, _ := h.EncodeInt64([]int64{userId})
+		os.MkdirAll(path.Join(store.storeRoot, userKey), 0777)
+		url = fmt.Sprintf("%s/%s.%s", userKey, photoKey, photoSuffix)
+	} else {
+		url = fmt.Sprintf("%s.%s", photoKey, photoSuffix)
+	}
 
 	//write to disk
-
-	os.MkdirAll(path.Join(store.storeRoot, userKey), 0777)
 	err = ioutil.WriteFile(path.Join(store.storeRoot, url), photo, 0600)
 	url = "/photo/" + url
+
 	return
 }
 
