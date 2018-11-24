@@ -1,5 +1,6 @@
 [http]
 bind = ":8081"
+domain = "pangolinai.net"
 assetsdir = "assets"
 secretkey = "47cd4a7b1f1e40a397b398"
 uploaddir = "/usr/uploadphotos"
@@ -7,7 +8,7 @@ uploaddir = "/usr/uploadphotos"
 [grpc]
 addr = "127.0.0.1:50051"
 cert = "../certs/cert.pem"
-host = "aitour.com"
+host = "pangolinai.net"
 
 [db]
 host = "127.0.0.1"
