@@ -18,7 +18,8 @@
 	<script src="//unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 	<script src="//unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"> </script> 
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5"> </script> 
+	<!--- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"> </script> --->
 	<script src="/assets/js/load-image.all.min.js"></script>
         <script src="/assets/js/porcelain_classes.js"></script>
         <script src="/assets/js/porcelain_user_labels.js"></script>
@@ -415,6 +416,10 @@
 	</style>
         
 	<script>
+
+                //import * as tf from '@tensorflow/tfjs';
+                //import {PORCELAIN_CLASSES} from 'assets/js/porcelain_classes';
+
 		const IMAGE_SIZE = 224;
 		const TOPK_PREDICTIONS = 5;
 		var model = null;
@@ -461,12 +466,12 @@
 			return tf.loadModel('/assets/dl_models/model.json');
 		}
    
-                Array.prototype.SumArray = function (arri,ratio) {
-                    var sum = this.map(function (num, idx) {
+                /**Array.prototype.SumArray = function (arri,ratio) {
+                    var sum = this.map(function (num, idx){
                       return (num + arr[idx]*ratio);
                     });
                     return sum;
-                }
+                }*/
 	
 		async function predictImage_online(imgsrc) {
 			if (model == null) {
