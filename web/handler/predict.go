@@ -48,10 +48,14 @@ var (
 	testImages = make(map[string][]string)
 )
 
-func getGrpcConn() (*grpc.ClientConn, error) {
+func init() {
 	if cfg == nil {
 		cfg = config.GetConfig()
 	}
+}
+
+
+func getGrpcConn() (*grpc.ClientConn, error) {
 	var opts []grpc.DialOption
 	if len(cfg.Grpc.Cert) > 0 {
 		creds, err := credentials.NewClientTLSFromFile(cfg.Grpc.Cert, cfg.Grpc.Host)

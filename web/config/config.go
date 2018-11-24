@@ -18,6 +18,7 @@ type Config struct {
 		AssetsDir string
 		UploadDir string
 		SecretKey string
+        Domain string
 	}
 
 	Grpc struct {

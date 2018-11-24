@@ -475,14 +475,14 @@
 				flag.hide();
 			}
 
-			var image = new Image();
+		   	console.log(imgsrc)
+                        var image = new Image();
 			image.src = imgsrc;
 			image.onload = function () {
 				const startTime = performance.now();
 				const logits = tf.tidy(() => {
 					// tf.fromPixels() returns a Tensor from an image element.
-					const img = tf.fromPixels(cropped_imgs[i]).toFloat();
-					const cropped_imgs = preprocessImage(img);
+					var cropped_imgs = preprocessImage(image);
 					console.log(cropped_imgs.length);
                                         var i;
                                         var weights = [0.3,0.4,0.3];
@@ -490,6 +490,7 @@
 					predicted.map(function(x){return 0;});
 					const offset = tf.scalar(127.5);
                                         for (i=0; i<cropped_imgs.length; i++){
+					   var img = tf.fromPixels(cropped_imgs[i]).toFloat();
 					   // Normalize the image from [0, 255] to [-1, 1].
 					   const normalized = img.sub(offset).div(offset);
 					   // Reshape to a single-element batch so we can pass it to predict.

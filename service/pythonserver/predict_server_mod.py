@@ -34,9 +34,10 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 MUSEUM_BASE_DIR = '../../web/assets/Images/Museum'
 MUSEUM_DATA_DIR= {'fine-arts':'Boston-FineArts', 'met':'MET', 'boston-ica':'Boston-ICA'}
 
-WEB_HOST = "http://aitour.ml:8081"
+#WEB_HOST = "http://aitour.ml:8081"
 #WEB_HOST = "http://216.15.112.63:8081"
 #WEB_HOST = "http://146.115.70.196:8081"
+WEB_HOST = "http://pangolinai.net"
 
 #PredictServicer implements rpc_pb2_grpc.PredictServicer
 class PredictServicer(rpc_pb2_grpc.PredictServicer):

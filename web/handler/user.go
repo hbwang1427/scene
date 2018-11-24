@@ -50,7 +50,7 @@ func init() {
 
 func sendAccountActiveMailTo(email string, url string) error {
 	m := gomail.NewMessage()
-	m.SetAddressHeader("From", "noreply@aitour.ml", "webmaster") // 发件人
+	m.SetAddressHeader("From", "noreply@" + cfg.Http.Domain, "webmaster") // 发件人
 	m.SetHeader("To",                                            // 收件人
 		m.FormatAddress(email, ""),
 	)
@@ -74,44 +74,11 @@ Please do not reply this mail<br/>
 Take care,<br/>
 The Aitour Team`, url, url))
 
-	//d := gomail.NewPlainDialer("smtp.qq.com", 465, "83527338@qq.com", "nddutxiwjdfzcaij") // 发送邮件服务器、端口、发件人账号、发件人密码
-	//d := gomail.NewDialer("mail.aitour.ml", 465, "postmaster@aitour.ml", "123456") // 发送邮件服务器、端口、发件人账号、发件人密码
-	d := gomail.NewPlainDialer("mail.aitour.ml", 25, "postmaster@aitour.ml", "123456") // 发送邮件服务器、端口、发件人账号、发件人密码
+	d := gomail.NewPlainDialer("mail." + cfg.Http.Domain, 25, "postmaster@" + cfg.Http.Domain, "123456") // 发送邮件服务器、端口、发件人账号、发件人密码
 	err := d.DialAndSend(m)
 	return err
 }
 
-// func sendAccountActiveMailTo(email string, url string) error {
-// 	// Set up authentication information.
-// 	auth := smtp.PlainAuth("", "postmaster@aitour.ml", "123456", "mail.aitour.ml")
-
-// 	// Connect to the server, authenticate, set the sender and recipient,
-// 	// and send the email all in one step.
-// 	body := fmt.Sprintf(`Hi there!<br/>
-// <br/>
-// Somebody just tried to register for a Aitour account<br/>
-// using this email address. To complete the registration process,<br/>
-// just follow this link(copy the url and open in web browser if the lick was not clickable):<br/>
-// <br/>
-// <a href="%s">%s</a>
-// <br/>
-// If you didn't register for a developer account with Aitour, simply<br/>
-// ignore this email: no action will be taken.<br/>
-// <br/>
-// This link will expire in 24 hours.<br/>
-// <br/>
-// Please do not reply this mail<br/>
-// Take care,<br/>
-// The Aitour Team`, url, url)
-
-// 	to := []string{email}
-// 	msg := []byte("To: " + email + "\r\n" +
-// 		"Subject: Aitour account activation!\r\n" +
-// 		"\r\n" +
-// 		body + "\r\n")
-// 	err := smtp.SendMail("mail.aitour.ml:25", auth, "noreply@aitour.ml", to, msg)
-// 	return err
-// }
 
 //authenticate check middleware
 func AuthChecker() gin.HandlerFunc {
@@ -231,7 +198,7 @@ func CreateUser(c *gin.Context) {
 		})
 
 	activateKey, _ := tk.SignedString([]byte(jwtHmacSignKey))
-	activateURL := fmt.Sprintf("https://www.aitour.ml/user/activate?key=%s", url.QueryEscape(activateKey))
+	activateURL := fmt.Sprintf("https://www." + cfg.Http.Domain + "/user/activate?key=%s", url.QueryEscape(activateKey))
 	err = sendAccountActiveMailTo(user.Email, activateURL)
 	if err != nil {
 		log.WithFields(log.Fields{"err": err, "email": reg.Email}).Warn("send user account activation mail failed")

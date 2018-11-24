@@ -84,7 +84,7 @@ func bindGoogle(c *gin.Context) {
 	fbConfig := oauth2.Config{
 		ClientID:     "216679058012-21gqlhp3eh1qp4mmvtmag7298h991udb.apps.googleusercontent.com",
 		ClientSecret: "OWwBt-b2XVz5qLDeGDaKEsVJ",
-		RedirectURL:  "https://aitour.ml/openid/google",
+		RedirectURL:  "https://" + cfg.Http.Domain + "/openid/google",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/plus.me",
 			"https://www.googleapis.com/auth/userinfo.email",
@@ -140,7 +140,7 @@ func bindFaceBook(c *gin.Context) {
 	fbConfig := oauth2.Config{
 		ClientID:     "186885222135849",
 		ClientSecret: "8aac6edf699e196fd9259c86d07d2414",
-		RedirectURL:  "https://aitour.ml/openid/facebook",
+		RedirectURL:  "https://" + cfg.Http.Domain + "/openid/facebook",
 		Scopes:       []string{"public_profile", "email"}, //, "user_hometown", "user_birthday", "user_gender"
 		Endpoint:     facebook.Endpoint,
 	}

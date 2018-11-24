@@ -6,4 +6,4 @@ traceenable=true
 tracebind = "[::]:50052"
 
 [web]
-host = "http://aitour.ml:8081"
+host = "http://www.pangolinai.net"
