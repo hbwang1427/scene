@@ -424,6 +424,7 @@
 		const TOPK_PREDICTIONS = 5;
 		var model = null;
 		var modelPromise = null;
+                const CLASS_NUM = 132;
 		/**
 		   * Crops an image tensor so we get a square image with no white space.
 		   * @param {Tensor4D} img An input image Tensor to crop.
@@ -432,11 +433,11 @@
 			//resize but keep the aspect ratio
           		// Take the greater value, and use it for the ratio 
                         min_ = Math.min(img_Tensor.shape[0], img_Tensor.shape[1]);
-                        ratio = tf.to_float(min_) / tf.constant(IMAGE_SIZE, dtype=tf.float32);
+                        ratio = min_ / IMAGE_SIZE;
 
-                        new_width = tf.to_float(img_Tensor.shape[0])/ratio;
-                        new_height = tf.to_float(img_Tensor.shape[1])/ratio;
-                        return tf.image.resizeBilinear(img_Tensor,[tf.to_int32(new_width), tf.to_int32(new_height)]);
+                        new_width = img_Tensor.shape[0]/ratio;
+                        new_height = img_Tensor.shape[1]/ratio;
+                        return tf.image.resizeBilinear(img_Tensor,[Math.round(new_width), Math.round(new_height)]);
 		}
 
                 function preprocessImage(img){
@@ -445,18 +446,18 @@
                         img_resized = resize_keep_aspect(img);
                         var img_Tensors = new Array(3);
                         if (img_resized.shape[0] >= img_resized.shape[1]){
-			    img_Tensors[0] = img_resized.slide([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    img_Tensors[0] = img_resized.slice([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
 			    const shift1 = (img_resized.shape[0]-img_resized.shape[1])/2;
 			    const shift2 = shift1*2;
-                            img_Tensors[1] = img_resized.slide([shift1,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
-                            img_Tensors[2] = img_resized.slide([shift2,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                            img_Tensors[1] = img_resized.slice([shift1,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                            img_Tensors[2] = img_resized.slice([shift2,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
                         }
                         else{
-			    img_Tensors[0] = img_resized.slide([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    img_Tensors[0] = img_resized.slice([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
 			    const shift1 = (img_resized.shape[1]-img_resized.shape[0])/2;
 			    const shift2 = shift1*2;
-                            img_Tensors[1] = img_resized.slide([0,shift1,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
-                            img_Tensors[2] = img_resized.slide([0,shift2,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                            img_Tensors[1] = img_resized.slice([0,shift1,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                            img_Tensors[2] = img_resized.slice([0,shift2,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
                         }
                         return img_Tensors;
                      
@@ -465,14 +466,7 @@
         	async function loadModel() {
 			return tf.loadModel('/assets/dl_models/model.json');
 		}
-   
-                /**Array.prototype.SumArray = function (arri,ratio) {
-                    var sum = this.map(function (num, idx){
-                      return (num + arr[idx]*ratio);
-                    });
-                    return sum;
-                }*/
-	
+
 		async function predictImage_online(imgsrc) {
 			if (model == null) {
 				var flag = $("#loading_flag").show();
@@ -480,29 +474,31 @@
 				flag.hide();
 			}
 
-		   	console.log(imgsrc)
                         var image = new Image();
 			image.src = imgsrc;
 			image.onload = function () {
 				const startTime = performance.now();
 				const logits = tf.tidy(() => {
 					// tf.fromPixels() returns a Tensor from an image element.
-					var cropped_imgs = preprocessImage(image);
-					console.log(cropped_imgs.length);
+                                        var image_t = tf.fromPixels(image).toFloat();
+					var cropped_imgs = preprocessImage(image_t);
                                         var i;
                                         var weights = [0.3,0.4,0.3];
-					const predicted = new Float32Array(PORCELAIN_CLASSES.length);
+					var predicted = new Float32Array(CLASS_NUM);
 					predicted.map(function(x){return 0;});
 					const offset = tf.scalar(127.5);
                                         for (i=0; i<cropped_imgs.length; i++){
-					   var img = tf.fromPixels(cropped_imgs[i]).toFloat();
+					   var img = cropped_imgs[i];
 					   // Normalize the image from [0, 255] to [-1, 1].
 					   const normalized = img.sub(offset).div(offset);
 					   // Reshape to a single-element batch so we can pass it to predict.
 					   const batched = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
 					   // Make a prediction through mobilenet.
 					   const p = model.predict(batched);
-					   predicted.SumArray(p,weights[i]);
+					   var pt = p.as1D().dataSync();
+					   predicted  = predicted.map(function (num, idx) {
+                                                  return num + pt[idx]*weights[i];
+                                           }); 
 					}
 					return predicted;
                                         
@@ -523,7 +519,7 @@
 		* @param topK The number of top predictions to show.
 		*/
 		async function getTopKClasses(logits, topK) {
-			const values = await logits.data();
+			const values = await logits;
 
 			const valuesAndIndices = [];
 			for (let i = 0; i < values.length; i++) {
@@ -586,7 +582,7 @@
 						type: 'POST',
 						data: {filekey: $("#filekey").val(), class: $(this).val()}
 					}).done(function(res) {
-						alert("thanks for your contribute");
+						alert("thanks for your contribution");
 					});
 				});
 			}
@@ -686,7 +682,7 @@
 				</ul>
 			</div>
 			<div id="langs">
-				<h3>${ $t("language") }</h3>
+				<h3>${ $t("language(语言)") }</h3>
 				<ul>
 					<li data="en" class="active">English</li>
 					<li data="zh-hans">简体中文</li>
@@ -749,7 +745,7 @@
 							<h4 class="modal-title">correct the category</h4>
 						</div>
 						<div class="modal-body">
-							<p style="text-align:left">Not right? Please help correct it for us (请悄悄告诉我们答案，努力向您学习):</p>
+							<p style="text-align:left">Not right? Please help correct it for us (不正确？可以告诉我们答案吗):</p>
 							<select id="lpclass" style="margin-top:10px;width:90%;overflow:hidden;">
 							</select>
 						</div>
