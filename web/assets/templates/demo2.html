@@ -12,7 +12,8 @@
 	<script src="//unpkg.com/jquery"></script>
     <script src="//unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="//unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5"> </script> 
 	<script src="/assets/js/load-image.all.min.js"></script>
 	
     <style>
@@ -344,7 +345,105 @@
 				margin-bottom: 20px;
 			}
 		}
-    </style>
+	</style>
+	
+	<script type="text/javascript">
+	   	const IMAGE_SIZE = 224;
+		const TOPK_PREDICTIONS = 5;
+		var model = null;
+		var modelPromise = null;
+		const CLASS_NUM = 132;
+		/**
+		   * Crops an image tensor so we get a square image with no white space.
+		   * @param {Tensor4D} img An input image Tensor to crop.
+		**/
+		function resize_keep_aspect(img_Tensor){
+			//resize but keep the aspect ratio
+          		// Take the greater value, and use it for the ratio 
+                        min_ = Math.min(img_Tensor.shape[0], img_Tensor.shape[1]);
+                        ratio = min_ / IMAGE_SIZE;
+
+                        new_width = img_Tensor.shape[0]/ratio;
+                        new_height = img_Tensor.shape[1]/ratio;
+                        return tf.image.resizeBilinear(img_Tensor,[Math.round(new_width), Math.round(new_height)]);
+		}
+
+		function preprocessImage(img){
+			//resize first then crop
+			img_resized = resize_keep_aspect(img);
+			var img_Tensors = new Array(3);
+			if (img_resized.shape[0] >= img_resized.shape[1]){
+			    	img_Tensors[0] = img_resized.slice([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    	const shift1 = (img_resized.shape[0]-img_resized.shape[1])/2;
+			    	const shift2 = shift1*2;
+					img_Tensors[1] = img_resized.slice([shift1,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+					img_Tensors[2] = img_resized.slice([shift2,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+				}
+				else{
+			    	img_Tensors[0] = img_resized.slice([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    	const shift1 = (img_resized.shape[1]-img_resized.shape[0])/2;
+			    	const shift2 = shift1*2;
+					img_Tensors[1] = img_resized.slice([0,shift1,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                    img_Tensors[2] = img_resized.slice([0,shift2,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+				}
+                        
+				return img_Tensors;
+                     
+		}     
+
+		async function loadModel() {
+			const orig_model = await tf.loadModel('/assets/dl_models/model.json');
+			const layer = orig_model.getLayer('conv_pw_13_relu');
+			return tf.model({inputs: orig_model.inputs, outputs: layer.output});
+		}
+
+		async function predictImage_online(imgsrc) {
+			if (model == null) {
+				var flag = $("#loading_flag").show();
+				model = await modelPromise;
+				flag.hide();
+			}
+
+			var image = new Image();
+			image.src = imgsrc;
+			image.onload = function () {
+				const startTime = performance.now();
+				const logits = tf.tidy(() => {
+					// tf.fromPixels() returns a Tensor from an image element.
+					var image_t = tf.fromPixels(image).toFloat();
+					var cropped_imgs = preprocessImage(image_t);
+					var i;
+					var weights = [0.3,0.4,0.3];
+					var predicted = new Float32Array(CLASS_NUM);
+					predicted.map(function(x){return 0;});
+					const offset = tf.scalar(127.5);
+					for (i=0; i<cropped_imgs.length; i++){
+					   var img = cropped_imgs[i];
+					   // Normalize the image from [0, 255] to [-1, 1].
+					   const normalized = img.sub(offset).div(offset);
+					   // Reshape to a single-element batch so we can pass it to predict.
+					   const batched = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
+					   // Make a prediction through mobilenet.
+					   const p = model.predict(batched);
+					   var pt = p.as1D().dataSync();
+					   predicted  = predicted.map(function (num, idx) {
+							return num + pt[idx]*weights[i];
+						}); 
+					}
+					
+					return predicted;
+				});
+				// Convert logits to probabilities and class names.
+				//const classesProbs = getTopKClasses(logits, TOPK_PREDICTIONS);
+				console.log(logits);
+				const totalTime = performance.now() - startTime;
+				console.log(`Done in ${Math.floor(totalTime)}ms`);
+				//console.log(classesProbs);
+				//showLocalPredictionResults(classesProbs, imgsrc);
+				return logits
+			}
+		}
+	</script>
 	
 	<script type="text/javascript">
 		function predictImage(imgdata) {
@@ -384,7 +483,7 @@
 	              	} else {
 	              		imgdata = img.toDataURL("image/jpeg");
 	              	}
-	              	predictImage(imgdata);
+	              	predictImage_online(imgdata);
 	              },
 	              {maxWidth: 400, maxHeight: 400, downsamplingRatio: 0.01, pixelRatio:window.devicePixelRatio, canvas: true, orientation: true}
 	            );
@@ -675,7 +774,7 @@
 					$('<img src="' + testimages[site][i] + '"/>').appendTo(imgwrapper);
 				}
 				$("#demoimgs img").on('click', function(){	
-					predictImage(this.src);
+					predictImage_online(this.src);
 				});
 				return;
 			}
@@ -690,7 +789,7 @@
 						$('<img src="' + response.images[i] + '"/>').appendTo(imgwrapper);
 					}
 					$("#demoimgs img").on('click', function(){	
-						predictImage(this.src);
+						predictImage_online(this.src);
 					});
 				}
 			});
@@ -736,6 +835,16 @@
 			   if ($(this).hasClass('active')) return;
 			   setLang($(this).attr("data"));
 	       });
+
+		   //pre load tf model on page loaded
+			modelPromise = loadModel();
+			modelPromise.then(function(m) {
+				// Warmup the model. This isn't necessary, but makes the first prediction
+				// faster. Call `dispose` to release the WebGL memory allocated for the return
+				// value of `predict`.
+				model = m;
+				model.predict(tf.zeros([1, IMAGE_SIZE, IMAGE_SIZE, 3])).dispose();
+			});
 	   });
 	</script>
 </body>
