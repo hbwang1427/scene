@@ -392,8 +392,8 @@
 		}     
 
 		async function loadModel() {
-			const orig_model = await tf.loadModel('/assets/dl_models/model.json');
-			const layer = orig_model.getLayer('conv_pw_13_relu');
+			const orig_model = await tf.loadModel('/assets/dl_models/museum/model_museum.json');
+			const layer = orig_model.getLayer('global_average_pooling2d_1');
 			return tf.model({inputs: orig_model.inputs, outputs: layer.output});
 		}
 
