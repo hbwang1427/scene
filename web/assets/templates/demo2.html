@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{{.title}}</title>
+	<title>predict demo page offline</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href='//fonts.googleapis.com/css?family=Raleway:600,300' rel='stylesheet' type='text/css'>
     <link href='//fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
@@ -9,16 +10,17 @@
     <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <script src="//unpkg.com/vue"></script>
     <script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-	<script src="//unpkg.com/jquery"></script>
+	<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
     <script src="//unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="//unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.7.1/lazyload.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script> 
 	<script src="/assets/js/load-image.all.min.js"></script>
 	
     <style>
     	* {margin:0; padding:0;}
     	html {
-			/* To make use of full height of page*/
+			 
 			min-height: 100%;
 			margin: 0;
 			padding: 0;
@@ -124,7 +126,7 @@
 		#snap_photo p {
 			font-family: 'Roboto Slab'; 
 			padding:150px 15px 40px 15px; 
-			/*margin:0 auto;*/
+			 
 			font-size:20px;
 		}
 
@@ -141,7 +143,7 @@
 		}
 
 		.item-card {
-			/*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+			 
 			background-color: white;
 			display: flex;
 			flex-direction: column;
@@ -150,8 +152,7 @@
 		    word-wrap: break-word;
 		    background-color: #fff;
 		    background-clip: border-box;
-		    /*border: 1px solid rgba(0,0,0,.125);
-		    border-radius: .25rem;*/
+		     
 		}
 
 		.item-card p {
@@ -199,7 +200,7 @@
 		    );
 		}
 
-		/*spining*/
+		 
 		.loader,
 		.loader:before,
 		.loader:after {
@@ -257,25 +258,25 @@
 				box-shadow: 0 2.5em 0 0;
 			}
 		}
-		/*spinning end*/
+		 
 
 
-		/* results grid */
+		 
 		.grid {
 		  background: #f5f5f5;
 		  margin-bottom: 60px;
 		}
 
-		/* clear fix */
+		 
 		.grid:after {
 		  content: '';
 		  display: block;
 		  clear: both;
 		}
 
-		/* ---- .grid-item ---- */
+		 
 
-		/* Extra small devices (portrait phones, less than 576px) */
+		 
 	    .grid-sizer,
 		.grid-item {
 		  width: 100%;
@@ -298,7 +299,7 @@
 		}
 		
 
-		/*Small devices (landscape phones, 576px and up)*/
+		 
 		@media only screen and (min-width: 576px) {
 			.grid-sizer,
 			.grid-item {
@@ -307,7 +308,7 @@
 			.gutter-sizer { width: 2%; }
 		}
 
-		/*Medium devices (tablets, 768px and up)*/
+		 
 		@media only screen and (min-width: 768px) {
 		    .grid-sizer,
 			.grid-item {
@@ -319,7 +320,7 @@
 			}
 		}
 
-		/*Large devices (desktops, 992px and up)*/
+		 
 		@media (min-width: 992px) { 
 			.grid {width:96%; margin-left:auto; margin-right:auto;}
 			.grid-sizer,
@@ -332,7 +333,7 @@
 			}
 		}
 
-		/*Extra large devices (large desktops, 1200px and up)*/
+		 
 		@media (min-width: 1200px) { 
 			.grid {width:96%; margin-left:auto; margin-right:auto;}
 			.grid-sizer,
@@ -344,7 +345,123 @@
 				margin-bottom: 20px;
 			}
 		}
-    </style>
+	</style>
+	
+	<script type="text/javascript">
+	   	const IMAGE_SIZE = 224;
+		const TOPK_PREDICTIONS = 5;
+		var model = null;
+		var modelPromise = null;
+		const CLASS_NUM = 1280;
+		
+
+		function resize_keep_aspect(img_Tensor){
+			min_ = Math.min(img_Tensor.shape[0], img_Tensor.shape[1]);
+			ratio = min_ / IMAGE_SIZE;
+
+			new_width = img_Tensor.shape[0]/ratio;
+			new_height = img_Tensor.shape[1]/ratio;
+			return tf.image.resizeBilinear(img_Tensor,[Math.round(new_width), Math.round(new_height)]);
+		}
+
+		function preprocessImage(img){
+			
+			img_resized = resize_keep_aspect(img);
+			var img_Tensors = new Array(3);
+			if (img_resized.shape[0] >= img_resized.shape[1]){
+			    	img_Tensors[0] = img_resized.slice([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    	const shift1 = (img_resized.shape[0]-img_resized.shape[1])/2;
+			    	const shift2 = shift1*2;
+					img_Tensors[1] = img_resized.slice([shift1,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+					img_Tensors[2] = img_resized.slice([shift2,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+				}
+				else{
+			    	img_Tensors[0] = img_resized.slice([0,0,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+			    	const shift1 = (img_resized.shape[1]-img_resized.shape[0])/2;
+			    	const shift2 = shift1*2;
+					img_Tensors[1] = img_resized.slice([0,shift1,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+                    img_Tensors[2] = img_resized.slice([0,shift2,0],[IMAGE_SIZE,IMAGE_SIZE,3]);
+				}
+                        
+				return img_Tensors;
+                     
+		}     
+
+		async function loadModel() {
+			const orig_model = await tf.loadModel('/assets/dl_models/museum/model_museum.json');
+			const layer = orig_model.getLayer('global_average_pooling2d_1');
+			return tf.model({inputs: orig_model.inputs, outputs: layer.output});
+		}
+
+		async function predictImage_online(imgsrc) {
+			if (model == null) {
+				var flag = $("#loading_flag").show();
+				model = await modelPromise;
+				flag.hide();
+			}
+
+			var image = new Image();
+			image.src = imgsrc;
+			image.onload = function () {
+				const startTime = performance.now();
+				const logits = tf.tidy(() => {
+					
+					var image_t = tf.fromPixels(image).toFloat();
+					var cropped_imgs = preprocessImage(image_t);
+					var i;
+					var weights = [0.3,0.4,0.3];
+					var predicted = new Float32Array(CLASS_NUM);
+					predicted.map(function(x){return 0;});
+					const offset = tf.scalar(127.5);
+					for (i=0; i<cropped_imgs.length; i++){
+					   var img = cropped_imgs[i];
+					   
+					   const normalized = img.sub(offset).div(offset);
+					   
+					   const batched = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
+					   
+					   const p = model.predict(batched);
+					   var pt = p.as1D().dataSync();
+					   predicted  = predicted.map(function (num, idx) {
+							return num + pt[idx]*weights[i];
+						}); 
+					}
+					
+					return predicted;
+				});
+				
+				app.results = [];
+				app.isRequesting = true;
+				//console.log(logits);
+				const totalTime = performance.now() - startTime;
+				//console.log(`Done in ${Math.floor(totalTime)}ms`);
+				
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', '/predict2?k=10');
+				xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+				xhr.send(logits);
+				xhr.onload = function(e) {
+					app.isRequesting = false;
+					var response = $.parseJSON(xhr.responseText);
+					if (response.results) {
+						for (var i = 0; i < response.results.length; i++) {
+							$.get("/art/"+response.results[i].ArtID).done(
+								function(data) {
+									if (typeof(data) != 'undefined' && typeof(data.results) != 'undefined') {
+										//console.log(data.results);
+										app.results.push(data.results); 
+									}
+								}
+							);
+						}
+					}
+
+					//console.log(xhr.responseText);
+				};
+				return logits
+			}
+		}
+	</script>
 	
 	<script type="text/javascript">
 		function predictImage(imgdata) {
@@ -373,25 +490,24 @@
 
 		function selectFile(input) {
         	if (input.files && input.files[0]) {
-	            //console.log('in select file!!', input.files[0])
 	            loadImage(input.files[0],
 	              function(img){
 	              	var fileName = input.files[0].name;
 	              	var imgdata;
 	              	if (fileName.endsWith(".png")) {
 	              		imgdata = img.toDataURL("image/png");	
-	              	//} else if (fileName.endsWidth(".jpg") || fileName.endsWidth(".jpeg")) {
+	              	
 	              	} else {
 	              		imgdata = img.toDataURL("image/jpeg");
 	              	}
-	              	predictImage(imgdata);
+	              	predictImage_online(imgdata);
 	              },
 	              {maxWidth: 400, maxHeight: 400, downsamplingRatio: 0.01, pixelRatio:window.devicePixelRatio, canvas: true, orientation: true}
 	            );
 	        }
     	}
 		function showAccount() {
-			document.cookie = "redirect=/demo; expires=Thu, 18 Dec 2913 12:00:00 UTC; path=/";
+			document.cookie = "redirect=/demo2; expires=Thu, 18 Dec 2913 12:00:00 UTC; path=/";
 			window.location.href = "/user";
 		}
 	</script>
@@ -453,9 +569,12 @@
 				<div class="gutter-sizer"></div>
 			  	<div v-for="item in results" class="grid-item">
 			  		<div class="item-card">
-				  		<img :data-src="item.image_url" @click="display(item)"/>
-				  		<audio v-if="item.audio_url" :src="item.audio_url" preload="metadata" controls="controls" controlsList="nodownload" onPlaying="onaudioplay(event)"></audio>
-				  		<p style="text-align:left; padding:10px;letter-spacing: 2px">${item.text}</p>
+				  			<img v-for="image_url in item.Images" :src="image_url" @click="display(item)"/>
+						  <audio v-for="audio_url in item.Audios" :src="audio_url" preload="metadata" controls="controls" controlsList="nodownload" onPlaying="onaudioplay(event)"></audio>
+						  <p style="text-align:left; padding:10px;letter-spacing: 2px">${item.Title}</p>
+						  <p style="text-align:left; padding:10px;letter-spacing: 2px">${item.CreationYear} / ${item.Material} / ${item.Category}</p>
+						  <p style="text-align:left; padding:10px;letter-spacing: 2px">${item.MuseumName} / ${item.MuseumCity} / ${item.MuseumCountry}</p>
+				  		<p style="text-align:left; padding:10px;letter-spacing: 2px">${item.Text}</p>
 			  		</div>
 			  	</div>
 		  	</div>
@@ -515,7 +634,6 @@
 
 	<script>
 		function onaudioplay(event) {
-			//mut other playing audios
 			$("audio", ".grid").each(function(i, elem) {
 				if (elem != event.target && !elem.paused) {
 					elem.pause();
@@ -538,14 +656,14 @@
 		const messages = {};
 
 		setTimeout(function(){
-			//animation effect
+			
 			$("#snap_photo").addClass("topdown");
 		}, 100);
 
-		// Create VueI18n instance with options
+		
 		const i18n = new VueI18n({
-		  locale: 'en', // set locale
-		  messages, // set locale messages
+		  locale: 'en', 
+		  messages, 
 		  fallbackLocale: 'zh'
 		});
 
@@ -560,10 +678,10 @@
 		    results: []
 		  },
 		  watch: {
-		  	//when property changes...
+		  	
 		  	uploadimg: function(val) {
-		  		//$("#upload_img").css({display:'block'});
-		  		//$("#upload_img img").attr({src: val});
+		  		
+		  		
 		  	},
 		  	isRequesting: function(val) {
 		  		showComuputing(val==true);
@@ -579,28 +697,28 @@
 		  	}
 		  },
 		  updated: function() {
-		  	//when data changes and dom have been rendered. use masonry to re arrany images
-		  	// init Masonry
+		  	
+		  	
 			var $grid = $('.grid').masonry({
-			  // set itemSelector so .grid-sizer is not used in layout
+			  
 			  itemSelector: '.grid-item',
-			  // use element for option
+			  
 			  columnWidth: '.grid-sizer',
 			  gutter: '.gutter-sizer',
 			  percentPosition: true
 			});
-			// layout Masonry after each image loads
+			
 			$grid.imagesLoaded().progress( function() {
 			  $grid.masonry('layout');
 			});
 
-			//add read more link if text length is large
+			
 			$('.item-card', '#predicts').children('p').each(function(i, p) {
 				var el = $(p);
 				var lineHeight = parseInt(el.css('line-height').replace('px', ''));
 				var height = el.height();
 				if (height > 4*lineHeight) {
-					//more than 4 lines
+					
 					$(p).addClass('limitheight');
 					if (p.innerText.length > 10) {
 						$('<div class="fadecover" onclick="showall(event)"></div>').insertAfter($(p));
@@ -608,11 +726,11 @@
 				}
 			});
 
-			//lazyload images
-			//$("#predicts .item-card img").lazyload();
+			
+			
 			var myLazyLoad = new LazyLoad({
 				callback_load: function(){
-					//after lazy loaded images loaded. layout the grid.
+					
 					$("#predicts").masonry('layout');
 				}
 			});
@@ -650,7 +768,7 @@
 
 		function setLang(language) {
 			if (typeof(language) == 'undefined') {
-				language =  getCookie("lang") || getNavigatorLanguage() || "en"; //default language
+				language =  getCookie("lang") || getNavigatorLanguage() || "en"; 
 			}
 			if (language == "zh") {
 				language = "zh-hans";
@@ -675,7 +793,7 @@
 					$('<img src="' + testimages[site][i] + '"/>').appendTo(imgwrapper);
 				}
 				$("#demoimgs img").on('click', function(){	
-					predictImage(this.src);
+					predictImage_online(this.src);
 				});
 				return;
 			}
@@ -690,7 +808,7 @@
 						$('<img src="' + response.images[i] + '"/>').appendTo(imgwrapper);
 					}
 					$("#demoimgs img").on('click', function(){	
-						predictImage(this.src);
+						predictImage_online(this.src);
 					});
 				}
 			});
@@ -736,6 +854,16 @@
 			   if ($(this).hasClass('active')) return;
 			   setLang($(this).attr("data"));
 	       });
+
+		   
+			modelPromise = loadModel();
+			modelPromise.then(function(m) {
+				
+				
+				
+				model = m;
+				model.predict(tf.zeros([1, IMAGE_SIZE, IMAGE_SIZE, 3])).dispose();
+			});
 	   });
 	</script>
 </body>

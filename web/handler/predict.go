@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
+	"encoding/binary"
 	"fmt"
 	"image"
 	"image/jpeg"
@@ -53,7 +54,6 @@ func init() {
 		cfg = config.GetConfig()
 	}
 }
-
 
 func getGrpcConn() (*grpc.ClientConn, error) {
 	var opts []grpc.DialOption
@@ -161,7 +161,6 @@ func Predict(c *gin.Context) {
 	} else {
 		log.WithError(err).Error("store image error")
 	}
-	
 
 	// get a connection to the server.
 	conn, err := getGrpcConn()
@@ -271,4 +270,98 @@ func FetchTestImages(c *gin.Context) {
 		"images": testImages[site],
 	})
 	return
+}
+
+type ArtScore struct {
+	ArtID int
+	Score float64
+}
+
+//Predict2 feature match
+//client extracts feature in client side and pass it to server to match the result
+func Predict2(c *gin.Context) {
+	var feature []float64
+	for {
+		var v float32
+		err := binary.Read(c.Request.Body, binary.LittleEndian, &v)
+		if err != nil {
+			break
+		}
+		
+		feature = append(feature,float64(v))
+	}
+	log.Printf("%v %v %v", feature[2], feature[3], feature[len(feature)-1])
+	//log.Printf("%v", feature)
+	refers, err := model.GetArtReferences()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"error": err,
+		})
+		return
+	}
+	if len(refers) == 0 || len(refers[0].MobileNetFeature) != len(feature) {
+		c.JSON(http.StatusOK, gin.H{
+			"err": "no reference feature or feature length not match",
+		})
+		log.Printf("refers len:%d, image_feature len:%d, feature len:%d", 
+			len(refers), len(refers[0].MobileNetFeature), len(feature))
+		return
+	}
+
+	k := 5
+	if arg := c.Query("k"); len(arg) > 0 {
+		if v , err := strconv.Atoi(arg); err == nil {
+			k = v
+		}
+	}
+	topK := make([]ArtScore, k)
+	featureNorm := model.Norm(feature)
+	for _, ref := range refers {
+		var score float64
+		for i := 0; i < len(ref.MobileNetFeature); i++ {
+			score += ref.MobileNetFeature[i] * feature[i]
+		}
+		score = score  / (ref.MobileNetFeatureNorm * featureNorm)
+
+		for j := 0; j < k; j++ {
+			if score > topK[j].Score {
+				desSorted := append([]ArtScore{}, topK[:j]...)
+				desSorted = append(desSorted, ArtScore{ref.ArtID, score})
+				desSorted = append(desSorted, topK[j:k-1]...)
+				topK = desSorted
+				break
+			}
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"results": topK,
+	})
+}
+
+
+func GetArtById(c *gin.Context) {
+	artid, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"error": "invalid request param",
+		})
+		return
+	}
+	language_id, err := strconv.Atoi(c.Query("language"))
+	if err != nil {
+		language_id = 2
+	}
+
+	art, err := model.GetArtById(artid, language_id)
+	if err != nil {
+		log.Printf("err:%v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"error": "art not exist",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"results": art,
+	})
 }

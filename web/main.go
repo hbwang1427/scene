@@ -99,7 +99,7 @@ func createHttpServer() (*http.Server, error) {
 			"title": "predict demo page offline",
 		})
 	})
-	
+
 	r.GET("/demo/testimgs/:site", handler.FetchTestImages)
 
 	r.GET("/demo_porcelain", func(c *gin.Context) {
@@ -108,10 +108,13 @@ func createHttpServer() (*http.Server, error) {
 		})
 	})
 
+	r.GET("/art/:id", handler.GetArtById)
+
 	r.POST("/uploadimg", handler.UploadAnonomousePhoto)
 	r.POST("/setimgclass", handler.SetAnonomouseUploadedPhotoClass)
 
 	r.POST("/predict", handler.Predict)
+	r.POST("/predict2", handler.Predict2)
 	r.GET("/weather/current", handler.GetCurrentWeather)
 	r.GET("/weather/forecast", handler.GetWeatherForeCast)
 	r.GET("/geocode", handler.GeoCodeHandler)
