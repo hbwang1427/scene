@@ -9,6 +9,7 @@ require (
 	github.com/gin-contrib/cors v0.0.0-20180828005559-6653abe07894
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.3.0
+	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b // indirect
 	github.com/golang/protobuf v1.2.0
 	github.com/hailocab/go-geoindex v0.0.0-20160127134810-64631bfe9711
 	github.com/jmoiron/sqlx v0.0.0-20180614180643-0dae4fefe7c0
@@ -20,6 +21,7 @@ require (
 	github.com/oschwald/maxminddb-golang v1.3.0 // indirect
 	github.com/sirupsen/logrus v1.0.6
 	github.com/speps/go-hashids v2.0.0+incompatible
+	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/ugorji/go v1.1.1 // indirect
 	golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d
@@ -28,6 +30,8 @@ require (
 	golang.org/x/text v0.3.0
 	google.golang.org/genproto v0.0.0-20180817151627-c66870c02cf8 // indirect
 	google.golang.org/grpc v1.14.0
+	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
+	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )

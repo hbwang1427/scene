@@ -9,6 +9,7 @@ web/web
 web/assets/Images
 web/assets/apk
 web/web.toml
+web/artref.gob
 service/aiserver
 service/service
 *.pyc
