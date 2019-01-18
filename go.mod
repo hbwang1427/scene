@@ -6,6 +6,7 @@ require (
 	github.com/chai2010/jsonmap v0.0.0-20180419081530-ab63064a4d41
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fsnotify/fsnotify v1.4.7
 	github.com/gin-contrib/cors v0.0.0-20180828005559-6653abe07894
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.3.0

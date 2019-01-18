@@ -1,141 +1,148 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
-import 'package:geolocator/geolocator.dart';
-import 'widgets/placehold_widget.dart';
-import "package:latlngconv/latlngconv.dart";
+import 'package:connectivity/connectivity.dart';
+
+import 'package:path_provider/path_provider.dart';
+
+import './home.dart';
+import './predict.dart';
+import './profile.dart';
+import './model.dart';
+import './global.dart' as globals;
 
 void main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(title: const Text('Maps demo')),
-      body: MapsDemo(),
-    ),
-  ));
+  asyncInit();
+  runApp(AitourApp());
 }
 
-class MapsDemo extends StatefulWidget {
+void asyncInit() async {
+  globals.gAppDocDir = (await getApplicationDocumentsDirectory()).path;
+  await Directory('${globals.gAppDocDir}/models').create(recursive: true);
+
+  var connectivityResult = await (new Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.wifi) {
+    var downloadError = false;
+
+    var modelListFile = await globals.getModelListFile();
+    var models = await globals.getModelInfo(listFileBody: modelListFile);
+    if (models.length > 0) {
+      List<ModelInfo> mlist;
+      var f = File('${globals.gAppDocDir}/models/mlist.json');
+      if (await f.exists()) {
+        mlist = (json.decode(await f.readAsString())['models'] as List)
+            .map((m) => ModelInfo.fromJson(m))
+            .toList();
+
+        //删除不同步的文件
+        for (var mi in mlist) {
+          var i = globals.gModelInfos.indexWhere((v) => v.name == mi.name);
+          if (i < 0) {
+            await File('${globals.gAppDocDir}/models/${mi.name}').delete();
+          }
+        }
+      }
+
+      //如果有必要， 下载模型
+      for (var mi in globals.gModelInfos) {
+        if (mlist != null &&
+            mlist.indexWhere((v) => v.md5Hash == mi.md5Hash) >= 0) {
+          continue;
+        } else {
+          var modelPath = '${globals.gAppDocDir}/models/${mi.name}';
+          var f = File(modelPath);
+          if (f.existsSync()) {
+            var digest = md5.convert(f.readAsBytesSync());
+            if ('$digest' == mi.md5Hash) {
+              continue;
+            }
+          }
+
+          //download the file
+          f = await mi.localFile;
+          if (!f.existsSync()) {
+            downloadError = true;
+          }
+        }
+      }
+    }
+
+    if (!downloadError) {
+      var fw = File('${globals.gAppDocDir}/models/mlist.json')
+          .openSync(mode: FileMode.write);
+      fw.writeStringSync(modelListFile);
+      fw.closeSync();
+    }
+  }
+}
+
+class AitourApp extends StatefulWidget {
+  AitourApp({Key key}) : super(key: key);
+
   @override
-  State createState() => MapsDemoState();
+  _AitourAppState createState() => _AitourAppState();
 }
 
-class MapsDemoState extends State<MapsDemo> {
-  LatLng _currentPoint = new LatLng(51.5, -0.09);
-  bool _outOfChina = true;
-  bool _baiduMapBigFont = false;
-  MapController _mapController = new MapController();
-  
+class _AitourAppState extends State<AitourApp> {
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  int _selectedIndex = 1;
+  final _widgetOptions = [
+    HomePage(),
+    ArtPredictPage(),
+    ProfilePage(),
+  ];
+
   @override
   void initState() {
     super.initState();
-    _mapController = new MapController();
-    _initPlatformState();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      globals.gConnectivityResult = result;
+      if (!globals.gIsModelChecked && result == ConnectivityResult.wifi) {}
+      //setState(() => _connectionStatus = result.toString());
+    });
   }
 
- // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> _initPlatformState() async {
-    Position position;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      final Geolocator geolocator = Geolocator();
-        //..forceAndroidLocationManager = true;
-      position = await geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.bestForNavigation);
-    } on PlatformException {
-      position = null;
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return;
-    }
-
-    if (position != null) {
-      LatLng wgs84 = new LatLng(position.latitude, position.longitude);
-      LatLng gcj02 = LatLngConvert(wgs84, LatLngType.WGS84, LatLngType.GCJ02);
-      setState(() {
-        _outOfChina = OutofChina(wgs84);
-        _currentPoint = gcj02;
-      });
-      //_currentPoint = new LatLng(position.latitude, position.longitude);
-      _mapController.move(_currentPoint, _mapController.zoom);
-    }
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<GeolocationStatus>(
-      future: Geolocator().checkGeolocationPermissionStatus(),
-      builder: (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
-        if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.data == GeolocationStatus.disabled) {
-            return const PlaceholderWidget('Location services disabled',
-                'Enable location services for this App using the device settings.');
-          }
-
-          if (snapshot.data == GeolocationStatus.denied) {
-            return const PlaceholderWidget('Access to location denied',
-                'Allow access to the location services for this App using the device settings.');
-          }
-
-          return new FlutterMap(
-            mapController: _mapController,
-            options: new MapOptions(
-              center: new LatLng(31.1695941, 121.3926092),
-              zoom: 15.0,
-            ),
-            layers: [
-              new TileLayerOptions(
-                // urlTemplate: "https://api.tiles.mapbox.com/v4/"
-                //     "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-
-                // urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                // subdomains: ['a', 'b', 'c'],
-
-                urlTemplate: "http://mt1.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galile",
-                //urlTemplate: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}&s=Gali",
-
-                //urlTemplate: "http://online{s}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&styles=pl&scaler=1&p=1",
-                //subdomains: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
-
-                // urlTemplate: "http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
-                // subdomains: ['1', '2', '3', '4'],
-
-                // urlTemplate: 'http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}',
-                // subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
-                
-                additionalOptions: {
-                  'accessToken': 'pk.eyJ1IjoibHVja3lrdyIsImEiOiJjanE2NWUxNTMyNTJmM3htdW9xbDNnb3lmIn0.05-Y4v23YalvWHFK21hXMQ',
-                  'id': 'mapbox.streets',
-                },
-              ),
-              // new TileLayerOptions(
-              //   urlTemplate: "http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}",
-              //   subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
-              //   backgroundColor: Color.fromARGB(0, 0, 0, 0),
-              // ),
-              new MarkerLayerOptions(
-                markers: [
-                  new Marker(
-                    width: 20.0,
-                    height: 35.0,
-                    point: _currentPoint,
-                    builder: (ctx) =>
-                    new Container(
-                      child: new Image.asset("assets/mappin.png"),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-      },
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Aitour'),
+        ),
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text('Home')),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.business), title: Text('Tour')),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.school), title: Text('Profile')),
+          ],
+          currentIndex: _selectedIndex,
+          fixedColor: Colors.deepPurple,
+          onTap: _onItemTapped,
+        ),
+      ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
