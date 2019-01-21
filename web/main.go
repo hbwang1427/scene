@@ -125,6 +125,9 @@ func createHttpServer() (*http.Server, error) {
 	r.GET("/vcode/:img", gin.WrapH(captcha.Server(200, 60)))
 	r.GET("/vcode", handler.NewCaptacha)
 
+	r.GET("/model/list", handler.GetModelInfo)
+	r.GET("/model/refresh", handler.RefreshModelInfo)
+
 	s := &http.Server{
 		Addr:    cfg.Http.Bind,
 		Handler: r,
