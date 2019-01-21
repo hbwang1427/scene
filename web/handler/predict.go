@@ -15,6 +15,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+    "sort"
 
 	log "github.com/sirupsen/logrus"
 
@@ -316,23 +317,29 @@ func Predict2(c *gin.Context) {
 	}
 	topK := make([]ArtScore, k)
 	featureNorm := model.Norm(feature)
+    //var scores []float64
 	for _, ref := range refers {
 		var score float64
 		for i := 0; i < len(ref.MobileNetFeature); i++ {
 			score += ref.MobileNetFeature[i] * feature[i]
 		}
-		score = score  / (ref.MobileNetFeatureNorm * featureNorm)
+		//score = score  / (ref.MobileNetFeatureNorm * featureNorm)
+        score = score / featureNorm
+        //scores = append(scores, score)
 
-		for j := 0; j < k; j++ {
-			if score > topK[j].Score {
-				desSorted := append([]ArtScore{}, topK[:j]...)
-				desSorted = append(desSorted, ArtScore{ref.ArtID, score})
-				desSorted = append(desSorted, topK[j:k-1]...)
-				topK = desSorted
+		for j := k-1; j >= 0; j-- {
+            if j == 0  && score > topK[0].Score {
+                topK =  append(append([]ArtScore{}, ArtScore{ref.ArtID, score}), topK[0:k-1]...)
+            } else if j>0 && score > topK[j].Score && score <= topK[j-1].Score {
+                topK = append(append(append([]ArtScore{}, topK[0:j]...), ArtScore{ref.ArtID, score}), topK[j:k-1]...)
 				break
 			}
 		}
 	}
+    //sort.Slice(scores, func(i, j int) bool {
+    //    return scores[i] > scores[j]
+    //}) 
+    //ioutil.WriteFile("/usr/local/aitour/aiweb/scores.txt", []byte(fmt.Sprintf("%v", scores)), 0644)
 
 	c.JSON(http.StatusOK, gin.H{
 		"results": topK,
@@ -352,8 +359,15 @@ func GetArtById(c *gin.Context) {
 	if err != nil {
 		language_id = 2
 	}
-
-	art, err := model.GetArtById(artid, language_id)
+        
+        assets_path := "/assets/MET/"
+        art, err := model.GetArtById(artid, language_id)
+        for i := 0; i < len(art.Images); i++ {
+          art.Images[i] = assets_path + "Images/00" + art.Images[i] + ".jpg"
+        }
+        for i := 0; i < len(art.Audios); i++ {
+          art.Audios[i] = assets_path + "Audio/" + art.Audios[i]
+        }
 	if err != nil {
 		log.Printf("err:%v", err)
 		c.JSON(http.StatusOK, gin.H{

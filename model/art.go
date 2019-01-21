@@ -26,10 +26,10 @@ type ArtReference struct {
 	ImageID              int
 	ArtID                int
 	ImageLocation        string
-	ImageFeature         []float64
-	ImageFeatureNorm     float64
-	MobileNetFeature     []float64
-	MobileNetFeatureNorm float64
+	ImageFeature         []float64 //already normalized feature
+	//ImageFeatureNorm     float64
+	MobileNetFeature     []float64 //already normalized feature
+	//MobileNetFeatureNorm float64
 }
 
 func Norm(array []float64) float64 {
@@ -103,8 +103,8 @@ func loadArtReferences() ([]ArtReference, error) {
 			}
 
 		}
-		ref.ImageFeatureNorm = Norm(ref.ImageFeature)
-		ref.MobileNetFeatureNorm = Norm(ref.MobileNetFeature)
+		//ref.ImageFeatureNorm = Norm(ref.ImageFeature)
+		//ref.MobileNetFeatureNorm = Norm(ref.MobileNetFeature)
 		references = append(references, ref)
 	}
 
