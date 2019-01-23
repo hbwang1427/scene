@@ -15,7 +15,6 @@ import (
 	"path"
 	"strconv"
 	"strings"
-    "sort"
 
 	log "github.com/sirupsen/logrus"
 
@@ -363,7 +362,7 @@ func GetArtById(c *gin.Context) {
         assets_path := "/assets/MET/"
         art, err := model.GetArtById(artid, language_id)
         for i := 0; i < len(art.Images); i++ {
-          art.Images[i] = assets_path + "Images/00" + art.Images[i] + ".jpg"
+          art.Images[i] = assets_path + "Images/" + art.Images[i] + ".jpg"
         }
         for i := 0; i < len(art.Audios); i++ {
           art.Audios[i] = assets_path + "Audio/" + art.Audios[i]
