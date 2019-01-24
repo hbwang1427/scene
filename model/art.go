@@ -58,14 +58,14 @@ func GetArtReferences() ([]ArtReference, error) {
 
 func loadArtReferences() ([]ArtReference, error) {
 	var references []ArtReference
-	var gobFile = "./artref.gob"
-	if file, err := os.Open(gobFile); err == nil {
-		decoder := gob.NewDecoder(file)
-		decoder.Decode(&references)
-		file.Close()
-		log.Printf("load image references count: %v", len(references))
-		return references, nil
-	}
+	// var gobFile = "./artref.gob"
+	// if file, err := os.Open(gobFile); err == nil {
+	// 	decoder := gob.NewDecoder(file)
+	// 	decoder.Decode(&references)
+	// 	file.Close()
+	// 	log.Printf("load image references count: %v", len(references))
+	// 	return references, nil
+	// }
 
 	rows, err := db.Queryx(sqlGetArtReferences)
 	if err != nil {
