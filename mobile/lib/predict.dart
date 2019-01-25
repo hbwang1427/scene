@@ -36,6 +36,7 @@ void logError(String code, String message) =>
 
 class _ArtPredictPageState extends State<ArtPredictPage> {
   bool camerasInitialized = false;
+  String tfmodelLoadError;
   bool tfliteModelLoaded = false;
   bool isPredicting = false;
   CameraController controller;
@@ -60,6 +61,7 @@ class _ArtPredictPageState extends State<ArtPredictPage> {
           tfliteModelLoaded = true;
         }
       } on PlatformException catch (e) {
+        tfmodelLoadError = e.message;
         print('load tflite model error:${e.message}');
       }
     }
@@ -97,7 +99,6 @@ class _ArtPredictPageState extends State<ArtPredictPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     asyncInit();
   }
@@ -150,8 +151,12 @@ class _ArtPredictPageState extends State<ArtPredictPage> {
   }
 
   void onCameraPreviewPressed() {
+    if (tfmodelLoadError != null && tfmodelLoadError.length > 0) {
+      showInSnackBar('Error: load model failed ($tfmodelLoadError)');
+    }
+
     if (!tfliteModelLoaded) {
-      showInSnackBar('Error: model was not loaded');
+      showInSnackBar('please wait, modal loading...');
       return;
     }
 
@@ -180,7 +185,8 @@ class _ArtPredictPageState extends State<ArtPredictPage> {
           print("$e");
         }
         //print('$feature');
-        var response = await http.post('${globals.host}/predict2?k=5',
+        var response = await http.post(
+            '${globals.host}/predict2?k=5&language=${globals.gMyLocale}',
             headers: {'Content-Type': 'application/octet-stream'},
             body: feature);
         if (response.statusCode == 200) {

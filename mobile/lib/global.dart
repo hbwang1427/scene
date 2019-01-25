@@ -1,13 +1,14 @@
 library aitour.globals;
 
 import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 import 'package:synchronized/synchronized.dart';
 
+
 import './model.dart';
+
 
 ConnectivityResult gConnectivityResult = ConnectivityResult.none;
 bool gIsLoggedIn = false;
@@ -17,7 +18,9 @@ Future<bool> gModelChecked;
 String gAppDocDir;
 String gModelListFileBody;
 Lock modelDownloadLock = new Lock();
-const host = 'http://192.168.0.220:8081';
+Locale gMyLocale = null;
+//const host = 'http://192.168.0.220:8081';
+const host = 'http://pangolinai.net';
 
 Future<List<ModelInfo>> getModelInfo({String listFileBody: ""}) async {
   if (gModelInfos.length > 0) {

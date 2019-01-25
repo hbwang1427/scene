@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+//import 'package:flutter/rendering.dart';
 import 'package:connectivity/connectivity.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -14,6 +15,7 @@ import './model.dart';
 import './global.dart' as globals;
 
 void main() {
+  //debugPaintSizeEnabled = true;
   asyncInit();
   runApp(AitourApp());
 }

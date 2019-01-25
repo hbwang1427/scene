@@ -2,14 +2,10 @@ package model
 
 import (
 	"database/sql"
-	"encoding/gob"
 	"fmt"
 	"math"
-	"os"
 	"strconv"
 	"strings"
-
-	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -23,12 +19,12 @@ var (
 )
 
 type ArtReference struct {
-	ImageID              int
-	ArtID                int
-	ImageLocation        string
-	ImageFeature         []float64 //already normalized feature
+	ImageID       int
+	ArtID         int
+	ImageLocation string
+	ImageFeature  []float64 //already normalized feature
 	//ImageFeatureNorm     float64
-	MobileNetFeature     []float64 //already normalized feature
+	MobileNetFeature []float64 //already normalized feature
 	//MobileNetFeatureNorm float64
 }
 
@@ -108,11 +104,11 @@ func loadArtReferences() ([]ArtReference, error) {
 		references = append(references, ref)
 	}
 
-	if file, err := os.Create(gobFile); err == nil {
-		encoder := gob.NewEncoder(file)
-		encoder.Encode(references)
-		file.Close()
-	}
+	// if file, err := os.Create(gobFile); err == nil {
+	// 	encoder := gob.NewEncoder(file)
+	// 	encoder.Encode(references)
+	// 	file.Close()
+	// }
 	return references, nil
 }
 

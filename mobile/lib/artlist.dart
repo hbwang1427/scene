@@ -89,14 +89,19 @@ class _ArtInfoCardState extends State<ArtInfoCard> {
     art.images.forEach((url) {
       widgets.add(CachedNetworkImage(
         //imageUrl: "http://via.placeholder.com/350x150",
-        imageUrl: "${globals.host}/${art.images[0]}",
+        imageUrl: art.images[0].startsWith("/")
+            ? "${globals.host}${art.images[0]}"
+            : "${globals.host}/${art.images[0]}",
         placeholder: new CircularProgressIndicator(),
         errorWidget: new Icon(Icons.broken_image),
       ));
     });
 
     art.audios.forEach((url) {
-      widgets.add(AudioPlayerWidget(url: url));
+      widgets.add(AudioPlayerWidget(
+          url: url.startsWith("/")
+              ? "${globals.host}$url"
+              : "${globals.host}/$url"));
     });
 
     widgets.add(Padding(
@@ -143,9 +148,9 @@ class AudioPlayerWidget extends StatefulWidget {
 }
 
 class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
-  AudioPlayerState playerState = AudioPlayerState.STOPPED;
   bool hasError = false;
-  Duration duration, position;
+  Duration duration = new Duration(hours: 0, minutes: 0, seconds: 0),
+      position = new Duration(hours: 0, minutes: 0, seconds: 0);
   AudioPlayer audioPlayer = new AudioPlayer();
 
   @override
@@ -153,15 +158,26 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     super.initState();
 
     audioPlayer.audioPlayerStateChangeHandler = (state) {
+      setState(() {});
+    };
+
+    audioPlayer.durationHandler = (Duration d) {
+      print('Max duration: $d');
       setState(() {
-        playerState = state;
+        duration = d;
+      });
+    };
+
+    audioPlayer.positionHandler = (Duration p) {
+      print('Current position: $p');
+      setState(() {
+        position = p;
       });
     };
 
     audioPlayer.errorHandler = (msg) {
       print('audioPlayer error : $msg');
       setState(() {
-        playerState = AudioPlayerState.STOPPED;
         duration = new Duration(seconds: 0);
         position = new Duration(seconds: 0);
       });
@@ -170,10 +186,15 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
   void buttonPressed() async {
     try {
-      if (playerState != AudioPlayerState.PLAYING) {
-        var result = await this.audioPlayer.play(this.widget.url);
-      } else {
-        var result = await this.audioPlayer.resume();
+      if (audioPlayer.state == null || audioPlayer.state == AudioPlayerState.STOPPED) {
+        await this.audioPlayer.play(this.widget.url);
+      } else if (audioPlayer.state == AudioPlayerState.PLAYING) {
+        await this.audioPlayer.pause();
+      } else if (audioPlayer.state == AudioPlayerState.PAUSED) {
+        await this.audioPlayer.resume();
+      } else if (audioPlayer.state == AudioPlayerState.COMPLETED) {
+        await this.audioPlayer.seek(Duration());
+        await this.audioPlayer.resume();
       }
     } on PlatformException catch (e) {
       print("play ${this.widget.url} error: $e");
@@ -182,14 +203,44 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     setState(() {});
   }
 
+  String prossText() {
+    if (position.inSeconds == 0 || duration.inSeconds == 0) {
+      return "--/--";
+    }
+
+    var timeLeft = duration.inSeconds - position.inSeconds;
+    var timeLeftMinutes = timeLeft ~/ 60;
+    var timeLeftSeconds = timeLeft - timeLeftMinutes * 60;
+    var durseconds = duration.inSeconds - duration.inMinutes * 60;
+    return "${timeLeftMinutes}''${timeLeftSeconds}'/${duration.inMinutes}''${durseconds}'";
+  }
+
   @override
   Widget build(BuildContext context) {
     Color iconColor = hasError ? Colors.grey : Colors.black;
-    return FlatButton(
-      child: playerState == AudioPlayerState.STOPPED
-          ? Icon(Icons.play_arrow, color:iconColor)
-          : Icon(Icons.pause, color:iconColor),
-      onPressed: hasError ? null : buttonPressed,
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Expanded(
+              child: Slider(
+            min: 0.0,
+            max: 1.0,
+            value: position.inSeconds == 0 || duration.inSeconds == 0
+                ? 0
+                : position.inSeconds / duration.inSeconds,
+                onChanged: audioPlayer == null ? null : (double val) => audioPlayer.seek(Duration(hours:0, minutes:0, seconds: (val * duration.inSeconds).toInt())),
+          )),
+          Text(prossText()),
+          FlatButton(
+            child: audioPlayer.state != AudioPlayerState.PLAYING
+                ? Icon(Icons.play_arrow, color: iconColor)
+                : Icon(Icons.pause, color: iconColor),
+            onPressed: buttonPressed,
+          ),
+        ],
+      ),
     );
   }
 }
