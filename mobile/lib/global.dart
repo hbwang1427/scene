@@ -20,7 +20,8 @@ String gModelListFileBody;
 Lock modelDownloadLock = new Lock();
 Locale gMyLocale = null;
 //const host = 'http://192.168.0.220:8081';
-const host = 'http://pangolinai.net';
+//const host = 'http://pangolinai.net';
+const host = 'http://192.168.1.8:8081';
 
 Future<List<ModelInfo>> getModelInfo({String listFileBody: ""}) async {
   if (gModelInfos.length > 0) {
