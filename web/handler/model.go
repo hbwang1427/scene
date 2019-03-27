@@ -24,7 +24,7 @@ type ModelInfo struct {
 }
 
 func reloadModelInfos() ([]ModelInfo, error) {
-	var models  []ModelInfo
+	var models []ModelInfo
 	dir := "./assets/tflite_models"
 	if fis, err := ioutil.ReadDir(dir); err == nil {
 		for _, fi := range fis {
@@ -68,6 +68,9 @@ func RefreshModelInfo(c *gin.Context) {
 }
 
 func GetModelInfo(c *gin.Context) {
+	if len(modelInfos) == 0 {
+		modelInfos, _ = reloadModelInfos()
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"models": modelInfos,
 	})

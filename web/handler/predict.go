@@ -361,12 +361,7 @@ func GetArtById(c *gin.Context) {
         
         assets_path := "/assets/MET/"
         art, err := model.GetArtById(artid, language_id)
-        for i := 0; i < len(art.Images); i++ {
-          art.Images[i] = assets_path + "Images/" + art.Images[i] + ".jpg"
-        }
-        for i := 0; i < len(art.Audios); i++ {
-          art.Audios[i] = assets_path + "Audio/" + art.Audios[i]
-        }
+
 	if err != nil {
 		log.Printf("err:%v", err)
 		c.JSON(http.StatusOK, gin.H{
@@ -374,6 +369,14 @@ func GetArtById(c *gin.Context) {
 		})
 		return
 	}
+
+	for i := 0; i < len(art.Images); i++ {
+		art.Images[i] = assets_path + "Images/" + art.Images[i] + ".jpg"
+	  }
+	  for i := 0; i < len(art.Audios); i++ {
+		art.Audios[i] = assets_path + "Audio/" + art.Audios[i]
+	  }
+	  
 	c.JSON(http.StatusOK, gin.H{
 		"results": art,
 	})

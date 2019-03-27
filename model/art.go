@@ -2,10 +2,14 @@ package model
 
 import (
 	"database/sql"
+	"encoding/gob"
 	"fmt"
 	"math"
+	"os"
 	"strconv"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -61,6 +65,8 @@ func loadArtReferences() ([]ArtReference, error) {
 		file.Close()
 		log.Printf("load image references count: %v", len(references))
 		return references, nil
+	} else {
+		log.Printf("load image references from artref.gob error:%v", err)
 	}
 
 	rows, err := db.Queryx(sqlGetArtReferences)

@@ -34,17 +34,17 @@ void asyncInit() async {
       List<ModelInfo> mlist;
       var f = File('${globals.gAppDocDir}/models/mlist.json');
       if (await f.exists()) {
-        mlist = (json.decode(await f.readAsString())['models'] as List)
-            .map((m) => ModelInfo.fromJson(m))
-            .toList();
-
-        //删除不同步的文件
-        for (var mi in mlist) {
-          var i = globals.gModelInfos.indexWhere((v) => v.name == mi.name);
-          if (i < 0) {
-            await File('${globals.gAppDocDir}/models/${mi.name}').delete();
+          var models = json.decode(await f.readAsString())['models'] as List;
+          if (models != null) {
+            mlist = models.map((m) => ModelInfo.fromJson(m)).toList();
+            //删除不同步的文件
+            for (var mi in mlist) {
+              var i = globals.gModelInfos.indexWhere((v) => v.name == mi.name);
+              if (i < 0) {
+                await File('${globals.gAppDocDir}/models/${mi.name}').delete();
+              }
+            }
           }
-        }
       }
 
       //如果有必要， 下载模型
